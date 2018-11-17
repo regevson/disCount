@@ -1,0 +1,160 @@
+package Personalverrechnung;
+
+import java.awt.Color;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import View.MainModel;
+import View.MainView;
+import extraViews.View_SuperClass;
+import extraViews.View_SuperClass_2Outputs;
+
+public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
+
+	private String konto1;
+	private String[] konten2;
+	private String konto3;
+	
+	private String price1, price2, price3, price4;
+	
+	private JTextField txtPrice1, txtPrice2, txtPrice3, txtPrice4;
+	private JTextField SV_DGA, DB, DZ, KommSt;
+	
+	
+	@Override
+	public void build(String konto1, String[] konten2, String konto3, boolean twoOutputs) {
+		this.konto1 = konto1;
+		this.konten2 = konten2;
+		this.konto3 = konto3;
+			
+		
+		changeYZKWP();
+		makeKonto1(konto1);
+		makeKonto2Fixed(konten2[0]);
+		makeRightKonto(konto3, yFirst + 20);
+		makeRightKonto(konto4, yFirst + 40);
+		makeRightKonto(percent, yFirst + 60);
+		
+		makePrices();
+		makeInfoFields();
+	}
+	
+	public void makeRightKonto(String konto, int y) {
+		JLabel lblKonto = new JLabel(konto);
+		lblKonto.setForeground(Color.WHITE);
+		lblKonto.setFont(MainView.font_20);
+		lblKonto.setBounds(xLeft, y, 71, 26);
+		contentPane.add(lblKonto);
+	}
+	
+	
+	private void makePrices() {
+		txtPrice1 = new JTextField("Gehälter");
+		View_SuperClass.txtFieldDesign(txtPrice1);
+		txtPrice1.setBounds(xLeft+200, yFirst, 130, 42);
+		contentPane.add(txtPrice1);
+		txtPrice1.setColumns(10);
+		
+		txtPrice2 = new JTextField("Krankenkasse");
+		View_SuperClass.txtFieldDesign(txtPrice2);
+		txtPrice2.setBounds(xLeft+400, yFirst, 140, 42);
+		contentPane.add(txtPrice2);
+		txtPrice2.setColumns(10);
+		
+		txtPrice3 = new JTextField("Finanzamt");
+		View_SuperClass.txtFieldDesign(txtPrice3);
+		txtPrice3.setBounds(xLeft+400, ySecond+10, 140, 42);
+		contentPane.add(txtPrice3);
+		txtPrice3.setColumns(10);
+		
+		txtPrice4 = new JTextField("Mitarbeiter");
+		View_SuperClass.txtFieldDesign(txtPrice4);
+		txtPrice4.setBounds(xLeft+400, ySecond + (ySecond-yFirst)+20, 140, 42);
+		contentPane.add(txtPrice4);
+		txtPrice4.setColumns(10);
+	}
+	
+	
+	private void makeInfoFields() {
+		SV_DGA = new JTextField("SV-DGA in €");
+		View_SuperClass.txtFieldDesign(SV_DGA);
+		SV_DGA.setBounds(xLeft+800, yFirst, 130, 42);
+		contentPane.add(SV_DGA);
+		SV_DGA.setColumns(10);
+		
+		DB = new JTextField("DB in %");
+		View_SuperClass.txtFieldDesign(DB);
+		DB.setBounds(xLeft+800, ySecond+10, 130, 42);
+		contentPane.add(DB);
+		DB.setColumns(10);
+		
+		DZ = new JTextField("DZ in %");
+		View_SuperClass.txtFieldDesign(DZ);
+		DZ.setBounds(xLeft+800, ySecond + (ySecond-yFirst)+20, 130, 42);
+		contentPane.add(DZ);
+		DZ.setColumns(10);
+		
+		KommSt = new JTextField("KommSt in %");
+		View_SuperClass.txtFieldDesign(KommSt);
+		KommSt.setBounds(xLeft+800, ySecond + 2*((ySecond-yFirst)+15), 130, 42);
+		contentPane.add(KommSt);
+		KommSt.setColumns(10);
+	}
+
+
+	
+
+
+	@Override
+	public void setUpRoutine(String konto4, String konto5, String percent, boolean twoOutputs, String extra) {
+		
+		makeBSes();
+		
+		View_SuperClass.resetSwap();
+	}
+	
+	private void makeBSes() {
+		myController.initPaint4Konten("3600", "6200", "3540", "3850");
+		myController.initPaint4Prices(Double.parseDouble(txtPrice2.getText()), Double.parseDouble(txtPrice1.getText()), Double.parseDouble(txtPrice3.getText()), Double.parseDouble(txtPrice4.getText()));
+	
+		myController.initPaint2Konten("3600", "6560");
+		myController.initPaint1Price(Double.parseDouble(SV_DGA.getText()));
+		
+		
+		
+		double SV_Price = Double.parseDouble(txtPrice2.getText());
+		double FA_Price = Double.parseDouble(txtPrice3.getText());
+		double Mitarbeiter_Price = Double.parseDouble(txtPrice4.getText());
+		
+		double SV_DGA_Price = Double.parseDouble(SV_DGA.getText());
+		double DB_Price = paintGehaltsKonten(DB, "3540", "6660");
+		double DZ_Price = paintGehaltsKonten(DZ, "3540", "6670");
+		double KommSt_Price = paintGehaltsKonten(KommSt, "3610", "6680");
+		
+		paint2ndGehaltsKonten(Mitarbeiter_Price, 0, 0, "2800", "3850");
+		
+		paint2ndGehaltsKonten(SV_Price, SV_DGA_Price, 0, "2800", "3600");
+		paint2ndGehaltsKonten(FA_Price, DB_Price, DZ_Price, "2800", "3540");
+		paint2ndGehaltsKonten(KommSt_Price, 0, 0, "2800", "3610");
+	}
+	
+	
+	private double paintGehaltsKonten(JTextField tf, String konto_temp1, String konto_temp2) {
+		myController.initPaint2Konten(konto_temp1, konto_temp2);
+		return myController.initCalcGehaltsPercent_andPrintIt(txtPrice1.getText(), tf.getText());
+	}
+	
+	
+	private void paint2ndGehaltsKonten(double price1, double price2, double price3, String konto_temp1, String konto_temp2) {
+		myController.initPaint2Konten(konto_temp1, konto_temp2);
+		double price = price1 + price2 + price3;
+		myController.initPaint1Price(price);
+	}
+	
+	
+	private void changeYZKWP() {
+		yZKWP = MainView.margin+10;
+	}
+	
+}
