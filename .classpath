@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="code/src"/>
-	<classpathentry kind="lib" path="code/disCount.jar"/>
-	<classpathentry kind="output" path="code/bin"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="disCount.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

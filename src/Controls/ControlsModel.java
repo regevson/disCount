@@ -68,19 +68,18 @@ public class ControlsModel {
 
 	public void turnOnCloud(JLabel jltemp) {
 		MainView.menuPanel.remove(jltemp);
-		JLabel label = MainView.makeMenuLabels("src/cloudOFF.png", 310, 1, 8, 52, 51);
+		JLabel label = MainView.makeMenuLabels("src/cloudON.gif", 310, 1, 8, 51, 51);
 		MainView.menuPanel.add(label);
 		MainView.menuPanel.repaint();
-		MainView.suggestionsEnabled = false;
+		MainView.suggestionsEnabled = true;		
 	}
 
 	public void turnOffCloud(JLabel jltemp) {
 		MainView.menuPanel.remove(jltemp);
-		JLabel label = MainView.makeMenuLabels("src/cloudON.gif", 310, 1, 8, 51, 51);
+		JLabel label = MainView.makeMenuLabels("src/cloudOFF.png", 310, 1, 8, 52, 51);
 		MainView.menuPanel.add(label);
 		MainView.menuPanel.repaint();
-		MainView.suggestionsEnabled = true;
-		MainView.checkIfShowSolutions();
+		MainView.suggestionsEnabled = false;
 	}
 
 	public void addBS(JLabel jltemp, ML_Controls ML) {
@@ -295,12 +294,8 @@ public class ControlsModel {
 		JTextField jtf = (JTextField) currentPanel.getComponent(0);
 		Color colorTemp = MainView.disCountBlue;
 
-		for(int x = 0; x < MainView.alColor.size(); x++) {
-			if(MainView.alColor.get(x).contains(jtf.getBackground())) {
-				colorTemp = jtf.getBackground();
-				break;
-			}
-		}
+		if(jtf.getBackground().equals(MainView.disCountBrown))
+			colorTemp = jtf.getBackground();
 		
 		
 		final Color color = colorTemp;

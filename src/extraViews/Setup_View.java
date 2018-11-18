@@ -182,6 +182,7 @@ public class Setup_View extends JFrame {
 						fileStream.println(cbSchule.getSelectedItem());
 						fileStream.println(txtEmail.getText());
 						fileStream.println(txtJahrgang.getText());
+						fileStream.println("student");
 						fileStream.close();
 						dispose();
 						startApp();

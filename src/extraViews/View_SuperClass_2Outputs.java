@@ -111,8 +111,6 @@ public class View_SuperClass_2Outputs extends JFrame{
 					dispose();
 				}
 				dispose();
-				if(MainView.suggestionsEnabled)
-					MainView.checkIfShowSolutions();
 			}
 
 				});

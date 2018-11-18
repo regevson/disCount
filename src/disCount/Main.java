@@ -15,7 +15,7 @@ public class Main {
 		
 		
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("code/src/setup.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("src/setup.txt"));
 			String setup = br.readLine();
 			if(setup != null && setup.equals("alreadyDone")) {
 				alreadyDone = true;

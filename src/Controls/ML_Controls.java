@@ -54,23 +54,28 @@ public class ML_Controls implements MouseListener{
 		else if(jltemp.getIcon().toString().equals("src/switch_left_pic.png") && jltemp.isEnabled())
 			myModel.switchRightToLeft();
 		
-		else if(jltemp.getIcon().toString().equals("src/cloudON.gif"))
-			myModel.turnOnCloud(jltemp);
-		
-		else if(jltemp.getIcon().toString().equals("src/cloudOFF.png") && db_Model.allowSolutions && !Controller_dbActivity.inExam)
+		else if(jltemp.getIcon().toString().equals("src/cloudON.gif")) {
 			myModel.turnOffCloud(jltemp);
+			MC.tellViewToRemoveExerciseSelectionPanel();
+		}
+		
+		else if(jltemp.getIcon().toString().equals("src/cloudOFF.png") && db_Model.allowSolutions && !Controller_dbActivity.inExam) {
+			myModel.turnOnCloud(jltemp);
+			MC.tellViewToAddExerciseSelectionPanel(false);
+		}
 		
 		
 		else if(jltemp.getIcon().toString().equals("src/bsCheck.png") && db_Model.allowSolutions == true && !Controller_dbActivity.inExam) {
 			if(jltemp.isEnabled()) {
 				jltemp.setEnabled(false);
-				MC.tellViewToRemoveGrammarCheckPanel();
+				MC.tellViewToRemoveExerciseSelectionPanel();
 			}
 			else {
-				MC.tellViewToAddGrammarCheckPanel();
+				MC.tellViewToAddExerciseSelectionPanel(true);
 				jltemp.setEnabled(true);
 			}
 		}
+		
 		
 		
 		else if((jltemp.getIcon().toString().equals("src/cloudOFF.png") ||  jltemp.getIcon().toString().equals("src/bsCheck.png")) && db_Model.allowSolutions == false && !Controller_dbActivity.inExam) {

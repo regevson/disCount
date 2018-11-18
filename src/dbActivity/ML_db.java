@@ -1,5 +1,6 @@
 package dbActivity;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
@@ -14,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import View.MainController;
+import View.MainModel;
 import View.MainView;
 import extraViews.ExamEvaluationView;
 import extraViews.ExamLobby;
@@ -50,36 +52,16 @@ public class ML_db implements MouseListener{
 		return myController.execConnect();
 	}
 	
-	public ArrayList<String> getCurrentImport() {
-		return myController.getCurrentImport();
-	}
-	
-	public LinkedList<Character> initOpenDB_content(String currentContentOnWP) {
-		return myController.execOpenDB_content(currentContentOnWP);
-	}
-	
-	public String initGetName() {
-		return myController.execGetName();
-	}
-
-	public String initGetCodeInfo() {
-		return myController.execGetCodeInfo();
-	}
-
-	public int initGetUpVotes() {
-		return myController.execGetUpVotes();
-	}
-
-	public int initGetDownVotes() {
-		return myController.execGetDownVotes();
-	}
-
-	public int initGetBScount() {
-		return myController.execGetBScount();
+	public String initGetSolutionID() {
+		return myController.execGetSolutionID();
 	}
 	
 	public void initCheckBS(String klasse, String page, String number) {
 		myController.execCheckBS(klasse, page, number);
+	}
+	
+	public void initShowSuggestions(String book, String page, String number) {
+		myController.execShowSuggestions(book, page, number);
 	}
 	
 	public void initUploadToDB(String jahrgang, String seite, String nummer) {
@@ -248,6 +230,16 @@ public class ML_db implements MouseListener{
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
@@ -272,6 +264,12 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
+
+
+	
 
 
 

@@ -1,4 +1,5 @@
 package View;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -59,12 +60,12 @@ public class MainController{
 		mainView.bootUpFrame();
 	}
 	
-	public void tellViewToAddGrammarCheckPanel() {
-		mainView.addGrammarCheckPanel();
+	public void tellViewToAddExerciseSelectionPanel(boolean check) {
+		mainView.addExerciseSelectionPanel(check);
 	}
 	
-	public void tellViewToRemoveGrammarCheckPanel() {
-		mainView.removeGrammarCheckPanel();
+	public void tellViewToRemoveExerciseSelectionPanel() {
+		mainView.removeExerciseSelectionPanel();
 	}
 	
 	private void displayMessages(ArrayList<MessageBox> messageBoxList) {
@@ -280,18 +281,9 @@ public class MainController{
 		return mainModel.convertTFListToStringList(tfList);
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public void execAddInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader) {
+		mainView.addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader);
+	}
 
 	
 	

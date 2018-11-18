@@ -103,8 +103,6 @@ public class View_SuperClass extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				setUpRoutine(Konto1, Konten2, Konto3, fixed, percent);
 				dispose();
-				if(MainView.suggestionsEnabled)
-					MainView.checkIfShowSolutions();
 			}
 
 				});

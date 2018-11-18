@@ -169,16 +169,10 @@ public static boolean isBANNED = false;
 	public static final Color disCountBlue = new Color(0, 122, 204);
 	public static final Color disCountGreen = new Color(9, 110, 109);
 	public static final Color disCountPurple = new Color(105, 51, 166);
-	
-	public static ArrayList<ArrayList<Color>> alColor = new ArrayList<ArrayList<Color>>();
-	
+	public static final Color disCountBrown = new Color(197, 146, 119);
 	
 	
-	public static int colorCounter = 0;
-	public static int colorListCounter = 0;
-	
-	public static int BScount = -1;
-	private static boolean isUploading = false;
+	public static boolean isUploading = false;
 	public static boolean suggestionsEnabled = false;
 
 	private static JPanel commentPanel;
@@ -210,7 +204,6 @@ public static boolean isBANNED = false;
 		
 		
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		//setUndecorated(true);
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds(0, 0, screen.width, screen.height);
 		screenWidth = screen.width;
@@ -219,8 +212,6 @@ public static boolean isBANNED = false;
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(lightBlack);
-		
-		addColorsToList();
 		
 		suchenPanel = new JPanel();
 		suchenPanel.setOpaque(false);
@@ -480,62 +471,6 @@ public static boolean isBANNED = false;
 
 		return label;
 	}
-	
-	public static void checkIfShowSolutions() {
-		
-		String currentContentOnWP = "";
-		LinkedList<Character> ll_Char = new LinkedList<Character>();
-		
-		llThumbsGroups.add(new ArrayList<ArrayList<JLabel>>());
-		
-		if(MainView.llJPanel.size() >= 1 && !isUploading) {
-						
-			currentContentOnWP = MainModel.sortHashMapPanelToCodeandGetCode();
-			
-			ll_Char = ((ML_db) llML.get(9)).initOpenDB_content(currentContentOnWP);
-			String name = ((ML_db) llML.get(9)).initGetName();
-			String codeInfo = ((ML_db) llML.get(9)).initGetCodeInfo();
-			int upvotes = ((ML_db) llML.get(9)).initGetUpVotes();
-			int downvotes = ((ML_db) llML.get(9)).initGetDownVotes();
-			int commentCount = ((ML_db) llML.get(9)).initGetCommentCount();
-			BScount = ((ML_db) llML.get(9)).initGetBScount();
-			
-			if(ll_Char != null) {
-				isUploading = true;
-				((ML_db) llML.get(9)).initOpenFile(ll_Char);
-				for(int x = 1; x <= BScount; x++) {
-					MainView.addNoteToPanel("\u00a9" + name + "   " + codeInfo, MainView.llJPanel.get(MainView.llJPanel.size()-x), 70); //13
-					MainView.addNoteToPanel(Integer.toString(upvotes), MainView.llJPanel.get(MainView.llJPanel.size()-x), 402);
-					MainView.addNoteToPanel(Integer.toString(downvotes), MainView.llJPanel.get(MainView.llJPanel.size()-x), 467);
-					MainView.addNoteToPanel(Integer.toString(commentCount), MainView.llJPanel.get(MainView.llJPanel.size()-x), 522);
-				}
-				isUploading = false;
-				
-				if(colorCounter == 4) {
-					colorCounter = 0;
-					colorListCounter++;
-					
-					if(colorListCounter == alColor.size())
-						colorListCounter = 0;
-				}
-				
-				
-				else
-					colorCounter++;
-				
-				checkIfShowSolutions();
-			}
-			
-			else
-				return;
-			
-			
-		
-		}
-		
-		
-		
-	}
 
 
 
@@ -562,6 +497,41 @@ public static boolean isBANNED = false;
 			db_Model.skill--;
 	}
 	
+	public void addInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader) {
+		//JLabel infoLabel = makeMenuLabels("src/infoPic.png", 5, 20, 9, 20, 20);
+		//numberLabel.add(infoLabel);
+		
+		JPanel infoPanel = new JPanel();
+		infoPanel.setBounds(60, 108, 523, 40);
+		infoPanel.setBackground(darkBlack);
+		infoPanel.setVisible(true);
+		infoPanel.setLayout(null);
+		llJPanel.getLast().add(infoPanel);
+		
+		addThumbs(infoPanel);
+		addCommentIcon(infoPanel);
+		
+		createBSInfoContents(10, 100, "@" + name, infoPanel);
+		createBSInfoContents(150, 50, codeInfo, infoPanel);
+		createBSInfoContents(332, 50, Integer.toString(upvotes), infoPanel);//22
+		createBSInfoContents(392, 100, Integer.toString(downvotes), infoPanel);
+		createBSInfoContents(452, 100, Integer.toString(commentCount), infoPanel);
+		
+		String id = ((ML_db) llML.get(9)).initGetSolutionID();
+		System.out.println("INMAINMODEL THIS IS ID " + id);
+		hmPanelCodeID.put(infoPanel, id);
+	}
+	
+	private void createBSInfoContents(int x, int width, String text, JPanel infoPanel) {
+		JLabel label = new JLabel();
+		label.setForeground(Color.WHITE);
+		label.setFont(font_15);
+		label.setText(text);
+		label.setBounds(x, 2, width, 40);
+		infoPanel.add(label);
+	}
+	
+	
 	
 	private static JPanel makeRadioButton(JPanel jp) {
 		JRadioButton jrb = new JRadioButton();
@@ -587,7 +557,7 @@ public static boolean isBANNED = false;
 		jp.setBackground(null);
 		if(isUploading) {
 			jp.setBackground(MainView.disCountGreen);
-			jp.setBorder(new LineBorder(alColor.get(colorListCounter).get(colorCounter), 2));
+			jp.setBorder(new LineBorder(disCountBrown, 2));
 		}
 		else {
 			jp.setBackground(middleBlack);
@@ -603,7 +573,7 @@ public static boolean isBANNED = false;
 		numberLabel = new JTextField();
 		numberLabel.setFont(new Font("Roboto", Font.BOLD, 20));
 		numberLabel.setForeground(Color.BLACK);
-		numberLabel.setBackground(alColor.get(colorListCounter).get(colorCounter));
+		numberLabel.setBackground(disCountBrown);
 
 		numberLabel.setBounds(0, 0, 60, 150);
 		numberLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -620,13 +590,6 @@ public static boolean isBANNED = false;
 		
 		addArrows(jp);
 		
-		if(isUploading) {
-			String id = ((ML_db) llML.get(9)).getCurrentImport().get(0);
-			hmPanelCodeID.put(jp, id);
-			addThumbs(jp);
-			addCommentIcon(jp);
-		}
-		
 		jpMargin = jpMargin + 170;
 		
 		return makeRadioButton(jp);
@@ -640,21 +603,11 @@ public static boolean isBANNED = false;
 	}
 	
 	public static void reModifyJPanel(JPanel jp) {
-		System.out.println("remodifff");
 		jp.setBounds(5, jpMargin - 170, 585, 150);
 		numberLabel.setBounds(0, 0, 60, 150);
 		MainView.workPanel.repaint();
 	}
 	
-	
-	private static void addCommentIcon(JPanel jp) {
-		ImageIcon commentIcon = new ImageIcon("src/comment.png");
-		JLabel commentLabel = new JLabel(commentIcon);
-		commentLabel.setBounds(500, 125, 18, 18);
-		jp.add(commentLabel);
-		
-		commentLabel.addMouseListener(((ML_db) llML.get(9)));
-	}
 	
 	
 	public static void addCheckMark(JPanel jp, ArrayList<Integer> examBSList, int bsNumber) {
@@ -682,11 +635,11 @@ public static boolean isBANNED = false;
 		ArrayList<JLabel> llLabel = new ArrayList<JLabel>();
 		ImageIcon thumbsUpIcon = new ImageIcon("src/thumbsup.png");
 		JLabel thumbsUpLabel = new JLabel(thumbsUpIcon);
-		thumbsUpLabel.setBounds(380, 125, 18, 18);
+		thumbsUpLabel.setBounds(310, 12, 18, 18);
 		
 		ImageIcon thumbsDownIcon = new ImageIcon("src/thumbsdown.png");
 		JLabel thumbsDownLabel = new JLabel(thumbsDownIcon);
-		thumbsDownLabel.setBounds(445, 125, 18, 18);
+		thumbsDownLabel.setBounds(370, 12, 18, 18);
 		
 		llLabel.add(thumbsUpLabel);
 		llLabel.add(thumbsDownLabel);
@@ -698,6 +651,15 @@ public static boolean isBANNED = false;
 		
 		jp.add(thumbsUpLabel);
 		jp.add(thumbsDownLabel);
+	}
+	
+	private static void addCommentIcon(JPanel jp) {
+		ImageIcon commentIcon = new ImageIcon("src/comment.png");
+		JLabel commentLabel = new JLabel(commentIcon);
+		commentLabel.setBounds(430, 12, 18, 18);
+		jp.add(commentLabel);
+		
+		commentLabel.addMouseListener(((ML_db) llML.get(9)));
 	}
 	
 	private static void addArrows(JPanel jp) {
@@ -1577,55 +1539,9 @@ public static boolean isBANNED = false;
 		setVisible(true);
 	}
 	
-	public void addColorsToList() {
-		Color red1 = new Color(236, 33, 33);
-		Color red2 = new Color(201, 31, 31);
-		Color red3 = new Color(158, 25, 25);
-		Color red4= new Color(135, 22, 22);
-		Color red5 = new Color(98, 16, 16);
-		
-		Color green1 = new Color(15, 190, 30);
-		Color green2 = new Color(12, 141, 23);
-		Color green3 = new Color(11, 125, 20);
-		Color green4= new Color(9, 88, 16);
-		Color green5 = new Color(8, 71, 14);
-		
-		Color brown1 = new Color(197, 146, 120);
-		Color brown2 = new Color(143, 92, 73);
-		Color brown3 = new Color(142, 103, 75);
-		Color brown4 = new Color(109, 77, 51);
-		Color brown5 = new Color(91, 57, 30);
-		
-		
-		ArrayList<Color> redList = new ArrayList<Color>();
-		redList.add(red1);
-		redList.add(red4);
-		redList.add(red3);
-		redList.add(red2);
-		redList.add(red5);
-		
-		ArrayList<Color> greenList = new ArrayList<Color>();
-		greenList.add(green1);
-		greenList.add(green4);
-		greenList.add(green3);
-		greenList.add(green2);
-		greenList.add(green5);
-		
-		ArrayList<Color> brownList = new ArrayList<Color>();
-		brownList.add(brown1);
-		brownList.add(brown2);
-		brownList.add(brown3);
-		brownList.add(brown4);
-		brownList.add(brown5);
-		
-		alColor.add(brownList);
-		alColor.add(greenList);
-		alColor.add(redList);
-		
-	}
 	
 	
-	public void addGrammarCheckPanel() {
+	public void addExerciseSelectionPanel(boolean check) {
 		grammarCheckPanel = new JPanel();
 		grammarCheckPanel.setPreferredSize(new Dimension(MainView.workPanel_Width, 55));
 		grammarCheckPanel.setBackground(new Color(51, 51, 51));
@@ -1668,7 +1584,10 @@ public static boolean isBANNED = false;
 		JLabel checkTHEMPic = makeMenuLabels("src/checkTHEM.png", workPanel_Width-90, 2, 8, 88, 55);
 		checkTHEMPic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
-				((ML_db) llML.get(9)).initCheckBS(txtClass.getText(), txtPage.getText(), txtNumber.getText());
+				if(check)
+					((ML_db) llML.get(9)).initCheckBS(txtClass.getText(), txtPage.getText(), txtNumber.getText());
+				else
+					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText(), txtPage.getText(), txtNumber.getText());
 			}
 
 			@Override public void mouseEntered(java.awt.event.MouseEvent e) {}@Override public void mouseExited(java.awt.event.MouseEvent e) {}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {	}});
@@ -1676,6 +1595,14 @@ public static boolean isBANNED = false;
 		grammarCheckPanel.add(checkTHEMPic);
 		
 	}
+	
+	public void removeExerciseSelectionPanel() {
+		tempPanel.remove(grammarCheckPanel);
+		jSP.setPreferredSize(new Dimension(workPanel_Width-3, screenHeight));
+		tempPanel.revalidate();
+		tempPanel.repaint();
+	}
+	
 	
 	public static void addNoteToCheckPanel(String msg) {
 		JLabel label = new JLabel(msg);
@@ -1686,12 +1613,7 @@ public static boolean isBANNED = false;
 		grammarCheckPanel.repaint();
 	}
 	
-	public void removeGrammarCheckPanel() {
-		tempPanel.remove(grammarCheckPanel);
-		jSP.setPreferredSize(new Dimension(workPanel_Width-3, screenHeight));
-		tempPanel.revalidate();
-		tempPanel.repaint();
-	}
+	
 
 
 
@@ -2136,7 +2058,8 @@ public static boolean isBANNED = false;
 		System.out.println("isFORBIDDEN!!");
 	}
 
-	
+
+
 	
 	
 	

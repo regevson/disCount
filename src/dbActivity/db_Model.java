@@ -31,7 +31,7 @@ public class db_Model {
 	private ResultSet rs = null;
 	
 	public LinkedList<Integer> ll_wrongSolutions = new LinkedList<Integer>();
-	public ArrayList<String> currentImport = new ArrayList<String>();
+	public String solutionID;
 	private String user_name;
 	private String codeInfo;
 	public String name;
@@ -65,6 +65,8 @@ public class db_Model {
 	private String solution = "";
 	private int myID;
 	private int studentNumber; //tells you which column you are in exam-database
+	private String myRank;
+	private String uploader;
 	
 	
 	
@@ -92,6 +94,9 @@ public class db_Model {
 		        evaluated = rs.getString("evaluated");
 		        
 		     String id = MainView.hmPanelCodeID.get(panel);
+		     
+		     if(panel == null)
+		    	 System.out.println("isNull !D!D!!!");
 		    
 		     System.out.println(id + "  id");
 		     if(!evaluated.contains("|" + id + "|")) {
@@ -114,8 +119,8 @@ public class db_Model {
 	    		 votes += 1;
 	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + id + "'");
 		    	
-		    	 JLabel upPanel = (JLabel) panel.getComponent(3);
-		    	 JLabel downPanel = (JLabel) panel.getComponent(4);
+		    	 JLabel upPanel = (JLabel) panel.getComponent(2);
+		    	 JLabel downPanel = (JLabel) panel.getComponent(3);
 		    	 
 		    	 ArrayList<JLabel> alJL = new  ArrayList<JLabel>();
 		    	 alJL.add(upPanel);
@@ -128,11 +133,15 @@ public class db_Model {
 		    			 if(MainView.llThumbsGroups.get(x).contains(alJL)) {
 		    			 for(int y = 0; y < MainView.llThumbsGroups.get(x).size(); y++) {
 		    				 
-			    				 if(value == 1)
+			    				 if(value == 1) {
 			    					 MainView.llThumbsGroups.get(x).get(y).get(1).setEnabled(false);
+			    					 System.out.println("ISUNENANBLED");
+			    				 }
 			    				 
-			    				 else
+			    				 else {
 			    					 MainView.llThumbsGroups.get(x).get(y).get(0).setEnabled(false);
+			    					 System.out.println("ISUNENANBLED");
+			    				 }
 			    				 
 			    				 MainView.llThumbsGroups.get(x).get(y).get(0).addMouseListener(null);
 			    				 MainView.llThumbsGroups.get(x).get(y).get(1).addMouseListener(null);
@@ -167,6 +176,7 @@ public class db_Model {
    		   schoolType = br.readLine();
    		   email = br.readLine();
    		   String schoolClass = br.readLine();
+   		   myRank = br.readLine();
    		   
    		   
    		   st = conn.createStatement();
@@ -266,7 +276,7 @@ public class db_Model {
 		
 		 try {
 			st = conn.createStatement();
-			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (name, email, code, codeInfo) VALUES ('" + name + "'," + "'" + email + "'," + "'" + code_str + "'," + "'" + exercise + "'" + ")");
+			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (name, email, uploader, code, codeInfo) VALUES ('" + name + "'," + "'" + email + "'," + "'" + myRank + "'," + "'" + code_str + "'," + "'" + exercise + "'" + ")");
 			
 			increaseCommunityStats(1);
 			checkAdded();
@@ -351,43 +361,45 @@ public class db_Model {
 
 
 
-	public LinkedList<Character> openDB_content(String currentContentOnWP) {
+	public LinkedList<Character> openDB_content(String currentContentOnWP, String codeInfo) {
 		if(!MainView.suggestionsEnabled)
 			return null;
 		
-		currentImport.removeAll(currentImport);
+		solutionID = "";
 		String code_str = "";
-		 BScount = -1;
-		 LinkedList<Character> char_LL = null;
+		BScount = -1;
+		this.codeInfo = codeInfo;
+		LinkedList<Character> char_LL = null;
+		
 		try {
 			   st = conn.createStatement();
-	           rs = st.executeQuery("SELECT id, name, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase());
+			   if(ll_wrongSolutions.size() == 0)
+				   rs = st.executeQuery("SELECT id, name, uploader, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
 	           
+			   System.out.println(rs.getFetchSize() + "  rssize");
 	           while(rs.next()) {
 	        	   int currentBSCount = MainView.llJPanel.size();
 	        	   int fromIndex = 0;
 	        	   String dbBS = rs.getString("code");
-	        	   String solutionID = rs.getString("id");
+	        	   solutionID = rs.getString("id");
 	        	   user_name = rs.getString("name");
-	        	   codeInfo = rs.getString("codeInfo");
 	        	   upvotes = rs.getInt("upVotes");
 	        	   downvotes = rs.getInt("downVotes");
 	        	   commentCount = rs.getInt("commentCount");
 	        	   comments = rs.getString("comments");
-	        	   
+	        	   uploader = rs.getString("uploader");
+	    
 	        	   
 	        	   if(ll_wrongSolutions.contains(Integer.parseInt(solutionID)) || (dbBS.length() - dbBS.replaceAll("#","").length() <= currentBSCount))
 	        		   continue;
 	        	   
 	        	   for(int x = 0; x <= currentBSCount; x++) {
 	        		   fromIndex = dbBS.indexOf('#', fromIndex) + 1;
-	        		  // System.out.println(fromIndex + "    fromIndex");
 	        	   }
 	        	   
 	        	  
 	        	   if(dbBS.substring(0, fromIndex - 1).equals(currentContentOnWP)) {
 		        	   code_str = dbBS.substring(fromIndex - 1);
-		        	//   System.out.println(code_str + "     code-Str");
 			           
 			           BScount = code_str.length() - code_str.replaceAll("#","").length();
 			           
@@ -395,10 +407,6 @@ public class db_Model {
 			           for(int x = 0; x < code_str.length(); x++) {
 			        	   char_LL.addLast(code_str.charAt(x));
 			           }
-			         //  System.out.println(char_LL);
-			           
-			           currentImport.add(solutionID);
-			           currentImport.add(dbBS);
 			           
 			           ll_wrongSolutions.addLast(Integer.parseInt(solutionID));
 			           
@@ -1267,8 +1275,8 @@ public class db_Model {
 	
 //---------------------------------------Getter----------------------------------------
 
-	public ArrayList<String> getCurrentImport() {
-		return currentImport;
+	public String getSolutionID() {
+		return solutionID;
 	}
 	
 	public String getName() {
@@ -1285,6 +1293,10 @@ public class db_Model {
 	
 	public int getBScount() {
 		return BScount;
+	}
+	
+	public String getUploader() {
+		return uploader;
 	}
 	
 	public int getUpVotes() {
@@ -1339,6 +1351,8 @@ public class db_Model {
 	public void setPID(int pid) {
 		this.pid = pid;
 	}
+
+	
 
 
 

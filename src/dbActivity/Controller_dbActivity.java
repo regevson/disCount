@@ -1,5 +1,6 @@
 package dbActivity;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -7,11 +8,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import View.Controller_AbstractClass;
 import View.MainController;
 import View.MainModel;
+import View.MainView;
 import extraViews.ExamLobby;
 import extraViews.ExamSetupView;
 import extraViews.MessageBox;
@@ -62,12 +65,12 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.connect();
 	}
 	
-	public ArrayList<String> getCurrentImport() {
-		return myModel.getCurrentImport();
+	public String execGetSolutionID() {
+		return myModel.getSolutionID();
 	}
 
-	public LinkedList<Character> execOpenDB_content(String currentContentOnWP) {
-		return myModel.openDB_content(currentContentOnWP);
+	public LinkedList<Character> execOpenDB_content(String currentContentOnWP, String codeInfo) {
+		return myModel.openDB_content(currentContentOnWP, codeInfo);
 	}
 
 	public String execGetName() {
@@ -88,6 +91,14 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public int execGetBScount() {
 		return myModel.getBScount();
+	}
+	
+	public String execGetUploader() {
+		return myModel.getUploader();
+	}
+	
+	public void initAddInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader) {
+		MC.execAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader);
 	}
 
 	public void execCheckBS(String klasse, String page, String number) {
@@ -398,6 +409,50 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		inExam = false;
 		MC.execShowLeftPanel();
 	}
+	
+	
+	
+	public void execShowSuggestions(String book, String page, String number) {
+		
+		String currentContentOnWP = "";
+		LinkedList<Character> ll_Char = new LinkedList<Character>();
+		
+		MainView.llThumbsGroups.add(new ArrayList<ArrayList<JLabel>>());
+		
+		if(MainView.llJPanel.size() >= 1 && !MainView.isUploading) {
+						
+			currentContentOnWP = MainModel.sortHashMapPanelToCodeandGetCode();
+			
+			ll_Char = execOpenDB_content(currentContentOnWP, book + "/" + page + "/" + number);
+			String name = myModel.getName();
+			String codeInfo = myModel.getCodeInfo();
+			int upvotes = myModel.getUpVotes();
+			int downvotes = myModel.getDownVotes();
+			int commentCount = myModel.getCommentCount();
+			int BScount = myModel.getBScount();
+			String uploader = myModel.getUploader();
+			
+			if(ll_Char != null) {
+				MainView.isUploading = true;
+				initOpenFile(ll_Char);
+				for(int x = 1; x <= BScount; x++) {
+					initAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader);
+				}
+				MainView.isUploading = false;
+				
+			}
+			
+			else
+				return;
+			
+			
+		
+		}
+		
+	}
+
+
+
 
 
 
