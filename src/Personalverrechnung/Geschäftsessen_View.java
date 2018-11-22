@@ -52,16 +52,16 @@ public class Geschäftsessen_View extends View_SuperClass{
 			double allTax = tax20 + tax10;
 			double rightPrice = res20Percent + res10Percent + allTax;
 			
-			myController.initPaint4Konten("7660", "2800", "7661", "2500");
-			myController.initPaint4Prices(res20Percent, rightPrice, res10Percent, allTax);
+			String kontos[] = {"7660", "2800", "7661", "2500"};
+			Double prices[] = {res20Percent, rightPrice, res10Percent, allTax};
 			
-			myController.initPaint4Konten("7663", "2800", "7664", "2500");
-			myController.initPaint4Prices(res20Percent, rightPrice, res10Percent, allTax);
+			myController.initpaintUpTo7(kontos, prices, leftMore);
 			
+			String kontos2[] = {"7663", "2800", "7664", "2500"};
+			Double prices2[] = {res20Percent, rightPrice, res10Percent, allTax};
 			
+			myController.initpaintUpTo7(kontos2, prices2, leftMore);
 			
-
-			resetSwap();
 	}
 	
 	private double calcRes(String price, int percent) {

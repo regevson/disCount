@@ -36,14 +36,19 @@ public class _2Stufig_VariableKonto extends View_SuperClass{
 
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 			
-		myController.initPaint3Konten(txtKontonummer.getText(), finalZahlungskonto, Konto3);
+		double nettoPrice = Double.parseDouble(txtPreis.getText());
+		double bruttoPrice = Double.parseDouble(txtPreis.getText());
 		
-			if(netto.isSelected())
-				myController.initNetto_to_paintAll3(((String) variableTax.getSelectedItem()).substring(0, 2), txtPreis.getText());
-			else
-				myController.initBrutto_to_paintAll3(((String) variableTax.getSelectedItem()).substring(0, 2), txtPreis.getText());
-	
-			resetSwap();
+		if(netto.isSelected())
+			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), ((String) variableTax.getSelectedItem()).substring(0, 2));
+		else
+			nettoPrice = myController.initBruttoToNetto(txtPreis.getText(), ((String) variableTax.getSelectedItem()).substring(0, 2));
+
+		String kontos[] = {txtKontonummer.getText(), finalZahlungskonto, Konto3};
+		Double prices[] = {nettoPrice, bruttoPrice, bruttoPrice - nettoPrice};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
+
 	}
 	
 }

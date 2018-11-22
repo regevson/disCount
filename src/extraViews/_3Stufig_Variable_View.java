@@ -64,14 +64,16 @@ public class _3Stufig_Variable_View extends View_SuperClass{
 
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 			
-		myController.initPaint4Konten(txtKontonummer.getText(), finalZahlungskonto, Konto3, lblKonto4.getText());
+		String kontos[] = {txtKontonummer.getText(), finalZahlungskonto, Konto3, lblKonto4.getText()};
+		Double prices[];
 		
 			if(netto.isSelected())
-				myController.initNetto_to_paintAll4(percent, txtPreis.getText(), txtPreis2.getText());
+				prices = myController.initNettoToBrutto(txtPreis.getText(), txtPreis2.getText(), percent);
 			else
-				myController.initBrutto_to_paintAll4(percent, txtPreis.getText(), txtPreis2.getText());
+				prices = myController.initBruttoToNetto(txtPreis.getText(), txtPreis2.getText(), percent);
 
-			resetSwap();
+			myController.initpaintUpTo7(kontos, prices, leftMore);
+			
 	}
 	
 }

@@ -36,15 +36,15 @@ public class ML_Tourismus implements MouseListener{
 	
 	
 		if(cmd.equals("~  Lebensmitteleinkauf")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "5100", FULLAW, "2500", "10", leftmore2Stufig, true, false);
+			myController.exec_2Stufig_Fixed_View(cmd, "5100", FULLAW, "2500", "10", leftmore2Stufig, true, true);
 		}
 		
 		else if(cmd.equals("~  Wareneinkauf mit Emballagen")) {
-			myController.exec_3Stufig_Variable_View(cmd, null, FULLAW, "5080", "20", leftmore2Stufig, false);
+			myController.exec_3Stufig_Variable_View(cmd, null, FULLAW, "5080", "20", leftmore2Stufig, false, true);
 		}
 		
 		else if(cmd.equals("~  Getränkeeinkauf")) {
-			myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false);
+			myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false, true);
 		}
 		
 	}

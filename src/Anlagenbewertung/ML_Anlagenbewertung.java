@@ -53,7 +53,7 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	
 	if(cmd.contains("~  Teilzahlung")) {
-		myController.exec_2Stufig_Fixed_View(cmd, "0710", FULLAW, "2500", "20", leftmore2Stufig, false, false);
+		myController.exec_2Stufig_Fixed_View(cmd, "0710", FULLAW, "2500", "20", leftmore2Stufig, false, true);
 	}
 	
 
@@ -63,17 +63,17 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	
 	else if(cmd.contains("~  Instandhaltung")) {
-		myController.exec_2Stufig_Fixed_View(cmd, "7200", FULLAW, "2500", "20", leftmore2Stufig, false, false);
+		myController.exec_2Stufig_Fixed_View(cmd, "7200", FULLAW, "2500", "20", leftmore2Stufig, false, true);
 	}
 	
 	
 	else if(cmd.contains("~  Anlagenaktivierung")) {
-		myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false);
+		myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false, true);
 	}
 	
 	
 	else if(cmd.contains("~  Anlagenausscheidung durch Verkauf")) {
-		myController.exec_Anlagenausscheidung_durchVerkauf(cmd, "4600", FULLAW, "3500", null, null, "20", leftmore2Stufig_X, false, null);
+		myController.exec_Anlagenausscheidung_durchVerkauf(cmd, "4600", FULLAW, "3500", null, null, "20", leftmore2Stufig_X, false, null, false);
 	}
 	
 }
@@ -110,7 +110,7 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	public void makeAbschreibung() {
 		System.out.println("Abschreibung");
-		myController.exec_Abschreibung("Abschreibung", "7010", FIXEDAW, null, null, leftmore2Stufig, true);
+		myController.exec_Abschreibung("Abschreibung", "7010", FIXEDAW, null, null, leftmore2Stufig, true, true);
 	}
 	
 	

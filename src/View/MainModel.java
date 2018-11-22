@@ -14,6 +14,7 @@ import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -26,16 +27,14 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Personalverrechnung.Tagesgeld_View;
-import extraViews.BS_Editor;
 import extraViews.View_SuperClass;
 import extraViews.View_SuperClass_2Outputs;
 
 public class MainModel {
 	
 
-	private static LinkedList<Double> llAfaPrice = new LinkedList<Double>();
-	private static LinkedList<String> llYear = new LinkedList<String>();
-	public static LinkedList<String> contentForTxt  = new LinkedList<String>();
+	public LinkedList<Double> llAfaPrice = new LinkedList<Double>();
+	public LinkedList<String> llYear = new LinkedList<String>();
 	
 	public static LinkedList<String> llAufgabe = new LinkedList<String>();
 	
@@ -103,41 +102,17 @@ public class MainModel {
 
 //------------------------------------------------paintSolutions-------------------------------------------------------------------------
 	
-	public void netto_to_paintBrutto(String percent, String price) {
-		Double nettoPrice = null;
-		try {
-			nettoPrice = Double.parseDouble(price);
-		}catch(NumberFormatException numFormatEx) {
-			price = "00.00";
-			JOptionPane.showMessageDialog(null, "Das Komma muss als Punkt geschrieben werden!", "Warning", JOptionPane.WARNING_MESSAGE);
-		}
-		nettoPrice = Double.parseDouble(price);
-		Double bruttoPrice = calculateBrutto(percent, nettoPrice);
 
-		paint1Price(bruttoPrice);
-	}
 	
-	public String brutto_to_paintBrutto(String price) {
-		Double bruttoPrice = null;
-		try {
-			bruttoPrice = Double.parseDouble(price);
-		}catch(NumberFormatException numFormatEx) {
-			price = "00.00";
-			JOptionPane.showMessageDialog(null, "Das Komma muss als Punkt geschrieben werden!", "Warning", JOptionPane.WARNING_MESSAGE);
-		}
-		bruttoPrice = Double.parseDouble(price);
-		
-		paint1Price(bruttoPrice);
-		return round(bruttoPrice);
-	}
+
 	
-	public void calculateErwerbsteuerbetrag_andPaintIt(String price) {
+	public Double calculateErwerbsteuerbetrag(String price) {
 		Double tempPrice = Double.parseDouble(price);
-		paint1Price((tempPrice/100)*20);
+		return tempPrice / 100 * 20;
 	}
 		
 	
-	public void netto_to_paintAll3(String percent, String price) {
+	public Double nettoToBrutto(String price, String percent) {
 		Double nettoPrice = null;
 		try {
 			nettoPrice = Double.parseDouble(price);
@@ -146,16 +121,20 @@ public class MainModel {
 			JOptionPane.showMessageDialog(null, "Das Komma muss als Punkt geschrieben werden!", "Warning", JOptionPane.WARNING_MESSAGE);
 		}
 		nettoPrice = Double.parseDouble(price);
-		Double bruttoPrice = MainModel.roundDouble_giveBack_Double(calculateBrutto(percent, nettoPrice));
-		Double steuer = bruttoPrice - nettoPrice;
-		
-
-		
-		paint3Prices(nettoPrice, bruttoPrice, steuer);
-		
+		return MainModel.roundDouble_giveBack_Double(calculateBrutto(percent, nettoPrice));
 	}
 	
-	public String brutto_to_paintAll3(String percent, String price) {
+	public Double[] nettoToBrutto(String nettoPrice_str, String otherPrice_str, String percent) {
+		Double otherPrice = Double.parseDouble(otherPrice_str); //emballagenpreis
+		Double nettoPrice = Double.parseDouble(nettoPrice_str);
+		
+		Double steuer = (nettoPrice + otherPrice) / 100 * 20;
+		Double bruttoPrice = nettoPrice + otherPrice + steuer;
+		
+		return new Double[] {nettoPrice, bruttoPrice, otherPrice, steuer};
+	}
+	
+	public Double bruttoToNetto(String price, String percent) {
 		Double bruttoPrice = null;
 		try {
 			bruttoPrice = Double.parseDouble(price);
@@ -164,11 +143,18 @@ public class MainModel {
 			JOptionPane.showMessageDialog(null, "Das Komma muss als Punkt geschrieben werden!", "Warning", JOptionPane.WARNING_MESSAGE);
 		}
 		bruttoPrice = Double.parseDouble(price);
-		Double nettoPrice = MainModel.roundDouble_giveBack_Double(calculateNetto(percent, bruttoPrice));
-		Double steuer = bruttoPrice - nettoPrice;
+		double nettoPrice = MainModel.roundDouble_giveBack_Double(calculateNetto(percent, bruttoPrice));
+		return nettoPrice;
+	}
+	
+	public Double[] bruttoToNetto(String bruttoPrice_str, String otherPrice_str, String percent) {
+		Double otherPrice = Double.parseDouble(otherPrice_str);
+		Double bruttoPrice = Double.parseDouble(bruttoPrice_str);
+		Double nettoPrice = calculateNetto(percent, bruttoPrice) - otherPrice;
 		
-		paint3Prices(nettoPrice, bruttoPrice, steuer);
-		return Double.toString(nettoPrice);
+		Double steuer = bruttoPrice - nettoPrice - otherPrice;
+		
+		return new Double[] {nettoPrice, bruttoPrice, otherPrice, steuer};
 	}
 
 	
@@ -181,321 +167,55 @@ public class MainModel {
 	}
 	
 
-	public void paint1Price(double price) {
-		
-		MainView.addToPanel(MainView.addBasicToPanel(round(price), 350, MainView.margin+10, 100, 100));
-		
-		MainView.llNettoPrices.addLast((double) 0);
-		
-		String tempCode = MainView.hmPanelToCode.get(MainView.llJPanel.getLast());
-		tempCode += "&" + round(price);
-		MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), tempCode);
-		
-	}
-
-	
-	public void paint3Prices(Double price1, Double price2, Double price3) {
-		
-		MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(price1)), View_SuperClass.pricesLeftWP, MainView.margin, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(price2)), View_SuperClass.pricesRightWP, MainView.margin, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(price3)), View_SuperClass.pricesLeftWP, MainView.margin+20, 100, 100));
-		
-		if(View_SuperClass.pricesLeftWP == 350) {
-			String tempCode = MainView.hmPanelToCode.get(MainView.llJPanel.getLast());
-			tempCode += "&" + round(price1) + "/" + round(price2) + "/" + round(price3);
-			MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), tempCode);
-			
-			MainView.llNettoPrices.addLast(price1);
-		}
-		
-		else {
-			String tempCode = MainView.hmPanelToCode.get(MainView.llJPanel.getLast());
-			tempCode += "&" + round(price2) + "/" + round(price1) + "/" + round(price3);
-			MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), tempCode);
-			
-			MainView.llNettoPrices.addLast(Double.parseDouble("-" + Double.toString(price1)));
-		}
-			
-	}
 	
 	
-	public void paintUpTo7(LinkedList<String> kontoList, LinkedList<String> priceList, boolean leftMore, boolean moreThan4) {
-
-		JPanel jp;
-		int stufen = kontoList.size() - 1;
-		int adaptMargin;
-		
-		if(!moreThan4) {
-			jp = MainView.createJPanel();
-			adaptMargin = -(6 * (stufen - 1));
-		}
-		else {
-			jp = MainView.createJPanel();
-			MainView.reModifyJPanel(jp);
-			adaptMargin = -(9 * (stufen - 1));
-		}
 
 
-		int marginLeftKontos;
-		int marginLeftPrices;
-		if(leftMore) {
-			marginLeftKontos = View_SuperClass.kontenLeftWP;
-			marginLeftPrices = View_SuperClass.pricesLeftWP;
-		}
-		else {
-			marginLeftKontos = View_SuperClass.kontenRightWP;
-			marginLeftPrices = View_SuperClass.pricesRightWP;
-		}
-		
-		jp.add(MainView.addBasicToPanel(round(Math.abs(Double.parseDouble(kontoList.get(0)))), View_SuperClass.kontenLeftWP, MainView.margin + adaptMargin, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(Double.parseDouble(kontoList.get(1)))), View_SuperClass.kontenRightWP, MainView.margin + adaptMargin, 100, 100));
-		
-		MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(Double.parseDouble(priceList.get(0)))), View_SuperClass.pricesLeftWP, MainView.margin + adaptMargin, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(Double.parseDouble(priceList.get(1)))), View_SuperClass.pricesRightWP, MainView.margin + adaptMargin, 100, 100));
-		
-		adaptMargin += 20;
-		
-		for(int x = 2; x < kontoList.size(); x++) {
-			jp.add(MainView.addBasicToPanel(round(Math.abs(Double.parseDouble(kontoList.get(x)))), marginLeftKontos, MainView.margin + adaptMargin, 100, 100));
-			adaptMargin += 20;
-		}
-		
-		if(!moreThan4)
-			adaptMargin = -(6 * (stufen - 1)) + 20;
-		else
-			adaptMargin = -(9 * (stufen - 1)) + 20;
-		
-		for(int x = 2; x < priceList.size(); x++) {
-			MainView.addToPanel(MainView.addBasicToPanel(round(Math.abs(Double.parseDouble(priceList.get(x)))), marginLeftPrices, MainView.margin + adaptMargin, 100, 100));
-			adaptMargin += 20;
-		}
-		
-		addIntoLists(jp, leftMore, stufen, kontoList, priceList);
-	}
 	
-	
-	
-	private void addIntoLists(JPanel jp, boolean leftMore, int stufen, LinkedList<String> kontoList, LinkedList<String> priceList) {
-		String code = "#";
-		if(leftMore) {
-			code += "-" + (stufen + 1) + "*" + kontoList.get(0) + "/" + kontoList.get(1);
-		}
-		else
-			code += "+" + (stufen + 1) + "*" + kontoList.get(0) + "/" + kontoList.get(1);
-		
-		for(int x = 2; x < kontoList.size(); x++) {
-			code += "/" + kontoList.get(x);
-		}
-		
-		MainView.hmPanelToCode.put(jp, code);
-		
-		
-		code = MainView.hmPanelToCode.get(MainView.llJPanel.getLast());
-		code += "&";
-		
-		if(leftMore) {
-			code += round(Double.parseDouble(priceList.get(0))) + "/" + round(Double.parseDouble(priceList.get(1)));
-		}
-		else
-			code += round(Double.parseDouble(priceList.get(0))) + "/" + round(Double.parseDouble(priceList.get(1)));
-		
-		for(int x = 2; x < priceList.size(); x++) {
-			code += "/" + round(Double.parseDouble(priceList.get(x)));
-		}
-		MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), code);
-		
-		MainView.llNettoPrices.addLast((double) 0);
-	}
-
-	
-	
-	public void paint4Prices(Double price1, Double price2, Double price3, Double price4) {
-		
-		MainView.addToPanel(MainView.addBasicToPanel(round(price1), View_SuperClass.pricesLeftWP, MainView.margin, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(price2), View_SuperClass.pricesRightWP, MainView.margin, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(price3), View_SuperClass.pricesLeftWP, MainView.margin+20, 100, 100));
-		MainView.addToPanel(MainView.addBasicToPanel(round(price4), View_SuperClass.pricesLeftWP, MainView.margin+40, 100, 100));
-		
-		String tempCode = MainView.hmPanelToCode.get(MainView.llJPanel.getLast());
-		tempCode += "&" + round(price1) + "/" + round(price2) + "/" + round(price3) + "/" + round(price4);
-		MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), tempCode);
-		
-		MainView.llNettoPrices.addLast((double) 0);
-		
-	}
-	
-	public void netto_to_paintAll4(String percent, String price1, String price2) {
-		Double secondPrice = Double.parseDouble(price2); //emballagenpreis
-		Double nettoPrice = Double.parseDouble(price1);
-		
-		Double steuer = ((nettoPrice + secondPrice)/100)*20;
-		Double bruttoPrice = nettoPrice + secondPrice + steuer;
-		
-		paint4Prices(nettoPrice, bruttoPrice, secondPrice, steuer);
-	}
-	
-	public void brutto_to_paintAll4(String percent, String price1, String price2) {
-		Double secondPrice = Double.parseDouble(price2);
-		Double bruttoPrice = Double.parseDouble(price1);
-		Double nettoPrice = calculateNetto(percent, bruttoPrice) - secondPrice;
-		
-		Double steuer = bruttoPrice - nettoPrice - secondPrice;
-		
-		paint4Prices(nettoPrice, bruttoPrice, secondPrice, steuer);
-	}
-	
-	public void calcNettoKreditkarten(String bruttoPrice_str, String spesen_str) {
+	public Double[] calcNettoKreditkarten(String bruttoPrice_str, String spesen_str) {
 		Double bruttoPrice = Double.parseDouble(bruttoPrice_str);
 		Double spesen = Double.parseDouble(spesen_str);
-		Double steuer = roundDouble_giveBack_Double((spesen/100)*20);
+		Double steuer = roundDouble_giveBack_Double(spesen / 100 * 20);
 		Double nettoPrice = bruttoPrice - spesen - steuer;
-		
-		paint4Prices(nettoPrice, bruttoPrice, spesen, steuer);
-	}
-	
-
-	
-	
-	public void netto_to_paintAllRabatt(String percent, String price, String rabattPercentarge) {
-		Double nettoPrice = Double.parseDouble(price);
-		calculateAndPrintRabattPrices(Integer.parseInt(percent), nettoPrice, rabattPercentarge);
-	}
-	
-	public void brutto_to_paintAllRabatt(String percent, String price, String rabattPercentarge) {
-		Double rabattPercent = Double.parseDouble(rabattPercentarge);
-		Double bruttoPrice = Double.parseDouble(price);
-		
-		double newBruttoRabattPrice = MainModel.roundDouble_giveBack_Double((bruttoPrice / 100) * rabattPercent);
-		double newNettoRabattPrice = (calculateNetto("20", newBruttoRabattPrice));
-		double tax = newBruttoRabattPrice - newNettoRabattPrice;
-		paint3Prices(newNettoRabattPrice, newBruttoRabattPrice, tax);
+		return new Double[] {nettoPrice, bruttoPrice, spesen, steuer};
 	}
 	
 	
-	
-	private void calculateAndPrintRabattPrices(int percent, Double nettoPrice, String rabattPercentarge) {
+	public Double[] calculateRabattPricesFromNetto(int percent, Double nettoPrice, String rabattPercentarge) {
 		Double rabattPercent = Double.parseDouble(rabattPercentarge);
 		
 		Double newNettoRabattPrice = MainModel.roundDouble_giveBack_Double((nettoPrice/100)*rabattPercent);
 		Double tax = MainModel.roundDouble_giveBack_Double((newNettoRabattPrice/100)*percent);
-		
 		Double newBruttoRabattPrice = newNettoRabattPrice + tax;
 		
-		paint3Prices(newNettoRabattPrice, newBruttoRabattPrice, tax);
+		return new Double[] {newNettoRabattPrice, newBruttoRabattPrice, tax};
 	}
 	
 	
 	
-	public JPanel paint2Konten_mitzyk(String konto4, String konto5) {
-		JPanel jp = MainView.createJPanel();
-		
-		jp.add(MainView.addBasicToPanel(konto4, View_SuperClass.kontenLeftWP, View_SuperClass_2Outputs.yZKWP, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto5, View_SuperClass.kontenRightWP, View_SuperClass_2Outputs.yZKWP, 100, 100));
-		
-		if(View_SuperClass.pricesLeftWP == 350)
-			MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), "#-2*" + konto4 + "/" + konto5);
-		
-		else
-			MainView.hmPanelToCode.put(MainView.llJPanel.getLast(), "#-2*" + konto5 + "/" + konto4);
-		
-		return jp;
-	}
 	
 	
-	public JPanel paint2Konten(String konto1, String konto2) {
-		JPanel jp = MainView.createJPanel();
-		
-		jp.add(MainView.addBasicToPanel(konto1, View_SuperClass.kontenLeftWP, MainView.margin+10, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto2, View_SuperClass.kontenRightWP, MainView.margin+10, 100, 100));
-		
-		if(View_SuperClass.pricesLeftWP == 350)
-			MainView.hmPanelToCode.put(jp, "#-2*" + konto1 + "/" + konto2);
-		
-		else
-			MainView.hmPanelToCode.put(jp, "#-2*" + konto2 + "/" + konto1);
 
-		return jp;
-	}
-	
-	
-	public JPanel paint3Konten(String konto1, String konto2, String konto3) {
-		JPanel jp = MainView.createJPanel();
-		
-		jp.add(MainView.addBasicToPanel(konto1, View_SuperClass.kontenLeftWP, MainView.margin, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto2, View_SuperClass.kontenRightWP, MainView.margin, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto3, View_SuperClass.kontenLeftWP, MainView.margin+20, 100, 100));
-		
-		if(View_SuperClass.pricesLeftWP == 350)
-			MainView.hmPanelToCode.put(jp, "#-3*" + konto1 + "/" + konto2 + "/" + konto3);
-
-		else
-			MainView.hmPanelToCode.put(jp, "#+3*" + konto2 + "/" + konto1 + "/" + konto3);
-
-		return jp;
-	}
-	
-	public void paint4Konten(String konto1, String konto2, String konto3, String konto4) {
-		JPanel jp = MainView.createJPanel();
-		
-		jp.add(MainView.addBasicToPanel(konto1, View_SuperClass.kontenLeftWP, MainView.margin, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto2, View_SuperClass.kontenRightWP, MainView.margin, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto3, View_SuperClass.kontenLeftWP, MainView.margin+20, 100, 100));
-		jp.add(MainView.addBasicToPanel(konto4, View_SuperClass.kontenLeftWP, MainView.margin+40, 100, 100));
-		
-		MainView.hmPanelToCode.put(jp, "#-4*" + konto1 + "/" + konto2 + "/" + konto3 + "/" + konto4);
-
-	}
-	
-	
-	//----------Skonto
-	
-	public void createKontos1stufig_Skonto(String kontoLinks, String kontoRechts) {
-		JPanel jp = MainView.createJPanel();
-		
-		jp.add(MainView.addBasicToPanel(kontoLinks, View_SuperClass.kontenLeftWP, MainView.margin+10, 100, 100));
-		jp.add(MainView.addBasicToPanel(kontoRechts, View_SuperClass.kontenRightWP, MainView.margin+10, 100, 100));
-		
-		if(View_SuperClass.pricesLeftWP == 350) {
-			MainModel.contentForTxt.addLast("\r\n\r\n\r\n\r\n" + kontoLinks + "    " + kontoRechts);
-			MainView.hmPanelToCode.put(jp, "#-2*" + kontoLinks + "/" + kontoRechts);
-		}
-		else {
-			MainModel.contentForTxt.addLast("\r\n\r\n\r\n\r\n" + kontoRechts + "    " + kontoLinks);
-			MainView.hmPanelToCode.put(jp, "#-2*" + kontoRechts + "/" + kontoLinks);
-		}
-	}
 	
 	
 	
 	
-	public String netto_to_newBrutto_Skonto(String price, String skPercent) {
+	public Double nettoToSkontoBrutto(String price, String skPercent) {
 		double nettoPrice = Double.parseDouble(price);
 		double bruttoPrice = MainModel.roundDouble_giveBack_Double(calculateBrutto("20", nettoPrice));
 		double skontoPercent = Double.parseDouble(skPercent);
 		double skontoBruttoPrice = MainModel.roundDouble_giveBack_Double((bruttoPrice/100)*skontoPercent);
 		bruttoPrice = bruttoPrice - skontoBruttoPrice;
 		
-		paint1Price(bruttoPrice);
-		return Double.toString(skontoBruttoPrice);
+		return skontoBruttoPrice;
 	}
 	
-	public String brutto_to_newBrutto_Skonto(String price, String skPercent) {
-		double bruttoPrice = Double.parseDouble(price);
-		double skontoPercent = Double.parseDouble(skPercent);
-		double skontoBruttoPrice = MainModel.roundDouble_giveBack_Double((bruttoPrice/100)*skontoPercent);
-		bruttoPrice = bruttoPrice - skontoBruttoPrice;
-		
-		paint1Price(bruttoPrice);
-		return Double.toString(skontoBruttoPrice);
-	}
-	
-	public String brutto_to_skBrutto_Skonto(String price, String skPercent) {
+	public Double bruttoToSkontoBrutto(String price, String skPercent) {
 		double bruttoPrice = Double.parseDouble(price);
 		double skontoPercent = Double.parseDouble(skPercent);
 		double skontoBruttoPrice = (bruttoPrice/100)*skontoPercent;
 		
-		paint1Price(skontoBruttoPrice);
-		return Double.toString(skontoBruttoPrice);
+		return skontoBruttoPrice;
 	}
 	
 	
@@ -503,18 +223,15 @@ public class MainModel {
 	
 //------------------------------------------------Personalverrechnung-------------------------------------------------------------------------
 	
-	public Double calcGehaltsPercent_andPrintIt(String ausgangsPreis_str, String percent_str) {
+	public Double calcGehaltsPercent(String ausgangsPreis_str, String percent_str) {
 		Double ausgangsPreis = Double.parseDouble(ausgangsPreis_str);
 		Double percent = Double.parseDouble(percent_str);
 		
-		Double res = (ausgangsPreis/100)*percent;
-		
-		paint1Price(res);
-		return res;
+		return (ausgangsPreis/100)*percent;
 	}
 	
 	
-	public static String calcTagesgeld(String anzTage_str, String startZeit, String endZeit, String essen) {
+	public Double calcTagesgeld(String anzTage_str, String startZeit, String endZeit, String essen) {
 		
 		int anzTage = Integer.parseInt(anzTage_str) - 1;
 		System.out.println(anzTage);
@@ -537,9 +254,10 @@ public class MainModel {
 		
 		
 		Double newPart = part1End - part1Start;
-		System.out.println(newPart);
 		Double resTG = ((anzTage*Tagesgeld_View.tagesGeld) + (Tagesgeld_View.tagesGeld*(++newPart/12))) - (Tagesgeld_View.essensGeld * Integer.parseInt(essen));
-		return round(resTG);
+		
+		return resTG;
+		
 	}
 	
 	
@@ -575,43 +293,15 @@ public class MainModel {
 			afaBetrag = afaBetrag/2;
 		}
 		
-		
-		if(command.equals("erste zwei Jahre"))
-			addAfAToPanel(0, 1, anlKonto);
-		
-		else if(command.equals("letzte zwei Jahre"))
-			addAfAToPanel(llAfaPrice.size()-2, llAfaPrice.size()-1, anlKonto);
-		
-		else if(command.equals("alle Jahre"))
-			addAfAToPanel(0, llAfaPrice.size()-1, anlKonto);
-		
-		else if(command.equals("erstes Jahr"))
-			addAfAToPanel(0, 0, anlKonto);
-		
-		llAfaPrice.removeAll(llAfaPrice);
-		llYear.removeAll(llYear);
-		
 		return afaBetrag;
+		
 	}
 	
-	private static String getDate() {
+	private String getDate() {
 		int year = Integer.parseInt(tempYear);
 		tempYear = Integer.toString(++year);
 		return tempYear;
 	}
-	
-	private void addAfAToPanel(int from, int to, String konto) {
-		int y = 1;
-		for(int x = from; x <= to; x++) {
-			JPanel tempPanel = paint2Konten("7010", konto);
-			paint1Price(llAfaPrice.get(x));
-			MainView.addNoteToPanel("Datum:     " + "31." + "12" + "." + llYear.get(x), tempPanel, 375);
-		}
-	}
-	
-	
-	
-	
 	
 
 	
@@ -903,91 +593,67 @@ public class MainModel {
 		return solutions_ABR;
 	}
 	
-	// callen, wenn man die encodierte Form der BS auf dem workpanel braucht
-	public static String sortHashMapPanelToCodeandGetCode() {
+	
+	
+	public static String getCodeOnWorkPanel() {
 		String code = "";
-		ArrayList<String> tempAL = new ArrayList<String>();
 		
-		for(int x = 0; x < MainView.llJPanel.size(); x++) {
-			tempAL.add("");
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			code += MainView.bsList.get(x).getCode();
 		}
-		
-		for(int y = 0; y < MainView.llJPanel.size(); y++) {
-			JPanel panel = MainView.llJPanel.get(y);
-			tempAL.set(Integer.parseInt(((JTextField) panel.getComponent(0)).getText()) - 1, MainView.hmPanelToCode.get(panel));
-		}
-		
-		for(int z = 0; z < tempAL.size(); z++) {
-			code += tempAL.get(z);
-		}
-
+		System.out.println(code + "   code");
 		return code;
-		
 	}
 	
+	public static String getTxtContent() {
+		String content = "";
+		
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			content += MainView.bsList.get(x).getTxtContent();
+		}
+
+		return content;
+	}
 	
 	
 	
 //----------------------------------deleteBS------------------------------------------------------------------------	
 
-	public static void deleteChecked(boolean alsoNettoPrices) {
-		try {
-			MainView.numOfPanels = 1;
-			MainView.jpMargin = 10;
-			int x = 0;
-			while(x < MainView.llRadioButton.size()) {
-				if(MainView.llRadioButton.get(x).isSelected()) {
-					MainView.workPanel.remove(x);
-					MainView.llRadioButton.remove(x);
-					if(alsoNettoPrices)
-						MainView.llNettoPrices.remove(x);
-					MainView.hmPanelToCode.remove(MainView.llJPanel.get(x));
-					MainView.llJPanel.remove(x);
-					x = 0;
-				}//if
-				else
-					x++;
-			}//while
-			
-			MainView.workPanel.removeAll();
-			for(int z = 0; z < MainView.llJPanel.size(); z++) {
-				JPanel jp = MainView.llJPanel.get(z);
-				jp.setBounds(5, MainView.jpMargin, 700, 150);
-				MainView.workPanel.add(jp);
-				MainView.jpMargin = MainView.jpMargin + 170;
-			}//for
-			
-			MainView.workPanel.repaint();
-			
-			MainView.paintNumberOnNumberLabel();
-			
-		}catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Bitte starten Sie das Programm erneut! Es ist ein Fehler aufgetreten.\n Gehen Sie sicher, dass Sie legitime Eingaben tätigen!", "Warning", JOptionPane.WARNING_MESSAGE);
-			e.printStackTrace();
+	public static void deleteChecked(JPanel workPanel) {
+		
+		LinkedList<Buchungssatz> bsList = MainView.bsList;
+		ArrayList<Buchungssatz> deleteList = new ArrayList<Buchungssatz>(); 
+		
+		for(int x = 0; x < bsList.size(); x++) {
+			if(bsList.get(x).getRadioButtonStatus() == true) {
+				bsList.get(x).removeBS(workPanel);
+				workPanel.remove(bsList.get(x).getBSPanel());
+				deleteList.add(bsList.get(x));
+			}
 		}
 		
-	}//method
-	
-	
-	
-	public static void deleteAll() {
-		MainView.numOfPanels = 1;
-		MainView.jpMargin = 10;
-		
-		MainView.workPanel.removeAll();
-		MainView.llRadioButton.removeAll(MainView.llRadioButton);
-		MainView.llNettoPrices.removeAll(MainView.llNettoPrices);
-		MainModel.contentForTxt.removeAll(MainModel.contentForTxt);
-		for(int x = 0; x < MainView.llJPanel.size(); x++) 
-			MainView.hmPanelToCode.remove(MainView.llJPanel.get(x));
-		MainView.llJPanel.removeAll(MainView.llJPanel);
-		
-		MainView.workPanel.repaint();
-		
+		deleteFromBSList(deleteList);
 		
 	}
 	
 	
+	
+	public static void deleteAll(JPanel workPanel) {
+		
+		LinkedList<Buchungssatz> bsList = MainView.bsList;
+		
+		workPanel.removeAll();
+		bsList.removeAll(bsList);
+		
+		MainView.bsPanelMargin = 20;
+		
+	}
+	
+	private static void deleteFromBSList(ArrayList<Buchungssatz> list) {
+		for(int x = 0; x < list.size(); x++) {
+			MainView.bsList.remove(list.get(x));
+		}
+	}
 	
 	
 	
@@ -998,8 +664,38 @@ public class MainModel {
 	
 //----------------------------------openFiles------------------------------------------------------------------------
 	
+
 	
-	public LinkedList<Character> openFile(File file) {
+	public File openFileChooser__Open() {
+		
+		File file = null;
+		
+		try {	
+			JFileChooser fc = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("disCount-Dateien", "dc", "disCount");
+			fc.setFileFilter(filter);
+			
+			fc.showOpenDialog(MainView.workPanel);
+			file = fc.getSelectedFile();
+		}catch(Exception e) {System.out.println("MainModel - openFileChooser__Open - didnt work!");}
+		
+		return file;
+			
+	}
+	
+	public void openProject_WithFile(File file, JPanel workPanel) {
+		ArrayList<Buchungssatz> bsList = new ArrayList<Buchungssatz>();
+		llChar = loadFileIntoLLChar(file);
+		prepareCollection(0, workPanel, bsList);
+	}
+	
+	public ArrayList<Buchungssatz> openProject_WithList(LinkedList<Character> char_LL, JPanel workPanel) {
+		ArrayList<Buchungssatz> bsList = new ArrayList<Buchungssatz>();
+		llChar = char_LL;
+		return prepareCollection(0, workPanel, bsList);
+	}
+	
+	private LinkedList<Character> loadFileIntoLLChar(File file) {
 		
 		//Add characters to char-LinkedList
 		try {
@@ -1027,28 +723,90 @@ public class MainModel {
 	}
 	
 	
-	public void openFile(LinkedList<Character> char_LL) {
-		llChar = char_LL;
-		prepareCollection(0);
+	
+	
+	public String openFileChooser_Save(String filetype, String prefix, String desc) {
+		
+		  JFileChooser fileChooser = new JFileChooser();
+		  FileNameExtensionFilter filter = new FileNameExtensionFilter(filetype, prefix, desc);
+		    fileChooser.setFileFilter(filter);
+		    int status = fileChooser.showSaveDialog(MainView.workPanel);
+
+		    String fileName = null;
+		    
+		    if (status == JFileChooser.APPROVE_OPTION) {
+		        File selectedFile = fileChooser.getSelectedFile();
+
+		        
+		        try {
+		            fileName = selectedFile.getCanonicalPath();
+		            if (!fileName.endsWith("dc")) {
+		                selectedFile = new File(fileName + "prefix");
+		            }
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		    
+		    return fileName;
+
+	}
+	
+	
+	
+	public void saveProject() {
+		
+		MainModel.saving = true;
+		
+		String fileName = openFileChooser_Save("disCount-Dateien", "dc", "disCount");
+		saveEncodedContent(fileName);
+		saveTxtFile(fileName);
+		
+		MainModel.saving = false;
 		
 	}
 	
-	public void prepareCollection(int index) {
-		
+	private void saveEncodedContent(String fileName) {
 
+		PrintWriter writer;
+		try {
+			
+			writer = new PrintWriter(fileName + ".dc", "UTF-8");
+			
+			writer.printf(getCodeOnWorkPanel());
+			writer.close();
+			
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {System.out.println("MainModel - saveEncodedContent - DIDNT WORK");e.printStackTrace();}
 		
+	}
+	
+
+	public void saveTxtFile(String fileName) {
+		
+		PrintWriter writer;
+		try {
+			
+			writer = new PrintWriter(fileName + ".txt", "UTF-8");
+			
+			writer.print(getTxtContent());
+			writer.close();
+		
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {System.out.println("MainModel - saveEncodedContent - DIDNT WORK");e.printStackTrace();}
+		
+	}
+	
+	
+	
+	public ArrayList<Buchungssatz> prepareCollection(int index, JPanel workPanel, ArrayList<Buchungssatz> bsList) {
+
 		boolean leftMore = false;
 		
-		if(index == -1)
-			return;
-		
-		else {
+		if(index != -1) {
 			
 			LinkedList<String> llKontos = new LinkedList<String>();
 			LinkedList<String> llPrices = new LinkedList<String>();
 			
 			char currentChar = llChar.get(index);
-			int kontoCount = 0;
 			
 			if(currentChar == '#') {
 				currentChar = llChar.get(++index);
@@ -1058,75 +816,37 @@ public class MainModel {
 				
 				currentChar = llChar.get(++index);
 				
-				kontoCount = Integer.parseInt(Character.toString(currentChar));
-				
 				index = collectKontos_Prices(llPrices, collectKontos_Prices(llKontos, ++index));
-
-				printToWorkPanel_putIntoTxtList(kontoCount, llKontos, llPrices, leftMore);
-
-
-				llKontos = null;
-				llPrices = null;
 				
-				prepareCollection(index);
+				bsList.add(createNewBS(llKontos, llPrices, leftMore, workPanel));
+				
+				prepareCollection(index, workPanel, bsList);
+
 			}
 			
 		}
+		
+		return bsList;
+	}
+	
+	private Buchungssatz createNewBS(LinkedList<String> llKontos, LinkedList<String> llPrices, boolean leftMore, JPanel workPanel) {
+		Buchungssatz bs = new Buchungssatz();
+		
+		String[] kontoList = convertLLStringToStringArray(llKontos);
+		String[] priceList = convertLLStringToStringArray(llPrices);
+		
+		bs.initBS(kontoList, priceList, leftMore, workPanel);
+		
+		return bs;
 	}
 	
 	
-	private void printToWorkPanel_putIntoTxtList(int kontoCount, LinkedList<String> llKontos, LinkedList<String> llPrices, boolean leftMore) {
-		
-		String firstRowMargin = "                ";
-		String secondRowMargin = "                        ";
-		
-		if(kontoCount == 2) { //einstufig
-			if(!saving) { //öffnen
-				paint2Konten(llKontos.get(0), llKontos.get(1));
-				paint1Price(Double.parseDouble(llPrices.get(0)));
-			}
-			
-			else //speichern
-				MainModel.contentForTxt.addLast("\r\n\r\n\r\n\r\n" + llKontos.get(0) + "    " + llKontos.get(1) + firstRowMargin + round(Double.parseDouble(llPrices.get(0))));
-		}
-		
-		
-		
-		if(kontoCount > 2) { //mehrstufig
-			if(!saving) {
-				if(kontoCount < 5)
-					paintUpTo7(llKontos, llPrices, leftMore, false);
-				else
-					paintUpTo7(llKontos, llPrices, leftMore, true);
-			}
-			
-			else {
-				if(leftMore) {
-					String output = "\r\n\r\n\r\n\r\n" + llKontos.get(0) + "    " + llKontos.get(1) + firstRowMargin + round(Double.parseDouble(llPrices.get(0))) + "    " + round(Double.parseDouble(llPrices.get(1)));
-					for(int x = 2; x < llKontos.size(); x++) {
-						output += "\r\n" + llKontos.get(x) + secondRowMargin + round(Double.parseDouble(llPrices.get(x)));
-					}
-					
-					MainModel.contentForTxt.addLast(output);
-				}
-				else {
-					String margin = "";
-					for(int x = 0; x < round(Double.parseDouble(llPrices.get(1))).length(); x++) {
-						margin += " ";
-					}
-					
-					String output = "\r\n\r\n\r\n\r\n" + llKontos.get(0) + "    " + llKontos.get(1) + firstRowMargin + round(Double.parseDouble(llPrices.get(0))) + "    " + round(Double.parseDouble(llPrices.get(1)));
-					for(int x = 2; x < llKontos.size(); x++) {
-						output += "\r\n        " + llKontos.get(x) + firstRowMargin + margin + "    " + round(Double.parseDouble(llPrices.get(x)));
-					}
-					
-					MainModel.contentForTxt.addLast(output);
-				}
-					
-			}
-		}
-		
+	
+	public static String[] convertLLStringToStringArray(LinkedList<String> ll) {
+		String[] array = new String[ll.size()];
+		return ll.toArray(array);
 	}
+	
 	
 	
 	
@@ -1161,80 +881,6 @@ public class MainModel {
 	
 	
 	
-	public void saveAstxt() {
-
-		String filename = save("disCount-Dateien", "dc", "disCount");
-		
-		try{
-			MainModel.contentForTxt.removeAll(MainModel.contentForTxt);
-			MainModel.saving = true;
-			PrintWriter writer = new PrintWriter(filename + ".txt", "UTF-8");
-			PrintWriter writer_system = new PrintWriter(filename + ".dc", "UTF-8");
-			
-			LinkedList<Character> llChar = new LinkedList<Character>();
-			
-			
-			String code = MainModel.sortHashMapPanelToCodeandGetCode();
-			
-			for(int y = 0; y < code.length(); y++) {
-				llChar.addLast(code.charAt(y));
-			}
-			
-			System.out.println(llChar + "    before openfile");
-			openFile(llChar);
-			
-			MainModel.contentForTxt.addFirst(filename + "- disCount");
-			
-			for(int i = 0; i < MainModel.contentForTxt.size(); i++) {
-				 writer.print(MainModel.contentForTxt.get(i));
-			}
-			writer.close();
-			MainModel.saving = false;
-			
-			writer_system.printf(code);
-
-			writer_system.close();
-		   
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	
-	
-	
-	public String save(String filetype, String prefix, String desc) {
-		
-		  JFileChooser fileChooser = new JFileChooser();
-		  FileNameExtensionFilter filter = new FileNameExtensionFilter(filetype, prefix, desc);
-		    fileChooser.setFileFilter(filter);
-		    int status = fileChooser.showSaveDialog(MainView.workPanel);
-
-		    String fileName = null;
-		    
-		    if (status == JFileChooser.APPROVE_OPTION) {
-		        File selectedFile = fileChooser.getSelectedFile();
-
-		        
-		        try {
-		            fileName = selectedFile.getCanonicalPath();
-		            if (!fileName.endsWith("dc")) {
-		                selectedFile = new File(fileName + "prefix");
-		            }
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-		    }
-		    
-		    return fileName;
-
-	}
 	
 	
 	
@@ -1243,23 +889,6 @@ public class MainModel {
 	
 	
 	
-	
-	public LinkedList<Character> open() {
-		
-		 File file = null;
-			try {	
-			JFileChooser fc = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("disCount-Dateien", "dc", "disCount");
-			fc.setFileFilter(filter);
-			
-			 int returnVal = fc.showOpenDialog(MainView.workPanel);
-			 file = fc.getSelectedFile();
-			}catch(Exception e) {
-				System.out.println("CLOSED");
-			}
-			
-			return openFile(file);
-	}
 	
 	
 	public String convertLL_CharToString(LinkedList<Character> llChar) {
@@ -1272,7 +901,7 @@ public class MainModel {
 	}
 
 
-	public LinkedList<Character> convertStringToLL_Char(String code) {
+	public static LinkedList<Character> convertStringToLL_Char(String code) {
 		
 		LinkedList<Character> llChar = new LinkedList<Character>();
 		
@@ -1292,6 +921,15 @@ public class MainModel {
 		}
 		
 		return strList;
+	}
+
+	/////////////////////////////////////////
+	
+	
+
+	public String[] convertDoubleArrayToStringArray(Double[] doubleArray) {
+		String[] a=Arrays.toString(doubleArray).split("[\\[\\]]")[1].split(", "); 
+		return a;
 	}
 	
 	

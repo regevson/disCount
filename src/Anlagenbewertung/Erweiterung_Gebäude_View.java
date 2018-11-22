@@ -145,32 +145,36 @@ public class Erweiterung_Gebäude_View extends View_SuperClass{
 	
 	
 	public void printStuff() {
-		int y = 0;
 		
 		int solutionsCounter = 0;
-		System.out.println(MainModel.solutions_AUSG);
-		System.out.println(solutions);
 		
 		for(int x = 0; x < MainModel.solutions_AUSG.size(); x++) {
 			
 			if(MainModel.solutions_AUSG.get(x) != 0.00) {
 				
-				myController.initPaint2Konten("3300", "2800");
+				String kontos[] = {"3300", "2800"};
+				Double prices[];
 				
-				if(MainModel.solutions_AUSG.get(x) == -1.00)
-					myController.initPaint1Price(MainModel.bruttoValuesFromAbrechnung.poll());
+				if(MainModel.solutions_AUSG.get(x) == -1.00) {
+					prices = new Double[] {MainModel.bruttoValuesFromAbrechnung.poll()};
+				}
 				
-				else
-					myController.initPaint1Price(MainModel.solutions_AUSG.get(x));
+				else {
+					prices = new Double[] {MainModel.solutions_AUSG.get(x)};
+				}
+				
+				myController.initpaintUpTo7(kontos, prices, leftMore);
 				
 			}
 			
 			else {
 				
 				if(solutionsCounter < solutions.size()) {
-					myController.initPaint3Konten(MainModel.abrAW_Konto.poll(), "3300", "2500");
 					
-					myController.initPaint3Prices(Double.parseDouble(alJTFs.get(y++).getText()), Double.parseDouble(alJTFs.get(y++).getText()), Double.parseDouble(alJTFs.get(y++).getText()));
+					String kontos[] = {MainModel.abrAW_Konto.poll(), "3300", "2500"};
+					Double prices[] = {Double.parseDouble(alJTFs.get(y++).getText()), Double.parseDouble(alJTFs.get(y++).getText()), Double.parseDouble(alJTFs.get(y++).getText())};
+					
+					myController.initpaintUpTo7(kontos, prices, leftMore);
 					solutionsCounter++;
 				}
 				

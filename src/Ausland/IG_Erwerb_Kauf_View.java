@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import View.Buchungssatz;
 import View.MainModel;
 import View.MainView;
 import extraViews.View_SuperClass;
@@ -37,7 +38,6 @@ public class IG_Erwerb_Kauf_View extends View_SuperClass_2Outputs{
 		this.konten2 = konten2;
 		this.konto3 = konto3;
 		
-		changeYZKWP();
 		makeKonto1(konto1);
 
 		makeKonto2Fixed(konten2[0]);
@@ -87,37 +87,31 @@ public class IG_Erwerb_Kauf_View extends View_SuperClass_2Outputs{
 		
 		
 
-		if(fwCB.isSelected()) //zusammenfassen mit unterem eventuell
+		if(fwCB.isSelected())
 			txtPreis.setText(MainModel.roundDouble_giveBack_String(Double.parseDouble(((Controller_Ausland) myController).initExecuteFWRoutine(txtPreis.getText(), fwSatz.getText()))));
 			
+		String kontos[] = {konto1, finalZahlungskonto};
+		Double prices[] = {Double.parseDouble(txtPreis.getText())};
 		
-		panel = myController.initPaint2Konten_mitzyk(konto1, finalZahlungskonto);
+		Buchungssatz bs = myController.initpaintUpTo7(kontos, prices, leftMore);
 		
 		if(fwCB.isSelected())
-			MainView.addNoteToPanel("Verwendeter Kurs:     "+ fwSatz.getText(), panel, 375);
+			bs.addNoteToPanel("Verwendeter Kurs:     "+ fwSatz.getText(), 375);
 		
-		myController.initPaint1Price(Float.parseFloat(txtPreis.getText()));
 
 		if(twoOutputs)
 			makeThe2ndBS(konto3, konto4, txtPreis.getText());
 			
-		View_SuperClass.resetSwap();
 
 	}
 	
 	public void makeThe2ndBS(String konto3, String konto4, String price) {
 
-		myController.initPaint2Konten_mitzyk(konto3, konto4);
+		String kontos[] = {konto3, konto4};
+		Double prices[] = {((Controller_Ausland) myController).initCalculateErwerbsteuerbetrag(price)};
 		
-		((Controller_Ausland) myController).initCalculateErwerbsteuerbetrag_andPaintIt(price);
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 		
-		resetyZK();
-	
-
-	}
-	
-	private void changeYZKWP() {
-		yZKWP = MainView.margin+10;
 	}
 	
 	private void makeNotice(String msg) {

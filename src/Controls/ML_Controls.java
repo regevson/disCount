@@ -3,10 +3,8 @@ package Controls;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -16,7 +14,6 @@ import View.MainModel;
 import View.MainView;
 import dbActivity.Controller_dbActivity;
 import dbActivity.db_Model;
-import extraViews.BS_Editor;
 import extraViews.MessageBox;
 import extraViews.View_SuperClass;
 
@@ -95,7 +92,7 @@ public class ML_Controls implements MouseListener{
 				windowListererIsActive = true;
 			}
 			
-			myModel.addBS(jltemp, this);
+			myModel.addBS(jltemp, this, MC.execGetWorkPanel());
 		}
 		
 		else if(jltemp.getIcon().toString().equals("src/checkedPic.png")) {
@@ -103,15 +100,6 @@ public class ML_Controls implements MouseListener{
 			MainView.addPic.setEnabled(true);
 		}
 		
-		
-		//moveBS//
-		
-		else if(jltemp.getIcon().toString().equals("src/upArrow.png"))
-			myModel.moveBS((JPanel) jltemp.getParent(), -1);
-			
-		
-		else if(jltemp.getIcon().toString().equals("src/downArrow.png"))
-			myModel.moveBS((JPanel) jltemp.getParent(), 1);
 		
 		
 	
@@ -127,31 +115,12 @@ public class ML_Controls implements MouseListener{
 		
 		LinkedList<String> priceList = MC.execConvertTFListToStringList(lastStufen.getPriceList());
 		
+		String[] kontos = MainModel.convertLLStringToStringArray(kontoList);
+		String[] prices = MainModel.convertLLStringToStringArray(priceList);
 		
-		if(stufen == 1) {
-			
-			if(lastStufen.getSide())
-				MC.execPaint2Konten(kontoList.get(0), kontoList.get(1));
-			
-			else {
-				View_SuperClass.swapLeft_RightWP();
-				MC.execPaint2Konten(kontoList.get(1), kontoList.get(0));
-				View_SuperClass.resetSwap();
-			}
-			
-			MC.execPaint1Price(Double.parseDouble(priceList.get(0)));
-			
-		}
+		MC.execpaintUpTo7(kontos, prices, lastStufen.getSide());
 		
-		
-
-		else if(stufen > 1 && stufen < 5)
-			MC.execPaintUpTo7(kontoList, priceList, lastStufen.getSide(), false);
-		
-		else
-			MC.execPaintUpTo7(kontoList, priceList, lastStufen.getSide(), true);
-		
-		MainModel.deleteChecked(false);
+		MainModel.deleteChecked(MC.execGetWorkPanel());
 		
 	}
 	

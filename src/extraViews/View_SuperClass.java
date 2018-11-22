@@ -47,9 +47,6 @@ public class View_SuperClass extends JFrame{
 	public int boundsWidth = 870, boundsHeight = 470;
 
 	
-
-	
-	public static int yZKWP = MainView.margin;
 	
 	public static JTextField txtPreis;
 	public static JTextField txtKontonummer;
@@ -68,8 +65,11 @@ public class View_SuperClass extends JFrame{
 	public static JComboBox lblKonto2Variable;
 	
 	public static String finalZahlungskonto;
+	
+	public boolean leftMore;
+	
 
-	public void setUpBasicStuff(String cmd, String Konto1, String[] Konten2, String Konto3, String percent, int[] coordinates, boolean fixed, Controller_AbstractClass myController) {
+	public void setUpBasicStuff(String cmd, String Konto1, String[] Konten2, String Konto3, String percent, int[] coordinates, boolean fixed, Controller_AbstractClass myController, boolean leftMore) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, boundsWidth, boundsHeight);
@@ -83,6 +83,7 @@ public class View_SuperClass extends JFrame{
 		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
 
 		this.myController = myController;
+		this.leftMore = leftMore;
 		addPic();
 		
 		JLabel lblTitle = new JLabel(cmd);
@@ -228,30 +229,6 @@ public class View_SuperClass extends JFrame{
 	
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
 		
-	}
-	
-	public static int getyZK() {
-		return yZKWP;
-	}
-	
-	public static void resetyZK() {
-		yZKWP = MainView.margin;
-	}
-	
-	public static void swapLeft_RightWP() {
-		kontenLeftWP = 180;
-		kontenRightWP = 100;
-		
-		pricesLeftWP = 450;
-		pricesRightWP = 350;
-	}
-	
-	public static void resetSwap() {
-		kontenLeftWP = 100;
-		kontenRightWP = 180;
-		
-		pricesLeftWP = 350;
-		pricesRightWP = 450;
 	}
 	
 	

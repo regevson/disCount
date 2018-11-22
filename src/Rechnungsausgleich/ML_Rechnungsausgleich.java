@@ -56,7 +56,7 @@ public class ML_Rechnungsausgleich implements MouseListener{
 		}
 		
 		
-		else if(cmd.equals("~  allgemeiner Forderungskeitenausgleich")) {
+		else if(cmd.equals("~  allgemeiner Forderungsausgleich")) {
 			myController.exec_1Stufig_ohneSteuer(cmd, "2000", VAG, null, null, leftmore1Stufig_X, true, true);
 		}
 		
@@ -79,11 +79,11 @@ public class ML_Rechnungsausgleich implements MouseListener{
 		}
 		
 		else if(cmd.equals("~  Kundenskonto")) {
-			((Controller_Rechnungsausgleich) myController).exec_Skonto_1_2_Stufig(cmd, "2800", _2000, "4410", "2000", "3500", "20", leftmore2Stufig, true, null, false);
+			((Controller_Rechnungsausgleich) myController).exec_Skonto_1_2_Stufig(cmd, "2800", _2000, "4410", "2000", "3500", "20", leftmore2Stufig, true, null, true);
 		}
 		
 		else if(cmd.equals("~  Lieferantenskonto")) {
-			((Controller_Rechnungsausgleich) myController).exec_Skonto_1_2_Stufig(cmd, "2800", RAB, "5880", "3300", "2500", "20", leftmore2Stufig_X_SK, true, null, true);
+			((Controller_Rechnungsausgleich) myController).exec_Skonto_1_2_Stufig(cmd, "2800", RAB, "5880", "3300", "2500", "20", leftmore2Stufig_X_SK, true, null, false);
 		}
 		
 		

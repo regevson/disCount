@@ -224,7 +224,7 @@ public class MessageBox extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
 				MLdb.initUploadToDB((String) comboBox.getSelectedItem(), txtSeite.getText(), txtNummer.getText());
-				MLdb.initSaveAstxt();
+				MLdb.initSaveProject();
 			}
 		});
 		btnAllesKlar.setBounds(535, 237, 123, 40);
@@ -247,7 +247,7 @@ public class MessageBox extends JFrame {
 		btnLieberNicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				MLdb.initSaveAstxt();
+				MLdb.initSaveProject();
 			}
 		});
 		

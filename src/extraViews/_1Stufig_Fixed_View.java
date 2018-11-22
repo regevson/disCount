@@ -24,15 +24,15 @@ public class _1Stufig_Fixed_View extends View_SuperClass{
 			finalZahlungskonto = Konten2[0];
 		else
 			finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
-			
-		myController.initPaint2Konten(lblKonto1.getText(), finalZahlungskonto);
+		
+		
+		double bruttoPrice = Double.parseDouble(txtPreis.getText());
 		
 			if(netto != null && netto.isSelected())
-				myController.initNetto_to_paintBrutto(percent, txtPreis.getText());
-			else
-				myController.initBrutto_to_paintBrutto(txtPreis.getText());
-
-			resetSwap();
+				bruttoPrice = myController.initNettoToBrutto(percent, txtPreis.getText());
+			
+			String kontos[] = {lblKonto1.getText(), finalZahlungskonto};
+			Double prices[] = {bruttoPrice};
 			
 	}
 

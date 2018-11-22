@@ -132,20 +132,19 @@ public class Abschreibung_View extends View_SuperClass{
 		}
 		
 			
-			AW = 0;
-			resetSwap();
+		AW = 0;
+
 	}
 	
 	private int getSelectedCB() {
 		
-		for(int x = 0; x < MainView.llRadioButton.size(); x++) {
-			if(MainView.llRadioButton.get(x).isSelected())
-				AW += MainView.llNettoPrices.get(x);
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			if(MainView.bsList.get(x).getRadioButtonStatus())
+				AW += Double.parseDouble(MainView.bsList.get(x).getNettoPrice());
 		}
 		
 		if(AW == 0) {
 			MainView.warning_CheckCBoxes();
-			MainView.appendHint("Abschreibungsregeln verletzt");
 			return 0;
 		}
 		

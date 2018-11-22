@@ -39,27 +39,27 @@ public class ML_Personalverrechnung implements MouseListener{
 	
 	
 	if(cmd.equals("~  Gehaltsbuchungen")) {
-		myController.exec__4_Stufig_Fixed_View(cmd, "3600", FIXEDAW, "3540", "3850", null, null, bigGB, true, null, true);
+		myController.exec__4_Stufig_Fixed_View(cmd, "3600", FIXEDAW, "3540", "3850", null, null, bigGB, true, null, false);
 	}
 	
 	else if(cmd.equals("~  Geschäftsessen")) {
-		myController.exec_Geschäftsessen_View(cmd, null, FULLAW, "5080", "20", leftmore2Stufig, true);
+		myController.exec_Geschäftsessen_View(cmd, null, FULLAW, "5080", "20", leftmore2Stufig, true, true);
 	}
 	
 	else if(cmd.equals("~  Fahrtkosten")) {
-		myController.exec_Fahrtkosten_View(cmd, null, FULLAW, "2500", "10", leftmore2Stufig, false);
+		myController.exec_Fahrtkosten_View(cmd, null, FULLAW, "2500", "10", leftmore2Stufig, false, true);
 	}
 	
 	else if(cmd.equals("~  Kilometergeld Unternehmer")) {
-		myController.exec_Kilometergeld_Unternehmer_View(cmd, "7345", FULLAW, null, null, leftmore2Stufig, false);
+		myController.exec_Kilometergeld_Unternehmer_View(cmd, "7345", FULLAW, null, null, leftmore2Stufig, false, true);
 	}
 	
 	else if(cmd.equals("~  Tagesgeld")) {
-		myController.exec_Tagesgeld_View(cmd, "7360", FULLAW, "2500", "10", leftmore2Stufig, false);
+		myController.exec_Tagesgeld_View(cmd, "7360", FULLAW, "2500", "10", leftmore2Stufig, false, true);
 	}
 	
 	else if(cmd.equals("~  Nächtigungsgeld")) {
-		myController.exec_2Stufig_Fixed_View(cmd, "7364", FULLAW, "2500", "13", leftmore2Stufig, false, false);
+		myController.exec_2Stufig_Fixed_View(cmd, "7364", FULLAW, "2500", "13", leftmore2Stufig, false, true);
 	}
 	
 

@@ -5,7 +5,6 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import View.MainModel;
 import View.MainView;
 import extraViews.View_SuperClass;
 import extraViews.View_SuperClass_2Outputs;
@@ -28,8 +27,6 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 		this.konten2 = konten2;
 		this.konto3 = konto3;
 			
-		
-		changeYZKWP();
 		makeKonto1(konto1);
 		makeKonto2Fixed(konten2[0]);
 		makeRightKonto(konto3, yFirst + 20);
@@ -109,18 +106,16 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 	@Override
 	public void setUpRoutine(String konto4, String konto5, String percent, boolean twoOutputs, String extra) {
 		
-		makeBSes();
+		makeAdditionalBS();
 		
-		View_SuperClass.resetSwap();
 	}
 	
-	private void makeBSes() {
-		myController.initPaint4Konten("3600", "6200", "3540", "3850");
-		myController.initPaint4Prices(Double.parseDouble(txtPrice2.getText()), Double.parseDouble(txtPrice1.getText()), Double.parseDouble(txtPrice3.getText()), Double.parseDouble(txtPrice4.getText()));
-	
-		myController.initPaint2Konten("3600", "6560");
-		myController.initPaint1Price(Double.parseDouble(SV_DGA.getText()));
+	private void makeAdditionalBS() {
 		
+		String kontos[] = {"3600", "6200", "3540", "3850"};
+		Double prices[] = {Double.parseDouble(txtPrice2.getText()), Double.parseDouble(txtPrice1.getText()), Double.parseDouble(txtPrice3.getText()), Double.parseDouble(txtPrice4.getText())};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 		
 		
 		double SV_Price = Double.parseDouble(txtPrice2.getText());
@@ -128,33 +123,49 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 		double Mitarbeiter_Price = Double.parseDouble(txtPrice4.getText());
 		
 		double SV_DGA_Price = Double.parseDouble(SV_DGA.getText());
-		double DB_Price = paintGehaltsKonten(DB, "3540", "6660");
-		double DZ_Price = paintGehaltsKonten(DZ, "3540", "6670");
-		double KommSt_Price = paintGehaltsKonten(KommSt, "3610", "6680");
+		double DB_Price = calcPrices(DB);
+		double DZ_Price = calcPrices(DZ);
+		double KommSt_Price = calcPrices(KommSt);
 		
-		paint2ndGehaltsKonten(Mitarbeiter_Price, 0, 0, "2800", "3850");
 		
-		paint2ndGehaltsKonten(SV_Price, SV_DGA_Price, 0, "2800", "3600");
-		paint2ndGehaltsKonten(FA_Price, DB_Price, DZ_Price, "2800", "3540");
-		paint2ndGehaltsKonten(KommSt_Price, 0, 0, "2800", "3610");
+		
+		
+		String kontos2[] = {"3600", "6560"};
+		Double prices2[] = {SV_Price};
+		myController.initpaintUpTo7(kontos2, prices2, leftMore);
+		
+		String kontos3[] = {"3540", "6660"};
+		Double prices3[] = {FA_Price};
+		myController.initpaintUpTo7(kontos3, prices3, leftMore);
+		
+		String kontos5[] = {"3850", "6670"};
+		Double prices5[] = {KommSt_Price};
+		myController.initpaintUpTo7(kontos5, prices5, leftMore);
+		
+		
+		
+		
+		String kontos6[] = {"2800", "3850"};
+		Double prices6[] = {Mitarbeiter_Price};
+		myController.initpaintUpTo7(kontos6, prices6, leftMore);
+		
+		String kontos7[] = {"2800", "3600"};
+		Double prices7[] = {SV_Price + SV_DGA_Price};
+		myController.initpaintUpTo7(kontos7, prices7, leftMore);
+		
+		String kontos8[] = {"2800", "3540"};
+		Double prices8[] = {FA_Price + DB_Price + DZ_Price};
+		myController.initpaintUpTo7(kontos8, prices8, leftMore);
+		
+		String kontos9[] = {"2800", "3610"};
+		Double prices9[] = {KommSt_Price};
+		myController.initpaintUpTo7(kontos9, prices9, leftMore);
+		
 	}
 	
 	
-	private double paintGehaltsKonten(JTextField tf, String konto_temp1, String konto_temp2) {
-		myController.initPaint2Konten(konto_temp1, konto_temp2);
-		return myController.initCalcGehaltsPercent_andPrintIt(txtPrice1.getText(), tf.getText());
-	}
-	
-	
-	private void paint2ndGehaltsKonten(double price1, double price2, double price3, String konto_temp1, String konto_temp2) {
-		myController.initPaint2Konten(konto_temp1, konto_temp2);
-		double price = price1 + price2 + price3;
-		myController.initPaint1Price(price);
-	}
-	
-	
-	private void changeYZKWP() {
-		yZKWP = MainView.margin+10;
+	private double calcPrices(JTextField tf) {
+		return myController.initCalcGehaltsPercent(txtPrice1.getText(), tf.getText());
 	}
 	
 }

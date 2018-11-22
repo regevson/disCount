@@ -1,6 +1,7 @@
 package dbActivity;
 
 import java.awt.Color;
+import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import View.Buchungssatz;
 import View.Controller_AbstractClass;
 import View.MainController;
 import View.MainModel;
@@ -40,21 +42,18 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	
 	
 	
-	
-	public String initOpen() {
-		return MC.execOpen();
-	}
-	
-	public void initOpenFile(LinkedList<Character> ll_Char) {
-		MC.execOpenFile(ll_Char);
-	}
 
-	public void initOpenFileAndPrintToWorkPanel() {
-		MC.execOpenFileAndPrintToWorkPanel();
+
+	public void initOpenProject() {
+		MC.execOpenProject();
 	}
 	
-	public void initPrintStringWithCodeToWorkPanel() {
-		MC.execPrintStringWithCodeToWorkPanel(myModel.getSolution());
+	public void initOpenProject(LinkedList<Character> char_LL) {
+		MC.execOpenProject(char_LL);
+	}
+	
+	public JPanel initGetWorkPanel() {
+		return MC.execGetWorkPanel();
 	}
 
 	public void execChangeRatio(int value, JPanel panel) {
@@ -97,14 +96,14 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.getUploader();
 	}
 	
-	public void initAddInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader) {
-		MC.execAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader);
+	public void initAddInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
+		MC.execAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, bs, ML);
 	}
 
 	public void execCheckBS(String klasse, String page, String number) {
-		LinkedList<Character> char_LL = myModel.setUpCheckBS(klasse, page, number);
+		LinkedList<Character> char_LL = myModel.setUpCheckBS(klasse, page, number, MC.execGetWorkPanel());
 		if(char_LL != null) {
-			MC.execOpenFile(char_LL);
+			MC.execOpenProject(char_LL);
 			myModel.checkBS();
 		}
 	}
@@ -113,8 +112,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		myModel.uploadToDB(jahrgang, seite, nummer);
 	}
 
-	public void initSaveAstxt() {
-		MC.execSaveAstxt();
+	public void initSaveProject() {
+		MC.execSaveProject();
 	}
 
 	public boolean execCheckExerciseAvailability(String jahrgang, String seite, String nummer) {
@@ -123,6 +122,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public int execGetCommentCount() {
 		return myModel.getCommentCount();
+	}
+	
+	public void initTellViewToRemoveExerciseSelectionPanel() {
+		MC.tellViewToRemoveExerciseSelectionPanel();
 	}
 	
 	public void execPrintComments(String id) {
@@ -330,11 +333,11 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		timer.purge();
     }
 
-	public double execHandInExam() {
+	public double execHandInExam(JPanel workPanel) {
 		inExam = false;
 		LinkedList<String> studentSolution = myModel.getWorkPanelCodeIntoList(new LinkedList<String>());
-		MainModel.deleteAll();
-		initPrintStringWithCodeToWorkPanel();
+		MainModel.deleteAll(workPanel);
+		initOpenProject(MainModel.convertStringToLL_Char(myModel.getSolution()));
 		ArrayList<Integer> outcomeList = myModel.checkBSExam(studentSolution);
 		
 		double percentage = calcPercentage(outcomeList);
@@ -412,33 +415,42 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	
 	
 	
-	public void execShowSuggestions(String book, String page, String number) {
+	public void execShowSuggestions(String book, String page, String number, MouseListener ML) {
 		
 		String currentContentOnWP = "";
 		LinkedList<Character> ll_Char = new LinkedList<Character>();
 		
 		MainView.llThumbsGroups.add(new ArrayList<ArrayList<JLabel>>());
 		
-		if(MainView.llJPanel.size() >= 1 && !MainView.isUploading) {
+		if(MainView.bsList.size() >= 1 && !MainView.isUploading) {
 						
-			currentContentOnWP = MainModel.sortHashMapPanelToCodeandGetCode();
+			currentContentOnWP = MainModel.getCodeOnWorkPanel();
+			
+			MainView.isUploading = true;
 			
 			ll_Char = execOpenDB_content(currentContentOnWP, book + "/" + page + "/" + number);
+			ArrayList<Buchungssatz> bsList = MC.execOpenProject(ll_Char);
+			
+			MainView.isUploading = false;
+			
 			String name = myModel.getName();
+			String solutionID = myModel.getSolutionID();
 			String codeInfo = myModel.getCodeInfo();
 			int upvotes = myModel.getUpVotes();
 			int downvotes = myModel.getDownVotes();
 			int commentCount = myModel.getCommentCount();
-			int BScount = myModel.getBScount();
 			String uploader = myModel.getUploader();
 			
-			if(ll_Char != null) {
-				MainView.isUploading = true;
-				initOpenFile(ll_Char);
-				for(int x = 1; x <= BScount; x++) {
-					initAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader);
+			if(bsList != null) {
+				
+				for(int x = 0; x < bsList.size(); x++) {
+					bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, ML);
+					
+					if(uploader.equals("teacher"))
+						bsList.get(x).addStar();
+					else if(uploader.equals("verified"));
+						bsList.get(x).addVerified();
 				}
-				MainView.isUploading = false;
 				
 			}
 			
@@ -450,8 +462,6 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		}
 		
 	}
-
-
 
 
 

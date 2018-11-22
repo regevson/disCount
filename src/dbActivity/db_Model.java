@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import View.Buchungssatz;
 import View.MainModel;
 import View.MainView;
 import disCount.Main;
@@ -271,8 +272,7 @@ public class db_Model {
 			return;
 		
 		
-		String code_str = MainModel.sortHashMapPanelToCodeandGetCode();
-		System.out.println(code_str);
+		String code_str = MainModel.getCodeOnWorkPanel();
 		
 		 try {
 			st = conn.createStatement();
@@ -376,9 +376,9 @@ public class db_Model {
 			   if(ll_wrongSolutions.size() == 0)
 				   rs = st.executeQuery("SELECT id, name, uploader, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
 	           
-			   System.out.println(rs.getFetchSize() + "  rssize");
+
 	           while(rs.next()) {
-	        	   int currentBSCount = MainView.llJPanel.size();
+	        	   int currentBSCount = MainView.bsList.size();
 	        	   int fromIndex = 0;
 	        	   String dbBS = rs.getString("code");
 	        	   solutionID = rs.getString("id");
@@ -493,7 +493,7 @@ public class db_Model {
 	
 	
 	
-	public LinkedList<Character> setUpCheckBS(String klasse, String page, String number) {
+	public LinkedList<Character> setUpCheckBS(String klasse, String page, String number, JPanel workPanel) {
 		try {
 			   st = conn.createStatement();
 	           rs = st.executeQuery("SELECT id, name, code, codeInfo, upVotes, downVotes FROM usersolutions" + schoolType.toLowerCase());
@@ -519,7 +519,7 @@ public class db_Model {
 	           }
 	           
 	           else
-	        	   MainView.addNoteToCheckPanel("\u00a9" + highestUser_name + "  " + "(" + highestUpvotes + " Like)");
+	        	   MainView.addNoteToCheckPanel("\u00a9" + highestUser_name + "  " + "(" + highestUpvotes + " Like(s))");
 	           
 	           LinkedList<Character> char_LL = new LinkedList<Character>();
 	           for(int x = 0; x < highestCode.length(); x++) {
@@ -533,7 +533,7 @@ public class db_Model {
 	           if(oldBSList.isEmpty())
 	        	   return null;
 	           
-	           MainModel.deleteAll();
+	           MainModel.deleteAll(workPanel);
 	           
 	           return char_LL;
 	           
@@ -543,9 +543,8 @@ public class db_Model {
 	}
 	
 	public LinkedList<String> getWorkPanelCodeIntoList(LinkedList<String> list) {
-		MainModel.sortHashMapPanelToCodeandGetCode();
-        for(int x = 0; x < MainView.llJPanel.size(); x++) {
-        	list.add(MainView.hmPanelToCode.get(MainView.llJPanel.get(x)));
+        for(int x = 0; x < MainView.bsList.size(); x++) {
+        	list.add(MainView.bsList.get(x).getCode());
 	    }
         return list;
 	}
@@ -553,13 +552,12 @@ public class db_Model {
 		
 	public void checkBS() {
 		try {
-           MainModel.sortHashMapPanelToCodeandGetCode();
            
-           for(int y = 0; y < MainView.llJPanel.size(); y++) {
+           for(int y = 0; y < MainView.bsList.size(); y++) {
         	   if(y == oldBSList.size())
         		   oldBSList.addLast(null);
-        	   if(MainView.hmPanelToCode.get(MainView.llJPanel.get(y)).equals(oldBSList.get(y)))
-        		   MainView.addCheckMark(MainView.llJPanel.get(y), null, -1);
+        	   if(MainView.bsList.get(y).getCode().equals(oldBSList.get(y)))
+        		   MainView.bsList.get(y).addCheckMark(null, -1);
         	   
         	   else {
         		   int tempY = checkIfBSmissing(y, oldBSList, null);
@@ -582,7 +580,6 @@ public class db_Model {
 		
 		//save();
 		int overloadSize = 0;
-		int oldSize = studentSolution.size();
 		String temp = solution;
 		int bsNumber = temp.length() - temp.replace("#", "").length();
 		ArrayList<Integer> examBSList = new ArrayList<Integer>();
@@ -591,13 +588,12 @@ public class db_Model {
 		}
 		
 		try {
-           MainModel.sortHashMapPanelToCodeandGetCode();
            
-           for(int y = 0; y < MainView.llJPanel.size(); y++) {
+           for(int y = 0; y < MainView.bsList.size(); y++) {
         	   if(y == studentSolution.size())
         		   studentSolution.addLast(null);
-        	   if(MainView.hmPanelToCode.get(MainView.llJPanel.get(y)).equals(studentSolution.get(y)))
-        		   MainView.addCheckMark(MainView.llJPanel.get(y), examBSList, y);
+        	   if(MainView.bsList.get(y).getCode().equals(studentSolution.get(y)))
+        		   MainView.bsList.get(y).addCheckMark(examBSList, y);
         	   
         	   else {
         		   int tempY = checkIfBSmissing(y, studentSolution, examBSList);
@@ -626,20 +622,20 @@ public class db_Model {
 	
 	private int checkIfBSmissing(int index, LinkedList<String> compareToList,  ArrayList<Integer> examBSList) {
 
-		 ArrayList<JPanel> wrongPanel = new ArrayList<JPanel>();
+		 ArrayList<Buchungssatz> wrongPanel = new ArrayList<Buchungssatz>();
 		
-   		   for(int i = index; i < MainView.llJPanel.size(); i++) {
-   			   if(MainView.hmPanelToCode.get(MainView.llJPanel.get(i)).equals(compareToList.get(index))) {
+   		   for(int i = index; i < MainView.bsList.size(); i++) {
+   			   if(MainView.bsList.get(i).getCode().equals(compareToList.get(index))) {
    				   for(int k = 0; k < wrongPanel.size(); k++) {
    					   compareToList.add(index, null);
-   					   MainView.addErrorIcon(wrongPanel.get(k));
+   					   wrongPanel.get(k).addErrorIcon();
    				   }
    				   
-   				   MainView.addCheckMark(MainView.llJPanel.get(i), examBSList, i);
+   				   MainView.bsList.get(i).addCheckMark(examBSList, i);
    				   return i;
    			   }
    			   else
-   				   wrongPanel.add(MainView.llJPanel.get(i));
+   				   wrongPanel.add(MainView.bsList.get(i));
 
    		   }
 		
@@ -655,24 +651,24 @@ public class db_Model {
 		
 		   for(int l = index; l < compareToList.size(); l++) {
 			   
-			   if(MainView.hmPanelToCode.get(MainView.llJPanel.get(index)).equals(compareToList.get(l))) {
+			   if(MainView.bsList.get(index).getCode().equals(compareToList.get(l))) {
 				   if(overloadSize == 1)
-					   MainView.addNoteToPanel("Darüber " + overloadSize + messageSingular, MainView.llJPanel.get(index), 220, 5);
+					   MainView.bsList.get(index).addNoteToPanel("Darüber " + overloadSize + messageSingular, 220);
 				   else
-					   MainView.addNoteToPanel("Darüber " + overloadSize + messagePlural, MainView.llJPanel.get(index), 220, 5);
+					   MainView.bsList.get(index).addNoteToPanel("Darüber " + overloadSize + messagePlural, 220);
 				   
 				   compareToList.remove(index);
-				   MainView.addCheckMark(MainView.llJPanel.get(index), examBSList, index);
+				   MainView.bsList.get(index).addCheckMark(examBSList, index);
 				   return overloadSize;
 			   }
 			   
-			   else {
+			   else
 				   overloadSize++;
-				   System.out.println(MainView.hmPanelToCode.get(MainView.llJPanel.get(index)) + "  doesnt equal:  " + compareToList.get(l));
-			   }
+
 		   }
+		   
 		   //wenn ich bis hier komme, ist es ein struktureller Fehler im Buchungssatz und kein Fehlen bzw. zu viel sein eines BS.
-		   MainView.addErrorIcon(MainView.llJPanel.get(index));
+		   MainView.bsList.get(index).addErrorIcon();
 		   
 		   return 0;
 		   

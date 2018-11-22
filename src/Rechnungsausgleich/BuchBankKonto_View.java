@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 
-import View.MainModel;
 import extraViews.View_SuperClass;
 
 public class BuchBankKonto_View extends View_SuperClass{
@@ -84,21 +83,24 @@ public class BuchBankKonto_View extends View_SuperClass{
 	@Override
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
 			
-		
+		String kontos[] = null;
 		
 		if(cbAbhebungVomBankkonto.isSelected())
-			myController.initPaint2Konten("2700", "2870");
+			kontos = new String[] {"2700", "2870"};
+		
 		else if(cbEinzahlungInsBankkonto.isSelected())
-			myController.initPaint2Konten("2870", "2700");
+			kontos = new String[] {"2870", "2700"};
 		
 		else if(cbAbhebungVonKassa.isSelected())
-			myController.initPaint2Konten("2800", "2870");
-		else if(cbEinzahlungInKassa.isSelected())
-			myController.initPaint2Konten("2870", "2800");
+			kontos = new String[] {"2800", "2870"};
 		
-		myController.initPaint1Price(Float.parseFloat(txtPreis.getText()));
+		else if(cbEinzahlungInKassa.isSelected())
+			kontos = new String[] {"2870", "2800"};
+		
+		Double prices[] = {Double.parseDouble(txtPreis.getText())};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 
-		resetSwap();
 	}
 	
 }

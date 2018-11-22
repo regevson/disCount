@@ -1,11 +1,13 @@
 package extraViews;
 
-import View.MainModel;
+import java.util.LinkedList;
+
 import View.MainView;
 
 public class _2Stufig_Fixed_View extends View_SuperClass {
-	
-	
+
+
+
 	@Override
 	public void build(String Konto1, String[] Konten2, String Konto3, boolean fixed) {
 		MainView.waitOK = false;
@@ -29,16 +31,24 @@ public class _2Stufig_Fixed_View extends View_SuperClass {
 			finalZahlungskonto = Konten2[0];
 		else
 			finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
-			
-		myController.initPaint3Konten(Konto1, finalZahlungskonto, Konto3);
 		
-			if(netto.isSelected())
-				myController.initNetto_to_paintAll3(((String) variableTax.getSelectedItem()).substring(0, 2), txtPreis.getText());
-			else
-				myController.initBrutto_to_paintAll3(((String) variableTax.getSelectedItem()).substring(0, 2), txtPreis.getText());
+		
+		double nettoPrice = Double.parseDouble(txtPreis.getText());
+		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		
+		if(netto.isSelected())
+			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), ((String) variableTax.getSelectedItem()).substring(0, 2));
+		else
+			nettoPrice = myController.initBruttoToNetto(txtPreis.getText(), ((String) variableTax.getSelectedItem()).substring(0, 2));
+		
+		String kontos[] = {Konto1, finalZahlungskonto, Konto3};
+		Double prices[] = {nettoPrice, bruttoPrice, bruttoPrice - nettoPrice};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 
-			resetSwap();
-			MainView.waitOK = true;
+		MainView.waitOK = true;
+		
+		
 	}
 
 

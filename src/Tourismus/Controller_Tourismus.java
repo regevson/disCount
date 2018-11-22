@@ -12,9 +12,9 @@ public class Controller_Tourismus extends Controller_AbstractClass{
 	
 	
 
-	public void exec_3Stufig_Variable_View(String cmd, String konto1, String[] kontoSelection, String konto3, String steuer, int[] coordinates, boolean fixed) {
+	public void exec_3Stufig_Variable_View(String cmd, String konto1, String[] kontoSelection, String konto3, String steuer, int[] coordinates, boolean fixed, boolean leftMore) {
 		_3Stufig_Variable_View view = new _3Stufig_Variable_View();
-		view.setUpBasicStuff(cmd, konto1, kontoSelection, konto3, steuer, coordinates, fixed, this);
+		view.setUpBasicStuff(cmd, konto1, kontoSelection, konto3, steuer, coordinates, fixed, this, leftMore);
 		view.setVisible(true);
 	}
 

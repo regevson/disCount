@@ -50,46 +50,46 @@ public class ML_Standard_Einkauf_Verkauf implements MouseListener{
 		
 		
 		if(cmd.equals("~  Handelswareneinkauf")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "5010", FULLAW, "2500", "20", leftmore2Stufig, false, false);
+			myController.exec_2Stufig_Fixed_View(cmd, "5010", FULLAW, "2500", "20", leftmore2Stufig, false, true);
 		}
 		
 		else if(cmd.equals("~  Handelswarenverkauf")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "4000", FULLET, "3500", "20", leftmore2Stufig_X, false, true);
+			myController.exec_2Stufig_Fixed_View(cmd, "4000", FULLET, "3500", "20", leftmore2Stufig_X, false, false);
 		}
 		
 		
 		else if(cmd.equals("~  sonstiger Aufwand (20%)")) {
-			myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false);		
+			myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false, true);		
 		}
 		
 		
 		else if(cmd.equals("~  Wir gewähren nachtr. Rabatt")) {
-			myController.exec_2Stufig_Fixed_NTRabatt_View(cmd, "4400", _2000, "3500", "20", leftmore2Stufig, true, false);
+			myController.exec_2Stufig_Fixed_NTRabatt_View(cmd, "4400", _2000, "3500", "20", leftmore2Stufig, true, true);
 		}
 		
 		
 		else if(cmd.equals("~  Lieferant gewährt nachtr. Rabatt")) {
-			myController.exec_2Stufig_Fixed_NTRabatt_View(cmd, "5010", RAB, "2500", "20", leftmore1Stufig_X, true, true);
+			myController.exec_2Stufig_Fixed_NTRabatt_View(cmd, "5010", RAB, "2500", "20", leftmore1Stufig_X, true, false);
 		}
 		
 		
 		else if(cmd.equals("~  Wir senden Waren zurück")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "5010", FULLAW, "2500", "20", leftmore2Stufig_X, false, true);
+			myController.exec_2Stufig_Fixed_View(cmd, "5010", FULLAW, "2500", "20", leftmore2Stufig_X, false, false);
 		}
 		
 		
 		else if(cmd.equals("~  Kunde sendet Waren zurück")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "4000", FULLET, "3500", "20", leftmore2Stufig, false, false);
+			myController.exec_2Stufig_Fixed_View(cmd, "4000", FULLET, "3500", "20", leftmore2Stufig, false, true);
 		}
 		
 		
 		else if(cmd.equals("~  Wir lassen uns die Waren liefern")) {
-			myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false);	
+			myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false, true);	
 		}
 		
 		
 		else if(cmd.equals("~  Wir senden dem Kunden die Waren")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "7300", FULLAW, "2500", "20", leftmore2Stufig, false, false);
+			myController.exec_2Stufig_Fixed_View(cmd, "7300", FULLAW, "2500", "20", leftmore2Stufig, false, true);
 		}
 		
 		

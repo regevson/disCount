@@ -1,4 +1,4 @@
-package extraViews;
+package Controls;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import View.MainView;
+import extraViews.View_SuperClass;
 
 public abstract class BS_Editor {
 	protected JPanel editorPanel;
@@ -50,10 +51,20 @@ public abstract class BS_Editor {
 	}
 	
 	public LinkedList<JTextField> getKontoList() {
+		if(!leftMore) {
+			String temp = kontoList.get(0).getText();
+			kontoList.get(0).setText(kontoList.get(1).getText());
+			kontoList.get(1).setText(temp);
+		}
 		return kontoList;
 	}
 	
 	public LinkedList<JTextField> getPriceList() {
+		if(priceList.size() > 1 && !leftMore) {
+			String temp = priceList.get(0).getText();
+			priceList.get(0).setText(priceList.get(1).getText());
+			priceList.get(1).setText(temp);
+		}
 		return priceList;
 	}
 	

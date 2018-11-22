@@ -1,6 +1,5 @@
 package Personalverrechnung;
 
-import View.MainModel;
 import extraViews._2Stufig_VariableKonto;
 
 public class Fahrtkosten_View extends _2Stufig_VariableKonto{
@@ -10,17 +9,23 @@ public class Fahrtkosten_View extends _2Stufig_VariableKonto{
 
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 			
-		myController.initPaint3Konten(txtKontonummer.getText(), finalZahlungskonto, Konto3);
 		
 		if(txtKontonummer.getText().equals("7341"))
 			percent = "13";
 		
-			if(netto.isSelected())
-				myController.initNetto_to_paintAll3(percent, txtPreis.getText());
-			else
-				myController.initBrutto_to_paintAll3(percent, txtPreis.getText());
+		double nettoPrice = Double.parseDouble(txtPreis.getText());
+		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		
+		if(netto.isSelected())
+			nettoPrice = myController.initNettoToBrutto(percent, txtPreis.getText());
+		else
+			bruttoPrice = myController.initBruttoToNetto(percent, txtPreis.getText());
 	
-			resetSwap();
+		String kontos[] = {txtKontonummer.getText(), finalZahlungskonto};
+		Double prices[] = {nettoPrice, bruttoPrice, bruttoPrice - nettoPrice};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
+	
 	}
 	
 }

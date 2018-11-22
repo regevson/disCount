@@ -47,12 +47,12 @@ public class Kilometergeld_Unternehmer_View extends View_SuperClass{
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
 
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
-			
-		myController.initPaint2Konten(lblKonto1.getText(), finalZahlungskonto);
 		
-		myController.initPaint1Price(Float.parseFloat(txtKM.getText()) * Float.parseFloat(txtKMPrice.getText()));
-
-		resetSwap();
+		String kontos[] = {lblKonto1.getText(), finalZahlungskonto};
+		Double prices[] = {Double.parseDouble(txtKM.getText()) * Float.parseFloat(txtKMPrice.getText())};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
+		
 	}
 	
 }

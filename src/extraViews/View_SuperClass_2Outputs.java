@@ -37,11 +37,10 @@ public class View_SuperClass_2Outputs extends JFrame{
 	public int xRight;
 	public int yFirst;
 	public int ySecond;
+	public boolean leftMore;
 	
 	public int boundsWidth = 870, boundsHeight = 470;
 
-	
-	public static int yZKWP = MainView.margin;
 	
 	public static JTextField txtPreis;
 	public static JTextField txtKontonummer;
@@ -67,11 +66,12 @@ public class View_SuperClass_2Outputs extends JFrame{
 	public static String finalZahlungskonto;
 	
 
-	public void setUpBasicStuff(String cmd, String Konto1, String[] Konto2, String Konto3, String Konto4, String Konto5, String percent, int[] coordinates, boolean fixed, String extra, Controller_AbstractClass myController) {
+	public void setUpBasicStuff(String cmd, String Konto1, String[] Konto2, String Konto3, String Konto4, String Konto5, String percent, int[] coordinates, boolean fixed, String extra, Controller_AbstractClass myController, boolean leftMore) {
 		
 		this.konto4 = Konto4;
 		this.konto5 = Konto5;
 		this.percent = percent;
+		this.leftMore = leftMore;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
@@ -225,14 +225,6 @@ public class View_SuperClass_2Outputs extends JFrame{
 	
 	public void setUpRoutine(String Konto4, String Konto5, String percent, boolean fixed, String extra) {
 		
-	}
-	
-	public static int getyZK() {
-		return yZKWP;
-	}
-	
-	public static void resetyZK() {
-		yZKWP = MainView.margin;
 	}
 	
 	public void changeBounds(int x, int y) {

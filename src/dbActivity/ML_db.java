@@ -1,6 +1,5 @@
 package dbActivity;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
@@ -16,7 +15,6 @@ import javax.swing.JTextArea;
 
 import View.MainController;
 import View.MainModel;
-import View.MainView;
 import extraViews.ExamEvaluationView;
 import extraViews.ExamLobby;
 import extraViews.ExamSetupView;
@@ -40,12 +38,8 @@ public class ML_db implements MouseListener{
 	}
 
 	
-	public void initOpenFile(LinkedList<Character> ll_Char) {
-		myController.initOpenFile(ll_Char);
-	}
-	
-	public void initOpenFileAndPrintToWorkPanel() {
-		myController.initOpenFileAndPrintToWorkPanel();
+	public void initOpenProject() {
+		myController.initOpenProject();
 	}
 	
 	public ArrayList<MessageBox> initConnect() {
@@ -61,19 +55,24 @@ public class ML_db implements MouseListener{
 	}
 	
 	public void initShowSuggestions(String book, String page, String number) {
-		myController.execShowSuggestions(book, page, number);
+		myController.execShowSuggestions(book, page, number, this);
 	}
 	
 	public void initUploadToDB(String jahrgang, String seite, String nummer) {
 		myController.execUploadToDB(jahrgang, seite, nummer);
 	}
 
-	public void initSaveAstxt() {
-		myController.initSaveAstxt();
+	public void initSaveProject() {
+		myController.initSaveProject();
 	}
 	
 	public boolean initCheckExerciseAvailability(String jahrgang, String seite, String nummer) {
 		return myController.execCheckExerciseAvailability(jahrgang, seite, nummer);
+	}
+	
+	public void initPrintComments(String solutionID) {
+		myController.initTellViewToRemoveExerciseSelectionPanel();
+		myController.execPrintComments(solutionID);
 	}
 	
 	public int initGetCommentCount() {
@@ -85,8 +84,9 @@ public class ML_db implements MouseListener{
 	}
 	
 	public String initOpenSolution() {
-		this.solution = myController.initOpen();
-		return this.solution;
+		myController.initOpenProject();
+		solution = MainModel.getCodeOnWorkPanel();
+		return solution;
 	}
 	
 	public void setStudentCount(int studentCount) {
@@ -133,7 +133,7 @@ public class ML_db implements MouseListener{
 	}
 	
 	public void initHandInExam() {
-		double percentage = myController.execHandInExam();
+		double percentage = myController.execHandInExam(myController.initGetWorkPanel());
 		MessageBox msg = new MessageBox("Resultat", "Du hast " + percentage + "% erreicht!", "Gratulation!");
 		msg.setVisible(true);
 	}
@@ -150,6 +150,8 @@ public class ML_db implements MouseListener{
 	public void initNotifyTeacherOfLeave() {
 		myController.execNotifyTeacherOfLeave();
 	}
+	
+	
 	
 	
 	
@@ -195,9 +197,6 @@ public class ML_db implements MouseListener{
 			
 			else if(jltemp.getIcon().toString().equals("src/thumbsdown.png"))
 				myController.execChangeRatio(-1, (JPanel) jltemp.getParent());
-			
-			else if(jltemp.getIcon().toString().equals("src/comment.png"))
-				myController.execPrintComments(MainView.hmPanelCodeID.get(jltemp.getParent()));
 			
 			else if(jltemp.getIcon().toString().equals("src/exit_white.png")) {
 				myController.initCloseAnswerPanel();
@@ -264,14 +263,6 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
-
-
-	
-
-
-	
-
-
 
 
 

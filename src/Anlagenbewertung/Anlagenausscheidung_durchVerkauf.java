@@ -24,8 +24,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		this.konto1 = konto1;
 		this.konto2 = konto2;
 		this.konto3 = konto3;
-		
-		changeYZKWP();
+	
 		makeKonto1(konto1);
 		
 		makeKonto2Variable(konto2);
@@ -93,25 +92,26 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 
 	
 	public void setUpRoutine(String konto4, String konto5, String percent, boolean fixed, String extra) {
-		System.out.println("setuproutine");
 		
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 		
-		myController.initPaint3Konten(konto1, finalZahlungskonto, konto3);
+		double nettoPrice = Double.parseDouble(txtPreis.getText());
+		double bruttoPrice = Double.parseDouble(txtPreis.getText());
 		
 		if(netto.isSelected())
-			myController.initNetto_to_paintAll3(percent, txtPreis.getText());
-		else
-			txtPreis.setText(myController.initBrutto_to_paintAll3(percent, txtPreis.getText()));
-
+			bruttoPrice = myController.initNettoToBrutto(percent, txtPreis.getText());
+		else {
+			nettoPrice = myController.initBruttoToNetto(percent, txtPreis.getText());
+			txtPreis.setText(Double.toString(nettoPrice));
+		}
 		
-		View_SuperClass.resetyZK();
-		View_SuperClass.resetSwap();
+		String kontos[] = {konto1, finalZahlungskonto, konto3};
+		Double prices[] = {nettoPrice, bruttoPrice, bruttoPrice - nettoPrice};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 			
 		makeAbschreibung();
 			
-
-
 	}
 	
 	public void makeAbschreibung() {
@@ -130,15 +130,14 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 
 	}
 	
-	private void changeYZKWP() {
-		yZKWP = MainView.margin+10;
-	}
-	
 	private void make3rdBS(Double abschreibungsBetrag) {
-		myController.initPaint2Konten("7820", finalAnlKonto);
+		
+		String kontos[] = {"7820", finalAnlKonto};
 		
 		Double ausbuchWert = Double.parseDouble(buchWert.getText()) - abschreibungsBetrag;
-		myController.initPaint1Price(ausbuchWert);
+		Double prices[] = {ausbuchWert};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 		
 		Double richtWert = Double.parseDouble(txtPreis.getText()) - ausbuchWert;
 		Double testRes = richtWert + Math.abs(richtWert);
@@ -147,14 +146,22 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 			openSaldBuchungen("4600", "7830", "7830", "7820", Double.parseDouble(txtPreis.getText()), MainModel.roundDouble_giveBack_Double(ausbuchWert));
 		else
 			openSaldBuchungen("4600", "4630", "4630", "7820", Double.parseDouble(txtPreis.getText()), MainModel.roundDouble_giveBack_Double(ausbuchWert));
+		
 	}
 	
 	private void openSaldBuchungen(String konto1, String konto2, String konto3, String konto4, Double nettoVP, Double ausbuchWert) {
-		myController.initPaint2Konten_mitzyk(konto1, konto2);
-		myController.initPaint1Price(nettoVP);
 		
-		myController.initPaint2Konten_mitzyk(konto3, konto4);
-		myController.initPaint1Price(ausbuchWert);
+		String kontos[] = {konto1, konto2};
+		Double prices[] = {nettoVP};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
+		
+		
+		String kontos2[] = {konto3, konto4};
+		Double prices2[] = {ausbuchWert};
+		
+		myController.initpaintUpTo7(kontos2, prices2, leftMore);
+
 	}
 	
 }

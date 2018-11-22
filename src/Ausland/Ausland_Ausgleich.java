@@ -7,6 +7,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import View.Buchungssatz;
 import View.MainModel;
 import View.MainView;
 import extraViews.View_SuperClass;
@@ -44,8 +45,6 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 		this.konten2 = konten2;
 		this.konto3 = konto3;
 			
-		
-		changeYZKWP();
 		makeKonto1(konto1);
 		makeKonto2Fixed(konten2[0]);
 		makeKonto3(konto3);
@@ -140,6 +139,7 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 	@Override
 	public void setUpRoutine(String konto4, String konto5, String percent, boolean spesen, String erwSt) {
 		
+		Buchungssatz bs = null;
 		
 		finalZahlungskonto = konten2[0];
 		
@@ -149,8 +149,6 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 
 		if(fwCB.isSelected())
 			this.newPrice = Double.parseDouble(((Controller_Ausland) myController).initExecuteFWRoutine(txtPreis.getText(), fwSatz.getText()));
-		
-		System.out.println(newPrice);
 		
 		
 		
@@ -164,13 +162,13 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 			
 			if(spCB.isSelected()) {// Wenn Skonto und Spesen selected sind
 				spesenException(newPrice, konto1);
-				makeThe2ndBSWith_Skonto(konto4, konto5, spesen, erwSt);
+				bs = makeThe2ndBSWith_Skonto(konto4, konto5, spesen, erwSt);
 				threeOutputs = false;
 			}//if
 			
 			else { // Wenn nur Skonto selected ist
 				make1stBS();
-				makeThe2ndBSWith_Skonto(konto4, konto5, spesen, erwSt);
+				bs = makeThe2ndBSWith_Skonto(konto4, konto5, spesen, erwSt);
 			}//else
 		}//else if
 		
@@ -182,30 +180,34 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 		}
 		
 		if(fwCB.isSelected())
-			MainView.addNoteToPanel("Verwendeter Kurs:     "+ fwSatz.getText(), panel, 375);
-		
-		View_SuperClass.resetyZK();
-		View_SuperClass.resetSwap();
+			bs.addNoteToPanel("Verwendeter Kurs:     "+ fwSatz.getText(), 375);
 			
-
-
 	}
 	
 	public void make1stBS() {
-		panel = myController.initPaint2Konten_mitzyk(konto1, finalZahlungskonto);
-		myController.initPaint1Price(newPrice);
+		String kontos[] = {konto1, finalZahlungskonto};
+		Double prices[] = {newPrice};
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 	}
 	
 
 	
-	public void makeThe2ndBSWith_Skonto(String konto4, String konto5, boolean spesen, String erwSt) {
-		myController.initPaint2Konten(konto4, konto5);
-		myController.initPaint1Price(skonto_Brutto);
+	public Buchungssatz makeThe2ndBSWith_Skonto(String konto4, String konto5, boolean spesen, String erwSt) {
+		Buchungssatz bs;
+		
+		String kontos[] = {konto4, konto5};
+		Double prices[] = {skonto_Brutto};
+		
+		bs = myController.initpaintUpTo7(kontos, prices, leftMore);
 		
 		if(erwSt == null) {
-			myController.initPaint2Konten("3510", "2510");
-			((Controller_Ausland) myController).initCalculateErwerbsteuerbetrag_andPaintIt(Double.toString(skonto_Brutto));
+			String kontos2[] = {"3510", "2510"};
+			Double prices2[] = {((Controller_Ausland) myController).initCalculateErwerbsteuerbetrag(Double.toString(skonto_Brutto))};
+			
+			bs = myController.initpaintUpTo7(kontos2, prices2, leftMore);
 		}
+		
+		return bs;
 		
 	}
 	
@@ -215,14 +217,18 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 		double newPrice = 0;
 		if(konto1.equals("2800")) {
 			newPrice = price - spesenPreis;
-			panel = myController.initPaint3Konten(konto1, finalZahlungskonto, konto3);
-			myController.initPaint3Prices(newPrice, price, spesenPreis);
+			String kontos[] = {konto1, finalZahlungskonto, konto3};
+			Double prices[] = {newPrice, price, spesenPreis};
+			
+			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 			
 			else {
 				newPrice = price + spesenPreis;
-				panel = myController.initPaint3Konten(konto1, finalZahlungskonto, konto3);
-				myController.initPaint3Prices(price, newPrice, spesenPreis);
+				String kontos[] = {konto1, finalZahlungskonto, konto3};
+				Double prices[] = {price, newPrice, spesenPreis};
+				
+				myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 	}
 	
@@ -234,12 +240,5 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 		double percent_double = Double.parseDouble(percent);
 		skonto_20Percent = MainModel.roundDouble_giveBack_Double((skonto_Brutto / 100) * percent_double); //Erwerbssteuer Skonto
 	}
-	
-	
-	
-	private void changeYZKWP() {
-		yZKWP = MainView.margin+10;
-	}
-	
 	
 }

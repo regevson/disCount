@@ -42,14 +42,22 @@ public class _2Stufig_Fixed_NTRabatt_View extends View_SuperClass{
 		else
 			finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 			
-		myController.initPaint3Konten(Konto1, finalZahlungskonto, Konto3);
 		
-			if(netto.isSelected())
-				myController.initNetto_to_paintAllRabatt(percent, txtPreis.getText(), rabattPercent.getText());
-			else
-				myController.initBrutto_to_paintAllRabatt(percent, txtPreis.getText(), rabattPercent.getText());
-
-			resetSwap();
+		String kontos[] = {Konto1, finalZahlungskonto, Konto3};
+		Double prices[];
+		
+			if(netto.isSelected()) {
+				prices = myController.initCalculateRabattPricesFromNetto(percent, txtPreis.getText(), rabattPercent.getText());
+			}
+			else {
+				prices = myController.initCalculateRabattPricesFromNetto(percent, Double.toString(myController.initBruttoToNetto(txtPreis.getText(), "20")), rabattPercent.getText());
+			}
+	
+			myController.initpaintUpTo7(kontos, prices, leftMore);
+			
 	}
 	
+	
+	
+			
 }

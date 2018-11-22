@@ -61,13 +61,16 @@ public class Tagesgeld_View extends View_SuperClass{
 			finalZahlungskonto = Konten2[0];
 		else
 			finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
-			
-		myController.initPaint3Konten(Konto1, finalZahlungskonto, Konto3);
 		
-		String resTG = MainModel.calcTagesgeld(txtTage.getText(), txtStartZeit.getText(), txtEndZeit.getText(), txtEssen.getText());
-		myController.initBrutto_to_paintAll3(percent, resTG);
+		double resTG = myController.initCalcTagesgeld(txtTage.getText(), txtStartZeit.getText(), txtEndZeit.getText(), txtEssen.getText());
+		double nettoPrice = myController.initBruttoToNetto(Double.toString(resTG), percent);
+			
+		String kontos[] = {Konto1, finalZahlungskonto, Konto3};
+		Double prices[] = {nettoPrice, resTG, resTG - nettoPrice};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
+		
 
-		resetSwap();
 	}
 	
 }

@@ -52,12 +52,12 @@ public class Ausgleich_Kreditkarten_View extends View_SuperClass{
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
 
 		finalZahlungskonto = Konten2[0];
-			
-		myController.initPaint4Konten(Konto1, finalZahlungskonto, Konto3, lblKonto4.getText());
 		
-		((Controller_Rechnungsausgleich) myController).initCalcNettoKreditkarten(txtPreis.getText(), txtPreis2.getText());
+		String kontos[] = {Konto1, finalZahlungskonto, Konto3, lblKonto4.getText()};
+		Double prices[] = ((Controller_Rechnungsausgleich) myController).initCalcNettoKreditkarten(txtPreis.getText(), txtPreis2.getText());
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 
-		resetSwap();
 	}
 	
 }

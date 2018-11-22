@@ -2,17 +2,14 @@ package Rechnungsausgleich;
 
 import javax.swing.JTextField;
 
-import View.MainView;
+import View.MainModel;
 import extraViews.View_SuperClass;
 import extraViews.View_SuperClass_2Outputs;
 
 public class Skonto_1_2_Stufig extends View_SuperClass_2Outputs {
-	public Skonto_1_2_Stufig() {
-	}
-
 	
 	public static JTextField skontoPercent;
-	private static String skontoBruttoPrice;
+	private static Double skontoBruttoPrice;
 	
 	private String konto1;
 	private String[] konto2;
@@ -24,8 +21,7 @@ public class Skonto_1_2_Stufig extends View_SuperClass_2Outputs {
 		this.konto1 = konto1;
 		this.konto2 = konto2;
 		this.konto3 = konto3;
-		
-		changeYZKWP();
+
 		makeKonto1(konto1);
 		
 		if(fixed == true)
@@ -63,15 +59,27 @@ public class Skonto_1_2_Stufig extends View_SuperClass_2Outputs {
 			finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 		
 		
-		((Controller_Rechnungsausgleich) myController).initCreateKontos1stufig_Skonto(konto1, konto2[0]);
+		
+		double nettoPrice = Double.parseDouble(txtPreis.getText());
+		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		
 
 		
-			if(netto.isSelected())
-				skontoBruttoPrice = ((Controller_Rechnungsausgleich) myController).initNetto_to_newBrutto_Skonto(txtPreis.getText(), skontoPercent.getText());
-			else
-				skontoBruttoPrice = ((Controller_Rechnungsausgleich) myController).initBrutto_to_newBrutto_Skonto(txtPreis.getText(), skontoPercent.getText());
-			
-			View_SuperClass.resetyZK();
+		if(netto.isSelected()) {
+			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), percent);
+			skontoBruttoPrice = ((Controller_Rechnungsausgleich) myController).initNettoToSkontoBrutto(txtPreis.getText(), skontoPercent.getText());
+		}
+		else {
+			nettoPrice = myController.initBruttoToNetto(txtPreis.getText(), percent);
+			skontoBruttoPrice = ((Controller_Rechnungsausgleich) myController).initBruttoToSkontoBrutto(txtPreis.getText(), skontoPercent.getText());
+		}
+		
+		
+		
+		String kontos[] = {konto1, finalZahlungskonto};
+		Double prices[] = {bruttoPrice - skontoBruttoPrice};
+		
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 			
 		makeThe2ndBS(konto4, konto5);
 			
@@ -80,18 +88,15 @@ public class Skonto_1_2_Stufig extends View_SuperClass_2Outputs {
 	}
 	
 	public void makeThe2ndBS(String konto4, String konto5) {
-
-		myController.initPaint3Konten(konto3, konto4, konto5);
 		
-		String nettoPrice =myController.initBrutto_to_paintAll3("20", skontoBruttoPrice);
-		MainView.llNettoPrices.set(MainView.llNettoPrices.size()-1, Double.parseDouble("-" + nettoPrice));
-	
-		View_SuperClass.resetSwap();
+		Double skontoNettoPrice = myController.initBruttoToNetto(Double.toString(skontoBruttoPrice), "20");
+		Double skontoTaxPrice = MainModel.roundDouble_giveBack_Double(skontoBruttoPrice - skontoNettoPrice);
+		
+		
+		String kontos[] = {konto3, konto4, konto5};
+		Double prices[] = {skontoNettoPrice, skontoBruttoPrice, skontoTaxPrice};
+		myController.initpaintUpTo7(kontos, prices, leftMore);
 
-	}
-	
-	private void changeYZKWP() {
-		yZKWP = MainView.margin+10;
 	}
 	
 

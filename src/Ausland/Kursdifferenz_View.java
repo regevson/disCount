@@ -106,27 +106,32 @@ public class Kursdifferenz_View extends View_SuperClass{
 	
 	private void output_Result_IGE_IMP(boolean gewinn, Double result) {
 		
+		
 		if(gewinn == true) {
-			myController.initPaint2Konten(konto_Vab, konto2_Gewinn);
-			myController.initPaint1Price(Math.abs(Double.parseDouble(MainModel.round(result))));
+			String kontos[] = {konto_Vab, konto2_Gewinn};
+			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 		
 		else {
-			myController.initPaint2Konten(konto1_Verlust, konto_Vab);
-			myController.initPaint1Price(Math.abs(Double.parseDouble(MainModel.round(result))));
+			String kontos[] = {konto1_Verlust, konto_Vab};
+			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 	}
 	
 	private void output_Result_IGL_EXP(boolean gewinn, Double result) {
 		
 		if(gewinn == true) {
-			myController.initPaint2Konten(konto_Vab, konto2_Gewinn);
-			myController.initPaint1Price(Math.abs(Double.parseDouble(MainModel.round(result))));
+			String kontos[] = {konto_Vab, konto2_Gewinn};
+			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 		
 		else {
-			myController.initPaint2Konten(konto1_Verlust, konto_Vab);
-			myController.initPaint1Price(Math.abs(Double.parseDouble(MainModel.round(result))));
+			String kontos[] = {konto1_Verlust, konto_Vab};
+			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 	}
 	

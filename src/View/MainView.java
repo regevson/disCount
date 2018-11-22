@@ -35,7 +35,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -46,7 +45,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import Anlagenbewertung.ML_Anlagenbewertung;
-import Controls.ML_Controls;
 import Kalkulationen.Absatzkalkulation_View;
 import Kalkulationen.Bezugskalkulation_View;
 import Kalkulationen.Personalverrechnung_View;
@@ -138,16 +136,14 @@ public static boolean isBANNED = false;
 	
 	private static JTextArea txtAreaHints;
 
-	public static int margin = 20;
+	public static int bsPanelMargin = 20;
 
 
-	public static LinkedList<JPanel> llJPanel = new LinkedList<JPanel>();
-	public static LinkedList<JRadioButton> llRadioButton = new LinkedList<JRadioButton>();
-	public static LinkedList<Double> llNettoPrices = new LinkedList<Double>();
+	//public static LinkedList<JPanel> llJPanel = new LinkedList<JPanel>();
+	public static LinkedList<Buchungssatz> bsList = new LinkedList<Buchungssatz>();
 	public static LinkedList<JLabel> llSearchNames = new LinkedList<JLabel>();
 	public static LinkedList<ArrayList<ArrayList<JLabel>>> llThumbsGroups = new LinkedList<ArrayList<ArrayList<JLabel>>>();
 	public static HashMap<JPanel, String> hmPanelCodeID = new HashMap<JPanel, String>();
-	public static HashMap<JPanel, String> hmPanelToCode = new HashMap<JPanel, String>();
 	
 	public static ArrayList<Image> icons = new ArrayList<Image>();
 
@@ -461,239 +457,9 @@ public static boolean isBANNED = false;
 		
 	}
 	
-	public static JLabel addBasicToPanel(String item, int x, int y, int width, int height) {
-		JLabel label = new JLabel(item);
-		label.setBounds(x, y, width, height);
-		label.setFont(new Font("Roboto", Font.BOLD, 17));
-		label.setForeground(new Color(218, 218, 218));
-		llJPanel.getLast().add(label);
-		llJPanel.getLast().repaint();
+	
+	
 
-		return label;
-	}
-
-
-
-	public static void addNoteToPanel(String note, JPanel panel, int x) {
-		JLabel label = new JLabel(note);
-		label.setBounds(x, 120, 500, 30);
-		label.setFont(new Font("Roboto", Font.ITALIC, 16));
-		label.setForeground(new Color(218, 218, 218));
-		panel.add(label);
-		panel.repaint();
-		MainView.workPanel.repaint();
-	}
-	
-	public static void addNoteToPanel(String note, JPanel panel, int x, int y) {
-		JLabel label = new JLabel(note);
-		label.setBounds(x, y, 500, 30);
-		label.setFont(new Font("Roboto", Font.BOLD, 17));
-		label.setForeground(Color.RED);
-		panel.add(label);
-		panel.repaint();
-		MainView.workPanel.repaint();
-		
-		if(note.contains("Darüber"))
-			db_Model.skill--;
-	}
-	
-	public void addInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader) {
-		//JLabel infoLabel = makeMenuLabels("src/infoPic.png", 5, 20, 9, 20, 20);
-		//numberLabel.add(infoLabel);
-		
-		JPanel infoPanel = new JPanel();
-		infoPanel.setBounds(60, 108, 523, 40);
-		infoPanel.setBackground(darkBlack);
-		infoPanel.setVisible(true);
-		infoPanel.setLayout(null);
-		llJPanel.getLast().add(infoPanel);
-		
-		addThumbs(infoPanel);
-		addCommentIcon(infoPanel);
-		
-		createBSInfoContents(10, 100, "@" + name, infoPanel);
-		createBSInfoContents(150, 50, codeInfo, infoPanel);
-		createBSInfoContents(332, 50, Integer.toString(upvotes), infoPanel);//22
-		createBSInfoContents(392, 100, Integer.toString(downvotes), infoPanel);
-		createBSInfoContents(452, 100, Integer.toString(commentCount), infoPanel);
-		
-		String id = ((ML_db) llML.get(9)).initGetSolutionID();
-		System.out.println("INMAINMODEL THIS IS ID " + id);
-		hmPanelCodeID.put(infoPanel, id);
-	}
-	
-	private void createBSInfoContents(int x, int width, String text, JPanel infoPanel) {
-		JLabel label = new JLabel();
-		label.setForeground(Color.WHITE);
-		label.setFont(font_15);
-		label.setText(text);
-		label.setBounds(x, 2, width, 40);
-		infoPanel.add(label);
-	}
-	
-	
-	
-	private static JPanel makeRadioButton(JPanel jp) {
-		JRadioButton jrb = new JRadioButton();
-		jrb.setText("");
-		jp.add(jrb);
-		jrb.setBounds(550, 69, 30, 30);
-		if(isUploading)
-			jrb.setBackground(MainView.disCountGreen);
-		else
-			jrb.setBackground(new Color(37, 37, 38));
-		
-		if(isUploading)
-			jrb.setSelected(true);
-		
-		llRadioButton.addLast(jrb);
-		return jp;
-	}
-	
-	
-	public static JPanel createJPanel() {
-		JPanel jp = new JPanel();
-		jp.setBounds(5, jpMargin, 585, 150);
-		jp.setBackground(null);
-		if(isUploading) {
-			jp.setBackground(MainView.disCountGreen);
-			jp.setBorder(new LineBorder(disCountBrown, 2));
-		}
-		else {
-			jp.setBackground(middleBlack);
-			jp.setBorder(new LineBorder(new Color(0, 117, 211), 2));
-		}
-		jp.setLayout(null);
-		
-		MainView.workPanel.add(jp);
-		llJPanel.addLast(jp);
-		MainView.workPanel.repaint();
-		
-		
-		numberLabel = new JTextField();
-		numberLabel.setFont(new Font("Roboto", Font.BOLD, 20));
-		numberLabel.setForeground(Color.BLACK);
-		numberLabel.setBackground(disCountBrown);
-
-		numberLabel.setBounds(0, 0, 60, 150);
-		numberLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		numberLabel.setEditable(false);
-		jp.add(numberLabel);
-		
-		if(!isUploading)
-			makePink(numberLabel, jp);
-		
-		
-		
-		paintNumberOnNumberLabel();
-		resizeWorkPanel();
-		
-		addArrows(jp);
-		
-		jpMargin = jpMargin + 170;
-		
-		return makeRadioButton(jp);
-	}
-	
-	
-	public static void modifyJPanel(JPanel jp) {
-		jp.setBounds(5, jpMargin - 170, 585, 300);
-		numberLabel.setBounds(0, 0, 60, 300);
-		MainView.workPanel.repaint();
-	}
-	
-	public static void reModifyJPanel(JPanel jp) {
-		jp.setBounds(5, jpMargin - 170, 585, 150);
-		numberLabel.setBounds(0, 0, 60, 150);
-		MainView.workPanel.repaint();
-	}
-	
-	
-	
-	public static void addCheckMark(JPanel jp, ArrayList<Integer> examBSList, int bsNumber) {
-		ImageIcon verifyIcon = new ImageIcon("src/verifyIt.gif");
-		JLabel verifyLabel = new JLabel(verifyIcon);
-		verifyLabel.setBounds(540, 4, 42, 40);
-		jp.add(verifyLabel);
-		
-		db_Model.skill++;
-		
-		if(examBSList != null)
-			examBSList.set(bsNumber, 1);
-	}
-	
-	public static void addErrorIcon(JPanel jp) {
-		ImageIcon errorIcon = new ImageIcon("src/error.gif");
-		JLabel errorLabel = new JLabel(errorIcon);
-		errorLabel.setBounds(538, 6, 39, 39);
-		jp.add(errorLabel);
-		
-		db_Model.skill--;
-	}
-	
-	private static void addThumbs(JPanel jp) {
-		ArrayList<JLabel> llLabel = new ArrayList<JLabel>();
-		ImageIcon thumbsUpIcon = new ImageIcon("src/thumbsup.png");
-		JLabel thumbsUpLabel = new JLabel(thumbsUpIcon);
-		thumbsUpLabel.setBounds(310, 12, 18, 18);
-		
-		ImageIcon thumbsDownIcon = new ImageIcon("src/thumbsdown.png");
-		JLabel thumbsDownLabel = new JLabel(thumbsDownIcon);
-		thumbsDownLabel.setBounds(370, 12, 18, 18);
-		
-		llLabel.add(thumbsUpLabel);
-		llLabel.add(thumbsDownLabel);
-		
-		MainView.llThumbsGroups.getLast().add(llLabel);
-		
-		thumbsUpLabel.addMouseListener(((ML_db) llML.get(9)));
-		thumbsDownLabel.addMouseListener(((ML_db) llML.get(9)));
-		
-		jp.add(thumbsUpLabel);
-		jp.add(thumbsDownLabel);
-	}
-	
-	private static void addCommentIcon(JPanel jp) {
-		ImageIcon commentIcon = new ImageIcon("src/comment.png");
-		JLabel commentLabel = new JLabel(commentIcon);
-		commentLabel.setBounds(430, 12, 18, 18);
-		jp.add(commentLabel);
-		
-		commentLabel.addMouseListener(((ML_db) llML.get(9)));
-	}
-	
-	private static void addArrows(JPanel jp) {
-		ImageIcon downIcon = new ImageIcon("src/downArrow.png");
-		JLabel downLabel = new JLabel(downIcon);
-		downLabel.setBounds(555, 123, 18, 12);
-		jp.add(downLabel);
-		downLabel.addMouseListener(((ML_Controls) llML.get(8)));
-		
-		ImageIcon upIcon = new ImageIcon("src/upArrow.png");
-		JLabel upLabel = new JLabel(upIcon);
-		upLabel.setBounds(555, 103, 18, 12);
-		jp.add(upLabel);
-		upLabel.addMouseListener(((ML_Controls) llML.get(8)));
-		
-	}
-	
-	public static void paintNumberOnNumberLabel() {
-		for(int y = 0; y < MainView.llJPanel.size(); y++) {
-			JTextField jtf = (JTextField) MainView.llJPanel.get(y).getComponent(0);
-			jtf.setText(Integer.toString(y + 1));
-		}
-	}
-	
-	private static void resizeWorkPanel() {
-		int height = (int) workPanel.getSize().getHeight();
-		workPanel.setPreferredSize(new Dimension(workPanel_Width-20, height + 170));
-		tempPanel.revalidate();
-		tempPanel.repaint();
-	}
-	
-	public static void addToPanel(JLabel jl) {
-		llJPanel.getLast().add(jl);
-	}
 	
 	public ArrayList<MessageBox> getPotentialMessages(LinkedList<MouseListener> llML_p){
 		this.llML = llML_p;
@@ -702,19 +468,7 @@ public static boolean isBANNED = false;
 	
 	
 	
-	public static void makePink(JTextField jl, JPanel jp) {
-		jl.setBackground(new Color(104, 33, 122));
-		jp.setBorder(new LineBorder(new Color(104, 33, 122), 2));
-		jl.repaint();
-		
-		new java.util.Timer().schedule(
-				new java.util.TimerTask(){
-					@Override
-					public void run() {
-						jl.setBackground(new Color(0, 117, 211));
-						jp.setBorder(new LineBorder(new Color(0, 117, 211), 2));
-						jl.repaint();}}, 1000);
-	}
+	
 	
 	private JPanel makeNewEntryOnSideBar(String title, JPanel panelLeft, JPanel contentPane, Dimension screen, String[] links, MouseListener ML) {
 
@@ -961,7 +715,7 @@ public static boolean isBANNED = false;
 		menuItemÖffnen.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItemÖffnen.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	((ML_db) llML.get(9)).initOpenFileAndPrintToWorkPanel();
+		    	((ML_db) llML.get(9)).initOpenProject();
 		    }
 		});
 		
@@ -997,9 +751,9 @@ public static boolean isBANNED = false;
 		menuBar.setForeground(Color.WHITE);
 		menuItem.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItem.addActionListener(new ActionListener() {
-			java.awt.Rectangle r = getBounds();
 		    public void actionPerformed(ActionEvent e) {
-		    	MainModel.deleteChecked(true);
+		    	MainModel.deleteChecked(workPanel);
+		    	workPanel.repaint();
 		    }
 		});
 		
@@ -1016,8 +770,8 @@ public static boolean isBANNED = false;
 		menuItem2.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItem2.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	MainModel.contentForTxt.removeAll(MainModel.contentForTxt);
-		    	MainModel.deleteAll();
+		    	MainModel.deleteAll(workPanel);
+		    	workPanel.repaint();
 		    }
 		});
 		
@@ -1712,6 +1466,7 @@ public static boolean isBANNED = false;
 			currentMargin = currentMargin + questionMargin;
 			
 		}
+		
 	}
 	
 	
@@ -2056,6 +1811,14 @@ public static boolean isBANNED = false;
 	public static void forbidWindowChange() {
 		legalWindowChange = false;
 		System.out.println("isFORBIDDEN!!");
+	}
+
+
+
+
+
+	public JPanel getWorkPanel() {
+		return workPanel;
 	}
 
 

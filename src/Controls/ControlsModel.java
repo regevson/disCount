@@ -1,18 +1,15 @@
 package Controls;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 
+import View.Buchungssatz;
 import View.MainView;
-import extraViews.BS_Editor;
 
 public class ControlsModel {
 
@@ -33,6 +30,7 @@ public class ControlsModel {
 	private int stufen = 1;
 	
 	BS_Editor lastStufen;
+	private Buchungssatz bs;
 	
 
 	
@@ -82,9 +80,9 @@ public class ControlsModel {
 		MainView.suggestionsEnabled = false;
 	}
 
-	public void addBS(JLabel jltemp, ML_Controls ML) {
+	public void addBS(JLabel jltemp, ML_Controls ML, JPanel workPanel) {
 		stufen = 1;
-		prepareAdd(jltemp, ML);
+		prepareAdd(jltemp, ML, workPanel);
 	}
 
 	public int getStufen() {
@@ -103,10 +101,12 @@ public class ControlsModel {
 	
 	
 	
-	private void prepareAdd(JLabel jltemp, ML_Controls ML) {
+	private void prepareAdd(JLabel jltemp, ML_Controls ML, JPanel workPanel) {
 		
-		newBSPanel = MainView.createJPanel();
-		MainView.llRadioButton.getLast().setSelected(true);
+		bs = new Buchungssatz();
+		newBSPanel = bs.createBSContainer(workPanel);
+		
+		bs.setRadioButtonSelected(true);
 		
 		if(jltemp.isEnabled()) {
 			einstufig  = new BS_1stufig_Editor();
@@ -146,7 +146,7 @@ public class ControlsModel {
 	private void upStufen() {
 		
 		if(!lastStufen.getSize() && stufen > 4)
-			MainView.modifyJPanel(newBSPanel);
+			bs.modifyJPanel();
 			
 		newBSPanel.remove(editorPanel);
 		newBSPanel.repaint();
@@ -168,7 +168,7 @@ public class ControlsModel {
 	private void downStufen() {
 		
 		if(lastStufen.getSize() && stufen < 5)
-			MainView.reModifyJPanel(newBSPanel);
+			bs.reModifyJPanel();
 		
 		newBSPanel.remove(editorPanel);
 		newBSPanel.repaint();
@@ -239,79 +239,6 @@ public class ControlsModel {
 		JLabel picLabel = new JLabel(icon);
 		picLabel.addMouseListener(ML);
 		return picLabel;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	////////////////////////moveBS//////////////////////////
-	
-	
-	public int moveBS(JPanel currentPanel, int num) {
-		int startMargin = 20;
-		int index = MainView.llJPanel.indexOf(currentPanel);
-		
-		if(index == 0 && num == -1)
-			return - 1;
-		else if(index == MainView.llJPanel.size() - 1 && num == 1)
-			return - 1;
-		
-		int marginOfOther = 170 * (index + num) + startMargin;
-		currentPanel.setBounds(5, marginOfOther, 585, 150);
-		marginOfOther = 170 * index + 20; // marginOfCurrent
-		JPanel otherPanel = MainView.llJPanel.get(index + num);
-		otherPanel.setBounds(5, marginOfOther, 585, 150);
-		MainView.llJPanel.set(index, otherPanel);
-		MainView.llJPanel.set(index + num, currentPanel);
-		
-		updateStandardLists(num, index);
-		
-		MainView.paintNumberOnNumberLabel();
-		
-		changeColorOnMove(currentPanel);
-
-		return index;
-	}
-	
-	private void updateStandardLists(int num, int index) {
-		double tempPrice = MainView.llNettoPrices.get(index);
-		JRadioButton tempButton = MainView.llRadioButton.get(index);
-		
-		MainView.llNettoPrices.set(index, MainView.llNettoPrices.get(index + num));
-		MainView.llNettoPrices.set(index + num, tempPrice);
-		
-		MainView.llRadioButton.set(index, MainView.llRadioButton.get(index + num));
-		MainView.llRadioButton.set(index + num, tempButton);
-		
-	}
-	
-	
-	private void changeColorOnMove(JPanel currentPanel) {
-		JTextField jtf = (JTextField) currentPanel.getComponent(0);
-		Color colorTemp = MainView.disCountBlue;
-
-		if(jtf.getBackground().equals(MainView.disCountBrown))
-			colorTemp = jtf.getBackground();
-		
-		
-		final Color color = colorTemp;
-			
-		jtf.setBackground(Color.RED);
-		currentPanel.setBorder(new LineBorder(Color.RED, 2));
-		jtf.repaint();
-		
-		new java.util.Timer().schedule(
-				new java.util.TimerTask(){
-					@Override
-					public void run() {
-						jtf.setBackground(color);
-						currentPanel.setBorder(new LineBorder(color, 2));
-						jtf.repaint();}}, 1000);
-		
 	}
 	
 	
