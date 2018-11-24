@@ -183,8 +183,8 @@ public class Erweiterung_Gebäude_View extends View_SuperClass{
 		
 			
 		
-		((Controller_Anlagenbewertung) myController).initCalcAbschreibung("0300", "2", "2017", "40", AW, "erstes Jahr");
-		((Controller_Anlagenbewertung) myController).initCalcAbschreibung("0300", Integer.toString(nbMonth), "2017", RND, MainModel.biggestNetto, "erste zwei Jahre");
+		((Controller_Anlagenbewertung) myController).initCalcAbschreibung("0300", "2", "2017", "40", AW, "erstes Jahr", leftMore);
+		((Controller_Anlagenbewertung) myController).initCalcAbschreibung("0300", Integer.toString(nbMonth), "2017", RND, MainModel.biggestNetto, "erste zwei Jahre", leftMore);
 	}
 
 

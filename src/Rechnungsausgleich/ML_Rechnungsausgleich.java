@@ -92,7 +92,7 @@ public class ML_Rechnungsausgleich implements MouseListener{
 		}
 		
 		else if(cmd.equals("~  Abbuchung der Bankomatkartengesellschaft")) {
-			myController.exec_2Stufig_Fixed_View(cmd, "7792", VAG, "2500", "20", leftmore2Stufig, true, false);
+			myController.exec_2Stufig_Fixed_View(cmd, "7792", VAG, "2500", "20", leftmore2Stufig, true, true);
 		}
 		
 		

@@ -52,7 +52,6 @@ import Tabellenkalkulation.ML_TableSelectionTopics;
 import dbActivity.Controller_dbActivity;
 import dbActivity.ML_db;
 import dbActivity.QuestionComment;
-import dbActivity.db_Model;
 import extraViews.ExamSetupView;
 import extraViews.ExerciseAvailabilityChecker_View;
 import extraViews.InfoView;
@@ -139,7 +138,6 @@ public static boolean isBANNED = false;
 	public static int bsPanelMargin = 20;
 
 
-	//public static LinkedList<JPanel> llJPanel = new LinkedList<JPanel>();
 	public static LinkedList<Buchungssatz> bsList = new LinkedList<Buchungssatz>();
 	public static LinkedList<JLabel> llSearchNames = new LinkedList<JLabel>();
 	public static LinkedList<ArrayList<ArrayList<JLabel>>> llThumbsGroups = new LinkedList<ArrayList<ArrayList<JLabel>>>();
@@ -297,7 +295,7 @@ public static boolean isBANNED = false;
 		makeNewEntryOnSideBar("Standard Ein-/Verkauf  ", panelLeft, contentPane, screen, namesEKVK, llML.get(0));
 		
 		
-		String[] namesRechnungsausgleich = {"~  allgemeiner Verbindlichkeitenausgleich", "~  allgemeiner Forderungskeitenausgleich", "~  Wir zahlen Mahnspesen",
+		String[] namesRechnungsausgleich = {"~  allgemeiner Verbindlichkeitenausgleich", "~  allgemeiner Forderungsausgleich", "~  Wir zahlen Mahnspesen",
 				"~  Wir verlangen Mahnspesen", "~  Wir zahlen Verzugszinsen", "~  Wir verlangen Verzugszinsen", "~  Kundenskonto",
 				"~  Lieferantenskonto", "~  Überweisung der Kreditkartengesellschaft", "~  Abbuchung der Bankomatkartengesellschaft", "~  Buchungen mit Bankkonto"};
 

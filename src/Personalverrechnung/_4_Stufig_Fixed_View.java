@@ -118,27 +118,31 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 		
 		
-		double SV_Price = Double.parseDouble(txtPrice2.getText());
-		double FA_Price = Double.parseDouble(txtPrice3.getText());
-		double Mitarbeiter_Price = Double.parseDouble(txtPrice4.getText());
-		
 		double SV_DGA_Price = Double.parseDouble(SV_DGA.getText());
 		double DB_Price = calcPrices(DB);
 		double DZ_Price = calcPrices(DZ);
 		double KommSt_Price = calcPrices(KommSt);
 		
 		
+		double SV_Price = Double.parseDouble(txtPrice2.getText());
+		double FA_Price = Double.parseDouble(txtPrice3.getText());
+		double Mitarbeiter_Price = Double.parseDouble(txtPrice4.getText());
+		
 		
 		
 		String kontos2[] = {"3600", "6560"};
-		Double prices2[] = {SV_Price};
+		Double prices2[] = {Double.parseDouble(SV_DGA.getText())};
 		myController.initpaintUpTo7(kontos2, prices2, leftMore);
 		
 		String kontos3[] = {"3540", "6660"};
-		Double prices3[] = {FA_Price};
+		Double prices3[] = {DB_Price};
 		myController.initpaintUpTo7(kontos3, prices3, leftMore);
 		
-		String kontos5[] = {"3850", "6670"};
+		String kontos4[] = {"3540", "6670"};
+		Double prices4[] = {DZ_Price};
+		myController.initpaintUpTo7(kontos4, prices4, leftMore);
+		
+		String kontos5[] = {"3610", "6680"};
 		Double prices5[] = {KommSt_Price};
 		myController.initpaintUpTo7(kontos5, prices5, leftMore);
 		

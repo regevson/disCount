@@ -99,16 +99,16 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		double bruttoPrice = Double.parseDouble(txtPreis.getText());
 		
 		if(netto.isSelected())
-			bruttoPrice = myController.initNettoToBrutto(percent, txtPreis.getText());
+			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), percent);
 		else {
-			nettoPrice = myController.initBruttoToNetto(percent, txtPreis.getText());
+			nettoPrice = myController.initBruttoToNetto(txtPreis.getText(), percent);
 			txtPreis.setText(Double.toString(nettoPrice));
 		}
 		
 		String kontos[] = {konto1, finalZahlungskonto, konto3};
 		Double prices[] = {nettoPrice, bruttoPrice, bruttoPrice - nettoPrice};
 		
-		myController.initpaintUpTo7(kontos, prices, leftMore);
+		myController.initpaintUpTo7(kontos, prices, !leftMore);
 			
 		makeAbschreibung();
 			
@@ -124,7 +124,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		else
 			IBN_Monat.setText("12");
 		
-		Double abschreibungsWert = ((Controller_Anlagenbewertung) myController).initCalcAbschreibung(finalAnlKonto, IBN_Monat.getText(), "2017", txtND.getText(), Double.parseDouble(txtAW.getText()), "erstes Jahr");
+		Double abschreibungsWert = ((Controller_Anlagenbewertung) myController).initCalcAbschreibung(finalAnlKonto, IBN_Monat.getText(), "2018", txtND.getText(), Double.parseDouble(txtAW.getText()), "erstes Jahr", leftMore);
 	
 		make3rdBS(abschreibungsWert);
 

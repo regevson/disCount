@@ -64,7 +64,7 @@ public class ML_Ausland implements MouseListener{
 		
 		
 		if(cmd.equals("~  IG Lieferung")) {
-			myController.exec_IG_Erwerb_Kauf_View(cmd, "4010", FIXEDET, null, null, null, "20", LSKCoo, false, null, true);
+			myController.exec_IG_Erwerb_Kauf_View(cmd, "4010", FIXEDET, null, null, null, "20", LSKCoo, false, null, false);
 		}
 		
 		if(cmd.equals("~  IG Lieferung Versandkosten")) {
@@ -72,7 +72,7 @@ public class ML_Ausland implements MouseListener{
 		}
 		
 		if(cmd.equals("~  IG Lieferung Ausgleich")) {
-			myController.exec_Ausland_Ausgleich(cmd, "2800", FIXEDET, "7790", "4415", "2000", "20", IGLAGCoo, true, "no", false);
+			myController.exec_Ausland_Ausgleich(cmd, "2800", FIXEDET, "7790", "4415", "2000", "20", IGLAGCoo, true, "no", true);
 		}
 		
 		else if(cmd.equals("~  Import")) {
@@ -94,12 +94,12 @@ public class ML_Ausland implements MouseListener{
 		
 		
 		else if(cmd.equals("~  Export Bezugskosten")) {
-			myController.exec_1Stufig_ohneSteuer(cmd, "7301", VAG, null, null, leftmore2Stufig, true, true);
+			myController.exec_1Stufig_ohneSteuer(cmd, "7301", VAG, null, null, leftmore2Stufig, true, false);
 		}
 		
 		
 		else if(cmd.equals("~  Export Ausgleich")) {
-			myController.exec_Ausland_Ausgleich(cmd, "2800", FIXEDET, "7790", "4416", "2000", "20", IGLAGCoo, true, "no", false);
+			myController.exec_Ausland_Ausgleich(cmd, "2800", FIXEDET, "7790", "4416", "2000", "20", IGLAGCoo, true, "no", true);
 		}
 		
 		

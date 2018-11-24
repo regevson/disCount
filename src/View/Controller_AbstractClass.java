@@ -1,9 +1,5 @@
 package View;
 
-import java.util.LinkedList;
-
-import javax.swing.JPanel;
-
 import extraViews._1Stufig_ohneSteuer;
 import extraViews._2Stufig_Fixed_NTRabatt_View;
 import extraViews._2Stufig_Fixed_View;

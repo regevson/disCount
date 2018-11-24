@@ -73,7 +73,7 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	
 	else if(cmd.contains("~  Anlagenausscheidung durch Verkauf")) {
-		myController.exec_Anlagenausscheidung_durchVerkauf(cmd, "4600", FULLAW, "3500", null, null, "20", leftmore2Stufig_X, false, null, false);
+		myController.exec_Anlagenausscheidung_durchVerkauf(cmd, "4600", FULLAW, "3500", null, null, "20", leftmore2Stufig_X, false, null, true);
 	}
 	
 }

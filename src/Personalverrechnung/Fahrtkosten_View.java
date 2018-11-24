@@ -17,11 +17,11 @@ public class Fahrtkosten_View extends _2Stufig_VariableKonto{
 		double bruttoPrice = Double.parseDouble(txtPreis.getText());
 		
 		if(netto.isSelected())
-			nettoPrice = myController.initNettoToBrutto(percent, txtPreis.getText());
+			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), percent);
 		else
-			bruttoPrice = myController.initBruttoToNetto(percent, txtPreis.getText());
+			nettoPrice = myController.initBruttoToNetto(txtPreis.getText(), percent);
 	
-		String kontos[] = {txtKontonummer.getText(), finalZahlungskonto};
+		String kontos[] = {txtKontonummer.getText(), finalZahlungskonto, Konto3};
 		Double prices[] = {nettoPrice, bruttoPrice, bruttoPrice - nettoPrice};
 		
 		myController.initpaintUpTo7(kontos, prices, leftMore);

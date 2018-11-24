@@ -126,7 +126,7 @@ public class Abschreibung_View extends View_SuperClass{
 		
 		for(int x = 0; x < llCBses.size(); x++) {
 			if(llCBses.get(x).isSelected()) {
-				((Controller_Anlagenbewertung) myController).initCalcAbschreibung(finalAnlKonto, txtIBN_Monat.getText(), txtIBN_Year.getText(), txtND.getText(), AW, llCBses.get(x).getText());
+				((Controller_Anlagenbewertung) myController).initCalcAbschreibung(finalAnlKonto, txtIBN_Monat.getText(), txtIBN_Year.getText(), txtND.getText(), AW, llCBses.get(x).getText(), leftMore);
 				break;
 			}
 		}

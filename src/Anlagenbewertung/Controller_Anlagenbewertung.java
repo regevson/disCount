@@ -31,8 +31,8 @@ public class Controller_Anlagenbewertung extends Controller_AbstractClass{
 		view.setUpBasicStuff(aufgabe, width, height);
 	}
 	
-	public Double initCalcAbschreibung(String anlKonto, String IBN_Monat_str, String IBN_Year, String ND_str, Double AW, String command) {
-		return MC.execCalcAbschreibung(anlKonto, IBN_Monat_str, IBN_Year, ND_str, AW, command);
+	public Double initCalcAbschreibung(String anlKonto, String IBN_Monat_str, String IBN_Year, String ND_str, Double AW, String command, boolean leftMore) {
+		return MC.execCalcAbschreibung(anlKonto, IBN_Monat_str, IBN_Year, ND_str, AW, command, leftMore);
 	}
 	
 

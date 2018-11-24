@@ -130,20 +130,20 @@ public class MainController{
 		return mainModel.calculateNetto(percent, price);
 	}
 	
-	public Double execCalcAbschreibung(String anlKonto, String IBN_Monat_str, String IBN_Year, String ND_str, Double AW, String command) {
+	public Double execCalcAbschreibung(String anlKonto, String IBN_Monat_str, String IBN_Year, String ND_str, Double AW, String command, boolean leftMore) {
 		double afaBetrag = mainModel.calcAbschreibung(anlKonto, IBN_Monat_str, IBN_Year, ND_str, AW, command);
 		
 		if(command.equals("erste zwei Jahre"))
-			addAfAToPanel(0, 1, anlKonto);
+			addAfAToPanel(0, 1, anlKonto, leftMore);
 		
 		else if(command.equals("letzte zwei Jahre"))
-			addAfAToPanel(mainModel.llAfaPrice.size()-2, mainModel.llAfaPrice.size()-1, anlKonto);
+			addAfAToPanel(mainModel.llAfaPrice.size()-2, mainModel.llAfaPrice.size()-1, anlKonto, leftMore);
 		
 		else if(command.equals("alle Jahre"))
-			addAfAToPanel(0, mainModel.llAfaPrice.size()-1, anlKonto);
+			addAfAToPanel(0, mainModel.llAfaPrice.size()-1, anlKonto, leftMore);
 		
 		else if(command.equals("erstes Jahr"))
-			addAfAToPanel(0, 0, anlKonto);
+			addAfAToPanel(0, 0, anlKonto, leftMore);
 		
 		mainModel.llAfaPrice.removeAll(mainModel.llAfaPrice);
 		mainModel.llYear.removeAll(mainModel.llYear);
@@ -152,7 +152,7 @@ public class MainController{
 		
 	}
 	
-	private void addAfAToPanel(int from, int to, String konto) {
+	private void addAfAToPanel(int from, int to, String konto, boolean leftMore) {
 		for(int x = from; x <= to; x++) {
 			String kontos[] = {"7010", konto};
 			Double prices[] = {mainModel.llAfaPrice.get(x)};
