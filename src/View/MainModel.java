@@ -634,6 +634,9 @@ public class MainModel {
 		
 		deleteFromBSList(deleteList);
 		
+		if(bsList.size() != 0)
+			bsList.getLast().paintNumberOnBSNumberPanel();
+		
 	}
 	
 	

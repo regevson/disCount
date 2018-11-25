@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import View.Buchungssatz;
 import View.MainView;
 import extraViews.View_SuperClass;
 
@@ -30,12 +31,12 @@ public abstract class BS_Editor {
 		
 		editorPanel = new JPanel();
 		if(stufig < 5)
-			editorPanel.setBounds(90, 2, 450, 146);
+			editorPanel.setBounds(90, 0, 450, Buchungssatz.bsPanelHeight - 12);
 		else {
-			editorPanel.setBounds(90, 2, 450, 292);
+			editorPanel.setBounds(90, 0, 450, Buchungssatz.bsPanelHeight_MAX - 10);
 			biggerThan4 = true;
 		}
-		editorPanel.setBackground(MainView.darkDisCountBlue);
+		editorPanel.setBackground(MainView.disCountBlue);
 		editorPanel.setLayout(null);
 		newBSPanel.add(editorPanel);
 		createFields(stufig, biggerThan4);

@@ -429,6 +429,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			MainView.isUploading = true;
 			
 			ll_Char = execOpenDB_content(currentContentOnWP, book + "/" + page + "/" + number);
+			
+			if(ll_Char == null)
+				return;
+			
 			ArrayList<Buchungssatz> bsList = MC.execOpenProject(ll_Char);
 			
 			MainView.isUploading = false;
@@ -441,24 +445,16 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			int commentCount = myModel.getCommentCount();
 			String uploader = myModel.getUploader();
 			
-			if(bsList != null) {
 				
-				for(int x = 0; x < bsList.size(); x++) {
-					bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, ML);
-					
-					if(uploader.equals("teacher"))
-						bsList.get(x).addStar();
-					else if(uploader.equals("verified"));
-						bsList.get(x).addVerified();
-				}
+			for(int x = 0; x < bsList.size(); x++) {
+				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, ML);
 				
+				if(uploader.equals("teacher"))
+					bsList.get(x).addStar();
+				else if(uploader.equals("verified"));
+					bsList.get(x).addVerified();
 			}
 			
-			else
-				return;
-			
-			
-		
 		}
 		
 	}
