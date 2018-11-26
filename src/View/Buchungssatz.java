@@ -83,7 +83,12 @@ public class Buchungssatz implements MouseListener{
 		bsPanel = new JPanel();
 		bsPanel.setBounds(5, bsPanelMargin, 585, bsPanelHeight);
 		RoundedBorder rb = new RoundedBorder();
-		rb.paintPanel(bsPanel, MainView.disCountBlue, MainView.middleBlack, 5, 24, workPanel);
+		
+		if(MainView.isUploading)
+			rb.paintPanel(bsPanel, MainView.disCountDarkGreen, MainView.middleBlack, 5, 24, workPanel);
+		else
+			rb.paintPanel(bsPanel, MainView.disCountBlue, MainView.middleBlack, 5, 24, workPanel);
+		
 		workPanel.add(bsPanel);
 		
 		if(MainView.isUploading) {
@@ -100,7 +105,12 @@ public class Buchungssatz implements MouseListener{
 		
 		
 		bsNumberPanel = new JPanel();
-		bsNumberPanel.setBackground(MainView.disCountBlue);
+		
+		if(MainView.isUploading)
+			bsNumberPanel.setBackground(MainView.disCountDarkGreen);
+		else
+			bsNumberPanel.setBackground(MainView.disCountBlue);
+		
 		bsNumberPanel.setBounds(5, 5, 60, bsPanelHeight - 15);
 		bsNumberPanel.setLayout(null);
 		bsPanel.add(bsNumberPanel);
@@ -176,9 +186,9 @@ public class Buchungssatz implements MouseListener{
 	
 	
 	public void addCheckMark(ArrayList<Integer> examBSList, int bsNumber) {
-		ImageIcon verifyIcon = new ImageIcon("src/verifyIt.gif");
+		ImageIcon verifyIcon = new ImageIcon("src/checkIt.png");
 		JLabel verifyLabel = new JLabel(verifyIcon);
-		verifyLabel.setBounds(540, 4, 42, 40);
+		verifyLabel.setBounds(528, 9, 42, 42);
 		bsPanel.add(verifyLabel);
 		
 		db_Model.skill++;
@@ -188,9 +198,9 @@ public class Buchungssatz implements MouseListener{
 	}
 	
 	public void addErrorIcon() {
-		ImageIcon errorIcon = new ImageIcon("src/error.gif");
+		ImageIcon errorIcon = new ImageIcon("src/errorIcon.png");
 		JLabel errorLabel = new JLabel(errorIcon);
-		errorLabel.setBounds(538, 6, 39, 39);
+		errorLabel.setBounds(533, 9, 42, 42);
 		bsPanel.add(errorLabel);
 		
 		db_Model.skill--;
@@ -240,14 +250,14 @@ public class Buchungssatz implements MouseListener{
 	public void addStar() {
 		ImageIcon starIcon = new ImageIcon("src/star.png");
 		JLabel starLabel = new JLabel(starIcon);
-		starLabel.setBounds(20, 90, 60, 60);
-		bsNumberLabel.add(starLabel);
+		starLabel.setBounds(16, 20, 23, 25);
+		bsNumberPanel.add(starLabel);
 	}
 	
 	public void addVerified() {
 		ImageIcon verifiedIcon = new ImageIcon("src/verified.png");
 		JLabel verifiedLabel = new JLabel(verifiedIcon);
-		verifiedLabel.setBounds(20, 90, 60, 60);
+		verifiedLabel.setBounds(26, 90, 60, 60);
 		bsNumberLabel.add(verifiedLabel);
 	}
 	
@@ -280,7 +290,7 @@ public class Buchungssatz implements MouseListener{
 	
 	public void addInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, MouseListener ML) {
 		
-		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", 19, 120, 9, 18, 18);
+		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", 17, 120, 9, 18, 18);
 		infoLabel.addMouseListener(this);
 		bsNumberPanel.add(infoLabel);
 		

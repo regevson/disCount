@@ -166,6 +166,7 @@ public static boolean isBANNED = false;
 	public static final Color disCountGreen = new Color(9, 110, 109);
 	public static final Color disCountPurple = new Color(105, 51, 166);
 	public static final Color disCountBrown = new Color(197, 146, 119);
+	public static final Color disCountDarkGreen = new Color(0, 92, 92);
 	
 	
 	public static boolean isUploading = false;
