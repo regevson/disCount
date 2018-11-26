@@ -229,6 +229,12 @@ public class ML_db implements MouseListener{
 	
 	
 	
+	public boolean initCheckTeacherCode(String enteredCode) {
+		return myController.execCheckTeacherCode(enteredCode);
+	}
+	
+	
+	
 	
 	
 	
@@ -262,6 +268,9 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
 
 
 

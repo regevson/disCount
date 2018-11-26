@@ -1,7 +1,10 @@
 package dbActivity;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.sql.Connection;
@@ -41,7 +44,6 @@ public class db_Model {
 	private String commentID;
 	private String email;
 	private String schoolType;
-	private LinkedList<String> oldBSList;
 	private Statement st2;
 	public static boolean allowSolutions = false;
 	public static final int MINIMUMADDED = 5;
@@ -67,8 +69,9 @@ public class db_Model {
 	private int myID;
 	private int studentNumber; //tells you which column you are in exam-database
 	private String myRank;
-	private String uploader;
+	private String uploaderRank;
 	private boolean inputToSuggestionIsIncorrect;
+	private String schoolClass;
 	
 	
 	
@@ -96,11 +99,7 @@ public class db_Model {
 		        evaluated = rs.getString("evaluated");
 		        
 		     String id = MainView.hmPanelCodeID.get(panel);
-		     
-		     if(panel == null)
-		    	 System.out.println("isNull !D!D!!!");
 		    
-		     System.out.println(id + "  id");
 		     if(!evaluated.contains("|" + id + "|")) {
 		    	 
 		    	 evaluated = evaluated + "|" + id + "|";
@@ -120,39 +119,6 @@ public class db_Model {
 	    		 
 	    		 votes += 1;
 	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + id + "'");
-		    	
-		    	 JLabel upPanel = (JLabel) panel.getComponent(2);
-		    	 JLabel downPanel = (JLabel) panel.getComponent(3);
-		    	 
-		    	 ArrayList<JLabel> alJL = new  ArrayList<JLabel>();
-		    	 alJL.add(upPanel);
-		    	 alJL.add(downPanel);
-		    	 
-		    	
-		    	
-		    	 for(int x = 0; x < MainView.llThumbsGroups.size(); x++) {
-		    			 System.out.println(MainView.llThumbsGroups.get(x).size() + "  size");
-		    			 if(MainView.llThumbsGroups.get(x).contains(alJL)) {
-		    			 for(int y = 0; y < MainView.llThumbsGroups.get(x).size(); y++) {
-		    				 
-			    				 if(value == 1) {
-			    					 MainView.llThumbsGroups.get(x).get(y).get(1).setEnabled(false);
-			    					 System.out.println("ISUNENANBLED");
-			    				 }
-			    				 
-			    				 else {
-			    					 MainView.llThumbsGroups.get(x).get(y).get(0).setEnabled(false);
-			    					 System.out.println("ISUNENANBLED");
-			    				 }
-			    				 
-			    				 MainView.llThumbsGroups.get(x).get(y).get(0).addMouseListener(null);
-			    				 MainView.llThumbsGroups.get(x).get(y).get(1).addMouseListener(null);
-			    				 
-		    			 }
-		    		 }
-		    	 }
-		    	 
-		    	 System.out.println("done");
 		    	
 		     }
 		        
@@ -177,14 +143,14 @@ public class db_Model {
    		   name = br.readLine();
    		   schoolType = br.readLine();
    		   email = br.readLine();
-   		   String schoolClass = br.readLine();
+   		   schoolClass = br.readLine();
    		   myRank = br.readLine();
    		   
    		   
    		   st = conn.createStatement();
    		   
            if(!Main.alreadyDone) {
-	           st.executeUpdate("INSERT INTO users (name, school, email, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('" + name + "'," + "'" + schoolType + "'," + "'" + email + "'," + "'" + schoolClass + "',"+ "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");                                                       
+	           st.executeUpdate("INSERT INTO users (name, school, email, rank, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('" + name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','" + schoolClass + "',"+ "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");                                                       
 	           setUpMACAddress();
            }
            
@@ -277,7 +243,7 @@ public class db_Model {
 		
 		 try {
 			st = conn.createStatement();
-			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (name, email, uploader, code, codeInfo) VALUES ('" + name + "'," + "'" + email + "'," + "'" + myRank + "'," + "'" + code_str + "'," + "'" + exercise + "'" + ")");
+			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (uploaderID, code, codeInfo) VALUES ('" + myID + "','" + code_str + "'," + "'" + exercise + "'" + ")");
 			
 			increaseCommunityStats(1);
 			checkAdded();
@@ -462,29 +428,32 @@ public class db_Model {
 		
 		try {
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT id, name, uploader, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
-
+			rs = st.executeQuery("SELECT id, uploaderID, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
+			
+			
 			String highestCode = "";
 			String highestUsername = "";
 			int highestUpvotes = -1;
 			int highestDownvotes = -1;
 			String highestSolutionID = "";
 			int highestCommentCount = -1;
-			String highestUploader = "";
+			String highestUploaderRank = "";
 
 
 			while(rs.next()) {
-
-				if(rs.getInt("upVotes") > highestUpvotes || rs.getString("uploader").equals("teacher")) {
+				
+				String info[] = getUsernameAndUploaderRank(rs.getString("uploaderID"));
+				highestUsername = info[0];
+				highestUploaderRank = info[1];
+				
+				if(rs.getInt("upVotes") > highestUpvotes || highestUploaderRank.equals("teacher")) {
 					highestCode = rs.getString("code");
-					highestUsername = rs.getString("name");
 					highestUpvotes = rs.getInt("upVotes");
 					highestDownvotes = rs.getInt("downVotes");
 					highestCommentCount = rs.getInt("commentCount");
 					highestSolutionID = rs.getString("id");
-					highestUploader = rs.getString("uploader");
 
-					if(highestUploader.equals("teacher"))
+					if(highestUploaderRank.equals("teacher"))
 						break;
 				}
 
@@ -492,14 +461,14 @@ public class db_Model {
 			
 
 			if(highestCode.equals(""))
-				MainView.addNoteToCheckPanel("Diese Aufgabe ist noch nicht verfügbar.");
+				MainView.addNoteToCheckPanel("Diese Aufgabe ist noch nicht verfügbar!");
 			
-			else if(onlyTS && !highestUploader.equals("teacher"))
-				MainView.addNoteToCheckPanel("Zu dieser Aufgabe gibt es noch keine Leherlösung!");
+			else if(onlyTS && !highestUploaderRank.equals("teacher"))
+				MainView.addNoteToCheckPanel("Es gibt noch keine Leherlösung!");
 
 			else {
 				MainView.addNoteToCheckPanel("\u00a9" + highestUsername + "  " + "(" + highestUpvotes + " Like(s))");
-				return new String[] {highestCode, highestUsername, Integer.toString(highestUpvotes), Integer.toString(highestDownvotes), Integer.toString(highestCommentCount), highestSolutionID, highestUploader};
+				return new String[] {highestCode, highestUsername, Integer.toString(highestUpvotes), Integer.toString(highestDownvotes), Integer.toString(highestCommentCount), highestSolutionID, highestUploaderRank};
 			}
 
 		} catch(Exception e) {e.printStackTrace();}
@@ -513,6 +482,27 @@ public class db_Model {
 	
 		
 		
+	private String[] getUsernameAndUploaderRank(String uploaderID) {
+		
+		try {
+			
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT name, rank FROM users WHERE id='" + uploaderID + "'");
+	
+			if(rs.next())
+				return new String[] {rs.getString("name"), rs.getString("rank")};
+			
+			rs.close();
+			
+		} catch (SQLException e) {System.out.println("dbModel - getUsernameAndUploaderRank - doesnt work");e.printStackTrace();}
+		
+		return null;
+		
+	}
+
+
+
+
 	public void checkBS(LinkedList<String> oldBSList) {
 		
 		try {
@@ -1229,10 +1219,62 @@ public class db_Model {
 
 	}
 	
-
-
 	
 	
+//---------------------------------------checkTeacherCode----------------------------------------	
+	
+	
+	public boolean checkTeacherCode(String enteredCode) {
+		
+		try {
+			
+			rs = st.executeQuery("SELECT code FROM teacherCodes WHERE code='" + enteredCode + "'");
+			
+			if(rs.next()) {
+				myRank = "teacher";
+				updateTxtInfoFile();
+				updateRankOnDB();
+				return true;
+			}
+			
+		} catch (SQLException e) {System.out.println("dbModel - checkTeacherCode - doesnt work");e.printStackTrace();}
+		
+		return false;
+		
+	}
+
+
+
+	private void updateTxtInfoFile() {
+		PrintStream fileStream;
+		
+		try {
+			
+			fileStream = new PrintStream(new File("src/info.txt"));
+			fileStream.println(name);
+			fileStream.println(schoolType);
+			fileStream.println(email);
+			fileStream.println(schoolClass);
+			fileStream.println(myRank);
+			fileStream.close();
+			
+		} catch (FileNotFoundException e) {System.out.println("dbModel - updateTxtInfoFile - doesnt work");e.printStackTrace();}
+		
+	}
+	
+	private void updateRankOnDB() {
+		
+		try {
+			
+			st.executeUpdate("UPDATE users SET rank='" + myRank + "' WHERE id='" + myID + "'");
+		
+		} catch (SQLException e) {System.out.println("updateRankOnDB didnt work -- db_Model");e.printStackTrace();}
+		
+	}
+
+
+
+
 //---------------------------------------Getter----------------------------------------
 
 	public String getSolutionID() {
@@ -1255,8 +1297,8 @@ public class db_Model {
 		return BScount;
 	}
 	
-	public String getUploader() {
-		return uploader;
+	public String getUploaderRank() {
+		return uploaderRank;
 	}
 	
 	public int getUpVotes() {
@@ -1315,6 +1357,11 @@ public class db_Model {
 	public boolean getInputToSuggestionIsIncorrect() {
 		return inputToSuggestionIsIncorrect;
 	}
+
+
+
+
+	
 
 
 

@@ -59,6 +59,8 @@ public class Buchungssatz implements MouseListener{
 	private String[] priceList;
 	private String nettoPrice;
 	
+	private ArrayList<JLabel> fieldList = new ArrayList<JLabel>();
+	
 	private String solutionID;
 	
 	String code;
@@ -261,7 +263,7 @@ public class Buchungssatz implements MouseListener{
 		label.setFont(new Font("Roboto", Font.BOLD, 17));
 		label.setForeground(new Color(218, 218, 218));
 		bsPanel.add(label);
-		bsPanel.repaint();
+		fieldList.add(label);
 
 		return label;
 	}
@@ -285,7 +287,6 @@ public class Buchungssatz implements MouseListener{
 		infoPanel = new JPanel();
 		infoPanel.setBounds(60, 118, 520, 40);
 		infoPanel.setBackground(MainView.darkBlack);
-		infoPanel.setVisible(true);
 		infoPanel.setLayout(null);
 		bsPanel.add(infoPanel);
 		infoPanel.setVisible(false);
@@ -302,6 +303,9 @@ public class Buchungssatz implements MouseListener{
 		setSolutionID(solutionID);
 		
 		paintNumberOnBSNumberPanel();
+		
+		bsPanel.revalidate();
+		bsPanel.repaint();
 		
 	}
 	
@@ -469,6 +473,18 @@ public class Buchungssatz implements MouseListener{
 		}
 		
 		MainView.bsPanelMargin -= 170;
+	}
+	
+	private void removeFields() {
+		for(int x = 0; x < fieldList.size(); x++) {
+			fieldList.get(x).setVisible(false);
+		}
+	}
+	
+	private void displayFields() {
+		for(int x = 0; x < fieldList.size(); x++) {
+			fieldList.get(x).setVisible(true);
+		}
 	}
 	
 	
@@ -647,10 +663,14 @@ public class Buchungssatz implements MouseListener{
 			((ML_db) ML).initPrintComments(solutionID);
 		
 		else if(triggerLabel.getIcon().toString().equals("src/info.png")) {
-			if(infoPanel.isVisible())
+			if(infoPanel.isVisible()) {
 				infoPanel.setVisible(false);
-			else
+				displayFields();
+			}
+			else {
 				infoPanel.setVisible(true);
+				removeFields();
+			}
 		}
 		
 	}

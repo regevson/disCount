@@ -59,6 +59,7 @@ import extraViews.InfoView;
 import extraViews.InsertExamIDView;
 import extraViews.MessageBox;
 import extraViews.Personalverrechnung_Settings_View;
+import extraViews.TeacherRegistration;
 import extraViews.View_SuperClass;
 import stats.ML_Stats;
 
@@ -671,6 +672,7 @@ public static boolean isBANNED = false;
 		JMenuItem menuItemAvailability;
 		JMenuItem menuItemExam;
 		JMenuItem menuItemInfo;
+		JMenuItem menuItemRegisterAsTeacher;
 
 		menuBar = new JMenuBar();
 		
@@ -943,6 +945,30 @@ public static boolean isBANNED = false;
 		
 		
 		
+		menu = new JMenu("LEHRER");
+		menu.setMnemonic(KeyEvent.VK_N);
+		menu.getAccessibleContext().setAccessibleDescription(
+		        "Als Lehrer registrieren");
+		menuBar.add(menu);
+
+		setJMenuBar(menuBar);
+		
+		menuItemRegisterAsTeacher = new JMenuItem("Als Lehrer registrieren", KeyEvent.VK_T);
+		
+		menuItemRegisterAsTeacher.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItemRegisterAsTeacher.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	TeacherRegistration tr = new TeacherRegistration((ML_db) llML.get(9));
+		    	tr.setVisible(true);
+		    }
+		});
+
+		menu.add(menuItemRegisterAsTeacher);
+		
+		
+		
+		
+		
 		menu = new JMenu("INFO");
 		menu.setMnemonic(KeyEvent.VK_N);
 		menu.getAccessibleContext().setAccessibleDescription(
@@ -951,7 +977,6 @@ public static boolean isBANNED = false;
 
 		setJMenuBar(menuBar);
 		
-
 		menuItemInfo = new JMenuItem("Entwicklung", KeyEvent.VK_T);
 		
 		menuItemInfo.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -1398,7 +1423,7 @@ public static boolean isBANNED = false;
 		jSP.setViewportView(commentPanel);
 		
 		addHeading(commentPanel, heading);
-		
+
 		questionList = setUpComments(commentsList);
 		
 		printComments(questionList, commentPanel);
@@ -1408,7 +1433,6 @@ public static boolean isBANNED = false;
 	}
 	
 	private void addNewQuestionPanel() {
-		System.out.println("new questionpanel");
 		
 		jSP.setPreferredSize(new Dimension(workPanel_Width + 5, screenHeight - 235));
 		

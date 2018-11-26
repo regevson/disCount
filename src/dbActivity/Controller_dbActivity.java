@@ -93,10 +93,6 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.getBScount();
 	}
 	
-	public String execGetUploader() {
-		return myModel.getUploader();
-	}
-	
 	public void initAddInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
 		MC.execAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, bs, ML);
 	}
@@ -302,7 +298,6 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 				@Override
         		  public void run() {
         			 
-					System.out.println("SCANNING FOR STARTSIGNAL");
         			  int signal = myModel.checkStartSignal(pid);
         			  
         			  if(signal == 1) {
@@ -475,6 +470,14 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	private void displayWarningMessage() {
 		MessageBox msg = new MessageBox("Warnung", "Keine Übereinstimmung", "Deine bisherigen Buchungssätze weisen Fehler auf!");
 		msg.setVisible(true);
+	}
+
+
+
+
+
+	public boolean execCheckTeacherCode(String enteredCode) {
+		return myModel.checkTeacherCode(enteredCode);
 	}
 
 
