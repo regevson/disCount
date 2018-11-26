@@ -252,7 +252,7 @@ public class MainController{
 		return mainModel.convertTFListToStringList(tfList);
 	}
 
-	public void execAddInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
+	public void execAddInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
 		bs.addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, ML);
 	}
 
@@ -280,6 +280,8 @@ public class MainController{
 		Buchungssatz bs = new Buchungssatz();
 		bs.initBS(kontos, prices, leftMore, mainView.getWorkPanel());
 	}
+
+	
 
 	
 

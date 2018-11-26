@@ -601,7 +601,7 @@ public class MainModel {
 		for(int x = 0; x < MainView.bsList.size(); x++) {
 			code += MainView.bsList.get(x).getCode();
 		}
-		System.out.println(code + "   code");
+
 		return code;
 	}
 	
@@ -916,7 +916,7 @@ public class MainModel {
 	}
 	
 	
-	public LinkedList<String> convertTFListToStringList(LinkedList<JTextField> tfList) {
+	public static LinkedList<String> convertTFListToStringList(LinkedList<JTextField> tfList) {
 		LinkedList<String> strList = new LinkedList<String>();
 		
 		for(int x = 0; x < tfList.size(); x++) {
@@ -930,11 +930,22 @@ public class MainModel {
 	
 	
 
-	public String[] convertDoubleArrayToStringArray(Double[] doubleArray) {
+	public static String[] convertDoubleArrayToStringArray(Double[] doubleArray) {
 		String[] a=Arrays.toString(doubleArray).split("[\\[\\]]")[1].split(", "); 
 		return a;
 	}
 	
+	public static int countOccurencesOfChar(String str, String item) {
+		return str.length() - str.replaceAll(item,"").length();
+	}
+	
+	public static LinkedList<String> getWorkPanelCodeIntoList(LinkedList<String> list) {
+        for(int x = 0; x < MainView.bsList.size(); x++) {
+        	list.add(MainView.bsList.get(x).getCode());
+	    }
+        
+        return list;
+	}
 	
 	
 	

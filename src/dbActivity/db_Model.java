@@ -68,6 +68,7 @@ public class db_Model {
 	private int studentNumber; //tells you which column you are in exam-database
 	private String myRank;
 	private String uploader;
+	private boolean inputToSuggestionIsIncorrect;
 	
 	
 	
@@ -296,13 +297,19 @@ public class db_Model {
 		st.executeUpdate("UPDATE users SET skill='" + skill + "' WHERE email='" + email + "'");
 	}
 	
-	private void increaseDependenceStats(double value) throws SQLException {
-		if(alreadyPunished)
-			return;
+	private void increaseDependenceStats(double value) {
+		try {
+			
+			if(alreadyPunished)
+				return;
+			
+			dependence += value;
+			st = conn.createStatement();
+			
+			st.executeUpdate("UPDATE users SET dependence='" + dependence + "' WHERE email='" + email + "'");
+			
+		} catch (SQLException e) {System.out.println("dbModel - increaseDependenceStats - not working");e.printStackTrace();}
 		
-		dependence += value;
-		st = conn.createStatement();
-		st.executeUpdate("UPDATE users SET dependence='" + dependence + "' WHERE email='" + email + "'");
 		alreadyPunished = true;
 	}
 	
@@ -359,77 +366,36 @@ public class db_Model {
 	}
 
 
-
-
-	public LinkedList<Character> openDB_content(String currentContentOnWP, String codeInfo) {
-		if(!MainView.suggestionsEnabled)
-			return null;
+	
+	public LinkedList<Character> cutSuggestion(String suggestionCode, String currentContentOnWP, String solutionID, int currentBSCount) {
 		
-		solutionID = "";
-		String code_str = "";
-		BScount = -1;
-		this.codeInfo = codeInfo;
-		LinkedList<Character> char_LL = null;
-		
-		try {
-			   st = conn.createStatement();
-			   if(ll_wrongSolutions.size() == 0)
-				   rs = st.executeQuery("SELECT id, name, uploader, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
-	           
+		int fromIndex = 0;
+		LinkedList<Character> llSolution = null;
 
-	           while(rs.next()) {
-	        	   int currentBSCount = MainView.bsList.size();
-	        	   int fromIndex = 0;
-	        	   String dbBS = rs.getString("code");
-	        	   solutionID = rs.getString("id");
-	        	   user_name = rs.getString("name");
-	        	   upvotes = rs.getInt("upVotes");
-	        	   downvotes = rs.getInt("downVotes");
-	        	   commentCount = rs.getInt("commentCount");
-	        	   comments = rs.getString("comments");
-	        	   uploader = rs.getString("uploader");
-	    
-	        	   
-	        	   if(ll_wrongSolutions.contains(Integer.parseInt(solutionID)) || (dbBS.length() - dbBS.replaceAll("#","").length() <= currentBSCount))
-	        		   continue;
-	        	   
-	        	   for(int x = 0; x <= currentBSCount; x++) {
-	        		   fromIndex = dbBS.indexOf('#', fromIndex) + 1;
-	        	   }
-	        	   
-	        	  
-	        	   if(dbBS.substring(0, fromIndex - 1).equals(currentContentOnWP)) {
-		        	   code_str = dbBS.substring(fromIndex - 1);
-			           
-			           BScount = code_str.length() - code_str.replaceAll("#","").length();
-			           
-			           char_LL  = new LinkedList<Character>();
-			           for(int x = 0; x < code_str.length(); x++) {
-			        	   char_LL.addLast(code_str.charAt(x));
-			           }
-			           
-			           ll_wrongSolutions.addLast(Integer.parseInt(solutionID));
-			           
-			           if(char_LL != null)
-			        	   increaseDependenceStats(1);
-			         
-			           
-			           return char_LL;
-	        	   }
+		for(int x = 0; x <= currentBSCount; x++) {
+			fromIndex = suggestionCode.indexOf('#', fromIndex) + 1;
+		}
 
-	           
-	           }
-	           
-	           return null;
-		         
-		} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		if(suggestionCode.substring(0, fromIndex - 1).equals(currentContentOnWP)) {
+
+			String suggestion = suggestionCode.substring(fromIndex - 1);
+
+			llSolution = new LinkedList<Character>();
+
+			for(int x = 0; x < suggestion.length(); x++) {
+				llSolution.addLast(suggestion.charAt(x));
 			}
-		 
-		 return char_LL;
-		
+
+			ll_wrongSolutions.addLast(Integer.parseInt(solutionID));
+
+			increaseDependenceStats(1);
+
+		}
+
+		return llSolution;
+
 	}
+	
 	
 	
 	
@@ -491,66 +457,64 @@ public class db_Model {
 	
 	//-------------------------------------------Fehlerkorrektur-------------------------------------------
 	
-	
-	
-	public LinkedList<Character> setUpCheckBS(String klasse, String page, String number, JPanel workPanel) {
+
+	public String[] getBestARMatch(String codeInfo, boolean onlyTS) {
+		
 		try {
-			   st = conn.createStatement();
-	           rs = st.executeQuery("SELECT id, name, code, codeInfo, upVotes, downVotes FROM usersolutions" + schoolType.toLowerCase());
-	           
-	           String highestCode = "";
-	           String highestUser_name = "";
-        	   int highestUpvotes = -1;
-        	   
-        	   String info = klasse + "/" + page + "/" + number;
-	           
-	           while(rs.next()) {
-	        	   if(rs.getString("codeInfo").equals(info) && rs.getInt("upVotes") > highestUpvotes) {
-	        		   highestCode = rs.getString("code");
-		        	   highestUser_name = rs.getString("name");
-		        	   highestUpvotes = rs.getInt("upVotes");
-	        	   }
-	        	  
-	           }
-	           
-	           if(highestCode.equals("")) {
-	        	   MainView.addNoteToCheckPanel("Diese Aufgabe ist noch nicht verfügbar.");
-	        	   return null;
-	           }
-	           
-	           else
-	        	   MainView.addNoteToCheckPanel("\u00a9" + highestUser_name + "  " + "(" + highestUpvotes + " Like(s))");
-	           
-	           LinkedList<Character> char_LL = new LinkedList<Character>();
-	           for(int x = 0; x < highestCode.length(); x++) {
-	        	   char_LL.addLast(highestCode.charAt(x));
-	           }
-	           
-	          oldBSList = new LinkedList<String>();
-	          getWorkPanelCodeIntoList(oldBSList);
-	           
-	           
-	           if(oldBSList.isEmpty())
-	        	   return null;
-	           
-	           MainModel.deleteAll(workPanel);
-	           
-	           return char_LL;
-	           
-	           
-		}catch(Exception e) {e.printStackTrace(); return null;}
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT id, name, uploader, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
+
+			String highestCode = "";
+			String highestUsername = "";
+			int highestUpvotes = -1;
+			int highestDownvotes = -1;
+			String highestSolutionID = "";
+			int highestCommentCount = -1;
+			String highestUploader = "";
+
+
+			while(rs.next()) {
+
+				if(rs.getInt("upVotes") > highestUpvotes || rs.getString("uploader").equals("teacher")) {
+					highestCode = rs.getString("code");
+					highestUsername = rs.getString("name");
+					highestUpvotes = rs.getInt("upVotes");
+					highestDownvotes = rs.getInt("downVotes");
+					highestCommentCount = rs.getInt("commentCount");
+					highestSolutionID = rs.getString("id");
+					highestUploader = rs.getString("uploader");
+
+					if(highestUploader.equals("teacher"))
+						break;
+				}
+
+			}
+			
+
+			if(highestCode.equals(""))
+				MainView.addNoteToCheckPanel("Diese Aufgabe ist noch nicht verfügbar.");
+			
+			else if(onlyTS && !highestUploader.equals("teacher"))
+				MainView.addNoteToCheckPanel("Zu dieser Aufgabe gibt es noch keine Leherlösung!");
+
+			else {
+				MainView.addNoteToCheckPanel("\u00a9" + highestUsername + "  " + "(" + highestUpvotes + " Like(s))");
+				return new String[] {highestCode, highestUsername, Integer.toString(highestUpvotes), Integer.toString(highestDownvotes), Integer.toString(highestCommentCount), highestSolutionID, highestUploader};
+			}
+
+		} catch(Exception e) {e.printStackTrace();}
 		
+		return null;
+
 	}
 	
-	public LinkedList<String> getWorkPanelCodeIntoList(LinkedList<String> list) {
-        for(int x = 0; x < MainView.bsList.size(); x++) {
-        	list.add(MainView.bsList.get(x).getCode());
-	    }
-        return list;
-	}
+	
+	
+	
 		
 		
-	public void checkBS() {
+	public void checkBS(LinkedList<String> oldBSList) {
+		
 		try {
            
            for(int y = 0; y < MainView.bsList.size(); y++) {
@@ -1276,15 +1240,15 @@ public class db_Model {
 	}
 	
 	public String getName() {
-		return this.user_name;
+		return user_name;
 	}
 	
 	public String getUploaderInfo() {
-		return this.uploaderInfo;
+		return uploaderInfo;
 	}
 	
 	public String getCodeInfo() {
-		return this.codeInfo;
+		return codeInfo;
 	}
 	
 	public int getBScount() {
@@ -1333,22 +1297,24 @@ public class db_Model {
 	}
 	
 	public ArrayList<Integer> getScanList() {
-		return this.scanList;
+		return scanList;
 	}
 
 	public void setScanStart(int val) {
-		this.scanStart = val;
+		scanStart = val;
 	}
 
 	public String getSolution() {
-		return this.solution;
+		return solution;
 	}
 
 	public void setPID(int pid) {
 		this.pid = pid;
 	}
 
-	
+	public boolean getInputToSuggestionIsIncorrect() {
+		return inputToSuggestionIsIncorrect;
+	}
 
 
 

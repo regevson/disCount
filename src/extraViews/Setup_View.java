@@ -313,7 +313,6 @@ public class Setup_View extends JFrame {
 	
 	public void connect() {
 		
-
 	       try
 	       {
 
@@ -337,7 +336,7 @@ public class Setup_View extends JFrame {
 	       catch (Exception e)
 	       {
 	    	   JOptionPane.showMessageDialog(null, "Sie brauchen eine Internetverbindung um das Programm zu startenconn!", "Nachricht", JOptionPane.PLAIN_MESSAGE);
-	    	   System.out.println("ERROR Connection setupview-class");
+	    	   System.out.println("ERROR Connection setupview-classrrr");
 	    	   return;
 
 	       }

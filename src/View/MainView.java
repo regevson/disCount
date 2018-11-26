@@ -35,6 +35,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -174,6 +175,8 @@ public static boolean isBANNED = false;
 	private JMenuBar menuBar;
 
 	private JMenuBar tempMenuBar;
+
+	private static JRadioButton onlyTeacherSolutions;
 	
 	
 	
@@ -1294,6 +1297,8 @@ public static boolean isBANNED = false;
 	
 	
 	public void addExerciseSelectionPanel(boolean check) {
+		if(grammarCheckPanel != null)
+			removeExerciseSelectionPanel();
 		grammarCheckPanel = new JPanel();
 		grammarCheckPanel.setPreferredSize(new Dimension(MainView.workPanel_Width, 55));
 		grammarCheckPanel.setBackground(new Color(51, 51, 51));
@@ -1333,13 +1338,21 @@ public static boolean isBANNED = false;
 		txtNumber.setBorder(BorderFactory.createCompoundBorder(txtNumber.getBorder(), BorderFactory.createEmptyBorder(0, 3, 0, 0)));
 		grammarCheckPanel.add(txtNumber);
 		
+		onlyTeacherSolutions = new JRadioButton();
+		onlyTeacherSolutions.setBounds(workPanel_Width - 310, 20, 160, 20);
+		onlyTeacherSolutions.setBackground(null);
+		onlyTeacherSolutions.setForeground(Color.WHITE);
+		onlyTeacherSolutions.setFont(MainView.font_15);
+		onlyTeacherSolutions.setText("nur Lehrerlösungen");
+		grammarCheckPanel.add(onlyTeacherSolutions);
+		
 		JLabel checkTHEMPic = makeMenuLabels("src/checkTHEM.png", workPanel_Width-90, 2, 8, 88, 55);
 		checkTHEMPic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				if(check)
-					((ML_db) llML.get(9)).initCheckBS(txtClass.getText(), txtPage.getText(), txtNumber.getText());
+					((ML_db) llML.get(9)).initCheckBS(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
 				else
-					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText(), txtPage.getText(), txtNumber.getText());
+					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
 			}
 
 			@Override public void mouseEntered(java.awt.event.MouseEvent e) {}@Override public void mouseExited(java.awt.event.MouseEvent e) {}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {	}});
@@ -1357,6 +1370,7 @@ public static boolean isBANNED = false;
 	
 	
 	public static void addNoteToCheckPanel(String msg) {
+		grammarCheckPanel.remove(onlyTeacherSolutions);
 		JLabel label = new JLabel(msg);
 		label.setBounds(265, 2, 270, 50);
 		label.setFont(new Font("Roboto", Font.ITALIC, 15));

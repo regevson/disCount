@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -68,8 +69,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.getSolutionID();
 	}
 
-	public LinkedList<Character> execOpenDB_content(String currentContentOnWP, String codeInfo) {
-		return myModel.openDB_content(currentContentOnWP, codeInfo);
+	public String[] execOpenDB_content(String codeInfo, boolean onlyTS) {
+		return myModel.getBestARMatch(codeInfo, onlyTS);
 	}
 
 	public String execGetName() {
@@ -96,15 +97,23 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.getUploader();
 	}
 	
-	public void initAddInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
+	public void initAddInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
 		MC.execAddInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, bs, ML);
 	}
 
-	public void execCheckBS(String klasse, String page, String number) {
-		LinkedList<Character> char_LL = myModel.setUpCheckBS(klasse, page, number, MC.execGetWorkPanel());
-		if(char_LL != null) {
-			MC.execOpenProject(char_LL);
-			myModel.checkBS();
+	public void execCheckBS(String codeInfo, boolean onlyTS) {
+		if(MainModel.getCodeOnWorkPanel().equals(""))
+			return;
+					
+		String[] llSolution = myModel.getBestARMatch(codeInfo, onlyTS);
+		
+		if(llSolution != null) {
+			LinkedList<String> oldBSList = new LinkedList<String>();
+			MainModel.getWorkPanelCodeIntoList(oldBSList);
+			
+			MainModel.deleteAll(MC.execGetWorkPanel());
+			MC.execOpenProject(MainModel.convertStringToLL_Char(llSolution[0]));
+			myModel.checkBS(oldBSList);
 		}
 	}
 	
@@ -335,7 +344,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public double execHandInExam(JPanel workPanel) {
 		inExam = false;
-		LinkedList<String> studentSolution = myModel.getWorkPanelCodeIntoList(new LinkedList<String>());
+		LinkedList<String> studentSolution = MainModel.getWorkPanelCodeIntoList(new LinkedList<String>());
 		MainModel.deleteAll(workPanel);
 		initOpenProject(MainModel.convertStringToLL_Char(myModel.getSolution()));
 		ArrayList<Integer> outcomeList = myModel.checkBSExam(studentSolution);
@@ -415,36 +424,40 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	
 	
 	
-	public void execShowSuggestions(String book, String page, String number, MouseListener ML) {
+	public void execShowSuggestions(String codeInfo, boolean onlyTS, MouseListener ML) {
 		
 		String currentContentOnWP = "";
-		LinkedList<Character> ll_Char = new LinkedList<Character>();
+		LinkedList<Character> llSuggestion = null;
 		
-		MainView.llThumbsGroups.add(new ArrayList<ArrayList<JLabel>>());
-		
-		if(MainView.bsList.size() >= 1 && !MainView.isUploading) {
+		if(MainView.bsList.size() > 0) {
 						
 			currentContentOnWP = MainModel.getCodeOnWorkPanel();
 			
 			MainView.isUploading = true;
 			
-			ll_Char = execOpenDB_content(currentContentOnWP, book + "/" + page + "/" + number);
 			
-			if(ll_Char == null)
+			String suggestionInfo[] = execOpenDB_content(codeInfo, onlyTS);
+			
+			if(suggestionInfo == null)
 				return;
 			
-			ArrayList<Buchungssatz> bsList = MC.execOpenProject(ll_Char);
+			llSuggestion = myModel.cutSuggestion(suggestionInfo[0], currentContentOnWP, suggestionInfo[5], MainModel.countOccurencesOfChar(currentContentOnWP, "#"));
+			
+			if(llSuggestion == null) {
+				displayWarningMessage();
+				return;
+			}
+			
+			ArrayList<Buchungssatz> bsList = MC.execOpenProject(llSuggestion);
 			
 			MainView.isUploading = false;
 			
-			String name = myModel.getName();
-			String solutionID = myModel.getSolutionID();
-			String codeInfo = myModel.getCodeInfo();
-			int upvotes = myModel.getUpVotes();
-			int downvotes = myModel.getDownVotes();
-			int commentCount = myModel.getCommentCount();
-			String uploader = myModel.getUploader();
-			
+			String name = suggestionInfo[1];
+			String solutionID = suggestionInfo[5];
+			String upvotes = suggestionInfo[2];
+			String downvotes = suggestionInfo[3];
+			String commentCount = suggestionInfo[4];
+			String uploader = suggestionInfo[6];
 				
 			for(int x = 0; x < bsList.size(); x++) {
 				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, ML);
@@ -457,6 +470,11 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			
 		}
 		
+	}
+	
+	private void displayWarningMessage() {
+		MessageBox msg = new MessageBox("Warnung", "Keine Übereinstimmung", "Deine bisherigen Buchungssätze weisen Fehler auf!");
+		msg.setVisible(true);
 	}
 
 

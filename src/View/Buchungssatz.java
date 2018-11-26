@@ -276,7 +276,7 @@ public class Buchungssatz implements MouseListener{
 		MainView.workPanel.repaint();
 	}
 	
-	public void addInfoToPanel(String name, String codeInfo, int upvotes, int downvotes, int commentCount, String uploader, String solutionID, MouseListener ML) {
+	public void addInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, MouseListener ML) {
 		
 		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", 19, 120, 9, 18, 18);
 		infoLabel.addMouseListener(this);
@@ -295,9 +295,9 @@ public class Buchungssatz implements MouseListener{
 		
 		createBSInfoContents(10, 100, "@" + name, infoPanel);
 		createBSInfoContents(150, 50, codeInfo, infoPanel);
-		createBSInfoContents(332, 50, Integer.toString(upvotes), infoPanel);	//22
-		createBSInfoContents(392, 100, Integer.toString(downvotes), infoPanel);
-		createBSInfoContents(452, 100, Integer.toString(commentCount), infoPanel);
+		createBSInfoContents(332, 50, upvotes, infoPanel);	//22
+		createBSInfoContents(392, 100, downvotes, infoPanel);
+		createBSInfoContents(452, 100, commentCount, infoPanel);
 		
 		setSolutionID(solutionID);
 		

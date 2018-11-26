@@ -50,12 +50,12 @@ public class ML_db implements MouseListener{
 		return myController.execGetSolutionID();
 	}
 	
-	public void initCheckBS(String klasse, String page, String number) {
-		myController.execCheckBS(klasse, page, number);
+	public void initCheckBS(String codeInfo, boolean onlyTS) {
+		myController.execCheckBS(codeInfo, onlyTS);
 	}
 	
-	public void initShowSuggestions(String book, String page, String number) {
-		myController.execShowSuggestions(book, page, number, this);
+	public void initShowSuggestions(String codeInfo, boolean onlyTS) {
+		myController.execShowSuggestions(codeInfo, onlyTS, this);
 	}
 	
 	public void initUploadToDB(String jahrgang, String seite, String nummer) {
@@ -212,7 +212,6 @@ public class ML_db implements MouseListener{
 	
 	private void addAnswer(String answer, LinkedList<QuestionComment> questionList) {
 		
-		System.out.println(answer);
 		LinkedList<JButton> answerButtonList = myController.initGetAnswerButtonList();
 		int index = answerButtonList.indexOf(button);
 		QuestionComment questionObj = questionList.get(index);
