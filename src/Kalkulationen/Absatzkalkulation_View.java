@@ -187,7 +187,7 @@ public class Absatzkalkulation_View extends JFrame{
 					setUpStuff();
 					dispose();
 					++(MainView.kalkulationsOpen);
-					MainView.entryOnSB.setText("Kalkulationen" + "   " + Integer.toString(MainView.kalkulationsOpen));
+					MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + MainView.kalkulationsOpen);
 				}
 	
 			});
@@ -438,7 +438,7 @@ public class Absatzkalkulation_View extends JFrame{
 				tempPanel.setVisible(true);
 				mainPane.setVisible(false);
 				mainPane = null;
-				MainView.entryOnSB.setText("Kalkulationen" + "   " + Integer.toString(--(MainView.kalkulationsOpen)));
+				MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + --MainView.kalkulationsOpen);
 			}
 
 		});

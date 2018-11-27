@@ -151,6 +151,10 @@ public class ML_db implements MouseListener{
 		myController.execNotifyTeacherOfLeave();
 	}
 	
+	public boolean initChangeRatio(int value, String solutionID) {
+		return myController.execChangeRatio(value, solutionID);
+	}
+	
 	
 	
 	
@@ -192,13 +196,7 @@ public class ML_db implements MouseListener{
 		
 			JLabel jltemp = (JLabel) e.getSource();
 			
-			if(jltemp.getIcon().toString().equals("src/thumbsup.png"))
-				myController.execChangeRatio(1, (JPanel) jltemp.getParent());
-			
-			else if(jltemp.getIcon().toString().equals("src/thumbsdown.png"))
-				myController.execChangeRatio(-1, (JPanel) jltemp.getParent());
-			
-			else if(jltemp.getIcon().toString().equals("src/exit_white.png")) {
+			if(jltemp.getIcon().toString().equals("src/exit_white.png")) {
 				myController.initCloseAnswerPanel();
 				button = null;
 			}
@@ -268,6 +266,9 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
 
 
 	

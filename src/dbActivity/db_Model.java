@@ -87,7 +87,7 @@ public class db_Model {
 
 
 
-	public void changeRatio(int value, JPanel panel) {
+	public boolean changeRatio(int value, String solutionID) {
 		
 		 try {
 			 
@@ -98,11 +98,10 @@ public class db_Model {
 		     if(rs.next())
 		        evaluated = rs.getString("evaluated");
 		        
-		     String id = MainView.hmPanelCodeID.get(panel);
 		    
-		     if(!evaluated.contains("|" + id + "|")) {
+		     if(!evaluated.contains("|" + solutionID + "|")) {
 		    	 
-		    	 evaluated = evaluated + "|" + id + "|";
+		    	 evaluated = evaluated + "|" + solutionID + "|";
 		    	 st.executeUpdate("UPDATE users SET evaluated='" + evaluated + "' WHERE email='" + email + "'");
 		    	 
 		    	 String votes_str = "upVotes";
@@ -110,7 +109,7 @@ public class db_Model {
 		    	 if(value == -1)
 		    		 votes_str = "downVotes";
 		    	 
-		    	 rs = st.executeQuery("SELECT " + votes_str + " FROM usersolutions" + schoolType.toLowerCase() + " WHERE id='" + id + "'");
+		    	 rs = st.executeQuery("SELECT " + votes_str + " FROM usersolutions" + schoolType.toLowerCase() + " WHERE id='" + solutionID + "'");
 		    	 
 	    		 int votes = 0;
 	    		 
@@ -118,17 +117,16 @@ public class db_Model {
 	    			 votes = rs.getInt(votes_str);
 	    		 
 	    		 votes += 1;
-	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + id + "'");
+	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + solutionID + "'");
+	    		 
+	    		 return true;
 		    	
 		     }
 		        
 		        
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {System.out.println("dbModel - changeRatio - didnt work");e.printStackTrace();}
 	        
-	       
+	    return false;
 		
 	}
 	

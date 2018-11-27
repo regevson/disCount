@@ -57,8 +57,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return MC.execGetWorkPanel();
 	}
 
-	public void execChangeRatio(int value, JPanel panel) {
-		myModel.changeRatio(value, panel);
+	public boolean execChangeRatio(int value, String solutionID) {
+		return myModel.changeRatio(value, solutionID);
 	}
 
 	public ArrayList<MessageBox> execConnect() {

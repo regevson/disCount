@@ -68,6 +68,8 @@ public class Buchungssatz implements MouseListener{
 	
 	private MouseListener ML;
 	private JPanel infoPanel;
+	private JLabel thumbsUpLabel;
+	private JLabel thumbsDownLabel;
 
 	
 	
@@ -124,7 +126,7 @@ public class Buchungssatz implements MouseListener{
 		
 		
 		if(!MainView.isUploading)
-			//makePink();
+			makePink();
 		
 		
 		
@@ -141,15 +143,16 @@ public class Buchungssatz implements MouseListener{
 	}
 	
 	public void makePink() {
-		bsNumberPanel.setBackground(new Color(104, 33, 122));
-		bsNumberPanel.repaint();
+		Color bg = bsPanel.getBackground();
+		bsPanel.setBackground(MainView.disCountPurple);
+		bsPanel.repaint();
 		
 		new java.util.Timer().schedule(
 				new java.util.TimerTask(){
 					@Override
 					public void run() {
-						bsNumberPanel.setBackground(new Color(0, 117, 211));
-						bsNumberPanel.repaint();}}, 1000);
+						bsPanel.setBackground(bg);
+						bsPanel.repaint();}}, 1000);
 	}
 	
 	
@@ -208,11 +211,11 @@ public class Buchungssatz implements MouseListener{
 	
 	private void addThumbs(JPanel infoPanel, MouseListener ML) {
 		ImageIcon thumbsUpIcon = new ImageIcon("src/thumbsup.png");
-		JLabel thumbsUpLabel = new JLabel(thumbsUpIcon);
+		thumbsUpLabel = new JLabel(thumbsUpIcon);
 		thumbsUpLabel.setBounds(310, 12, 18, 18);
 		
 		ImageIcon thumbsDownIcon = new ImageIcon("src/thumbsdown.png");
-		JLabel thumbsDownLabel = new JLabel(thumbsDownIcon);
+		thumbsDownLabel = new JLabel(thumbsDownIcon);
 		thumbsDownLabel.setBounds(370, 12, 18, 18);
 		
 		thumbsUpLabel.addMouseListener(this);
@@ -448,6 +451,7 @@ public class Buchungssatz implements MouseListener{
 	////////////////move/////////////////////
 	
 	private void moveBS(int upOrDown) { // up is -1
+		makePink();
 		int myIndex = MainView.bsList.indexOf(this);
 		
 		if((myIndex == 0 && upOrDown == -1) || (myIndex == MainView.bsList.size() - 1 && upOrDown == 1))
@@ -681,6 +685,16 @@ public class Buchungssatz implements MouseListener{
 				infoPanel.setVisible(true);
 				removeFields();
 			}
+		}
+		
+		else if(triggerLabel.getIcon().toString().equals("src/thumbsup.png")) {
+			if(((ML_db) ML).initChangeRatio(1, solutionID))
+				thumbsUpLabel.setEnabled(false);
+		}
+		
+		else if(triggerLabel.getIcon().toString().equals("src/thumbsdown.png")) {
+			if(((ML_db) ML).initChangeRatio(-1, solutionID))
+				thumbsDownLabel.setEnabled(false);
 		}
 		
 	}

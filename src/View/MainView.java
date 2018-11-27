@@ -124,7 +124,7 @@ public static boolean isBANNED = false;
 	
 	public static JLabel deleteSymbol;
 	public static JLabel abschreibungSymbol;
-	public static JLabel entryOnSB;
+	private JLabel entryOnSB;
 
 
 	public static Font font_30 = new Font("Roboto", Font.BOLD, 30);
@@ -550,12 +550,13 @@ public static boolean isBANNED = false;
 		Dimension dimension = new Dimension(310, 40);
 		entryOnSB.setMaximumSize(dimension);
 		entryOnSB.setMinimumSize(dimension);
-		Dimension labelSize = entryOnSB.getSize();
 		entryOnSB.setBorder(new EmptyBorder(20, 30, 20, 0));
+		
 		if(title.equals("Stats"))
 			entryOnSB.setBackground(MainView.disCountPurple);
 		else
 			entryOnSB.setBackground(MainView.disCountBlue);
+		
 		entryOnSB.setOpaque(true);
 		entryOnSB.setForeground(new Color(218, 218, 218));
 		entryOnSB.setFont(font_18);

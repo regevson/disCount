@@ -180,7 +180,7 @@ public Personalverrechnung_View(Controller_Kalkulationen myController) {
 			
 			dispose();
 			++(MainView.kalkulationsOpen);
-			MainView.entryOnSB.setText("Kalkulationen" + "   " + Integer.toString(MainView.kalkulationsOpen));
+			MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + MainView.kalkulationsOpen);
 		}
 
 	});
@@ -409,7 +409,7 @@ public void setUpStuff(boolean zumutbar, boolean unzumutbar) throws NumberFormat
 				tempPanel.setVisible(true);
 				mainPane.setVisible(false);
 				mainPane = null;
-				MainView.entryOnSB.setText("Kalkulationen" + "   " + Integer.toString(--(MainView.kalkulationsOpen)));
+				MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + --MainView.kalkulationsOpen);
 			}
 
 		});
