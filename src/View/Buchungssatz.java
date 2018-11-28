@@ -260,8 +260,8 @@ public class Buchungssatz implements MouseListener{
 	public void addVerified() {
 		ImageIcon verifiedIcon = new ImageIcon("src/verified.png");
 		JLabel verifiedLabel = new JLabel(verifiedIcon);
-		verifiedLabel.setBounds(26, 90, 60, 60);
-		bsNumberLabel.add(verifiedLabel);
+		verifiedLabel.setBounds(13, 20, 26, 28);
+		bsNumberPanel.add(verifiedLabel);
 	}
 	
 	public void paintNumberOnBSNumberPanel() {

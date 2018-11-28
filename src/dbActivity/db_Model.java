@@ -49,6 +49,7 @@ public class db_Model {
 	public static final int MINIMUMADDED = 5;
 	public static final int MAXSTUDENTS = 5;
 	public static final int MAXBS = 5;
+	private final int minLikesToBeVerified = 5;
 	
 	private int BScount;
 	private int commentCount;
@@ -72,6 +73,7 @@ public class db_Model {
 	private String uploaderRank;
 	private boolean inputToSuggestionIsIncorrect;
 	private String schoolClass;
+	private String uploaderID;
 	
 	
 	
@@ -119,6 +121,8 @@ public class db_Model {
 	    		 votes += 1;
 	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + solutionID + "'");
 	    		 
+	    		 increase_decreaseUploaderLikes(value);
+	    		 
 	    		 return true;
 		    	
 		     }
@@ -129,6 +133,34 @@ public class db_Model {
 	    return false;
 		
 	}
+	
+	
+	private void increase_decreaseUploaderLikes(int value) {
+		
+		try {
+
+			rs = st.executeQuery("SELECT totalLikes, rank FROM users WHERE id='" + uploaderID + "'");
+
+			int totalLikes = 0;
+			String uploaderRank = "";
+
+			if(rs.next()) {
+				totalLikes = rs.getInt("totalLikes");
+				uploaderRank = rs.getString("rank");
+			}
+			
+			if(totalLikes + value == minLikesToBeVerified && uploaderRank.equals("student"))
+				uploaderRank = "verified";
+			
+			else if(totalLikes + value < minLikesToBeVerified && uploaderRank.equals("verified"))
+				uploaderRank = "student";
+			
+			st.executeUpdate("UPDATE users SET totalLikes ='" + (totalLikes += value) + "', rank='" + uploaderRank + "' WHERE id='" + uploaderID + "'");
+			
+		} catch(SQLException e) {System.out.println("dbModel - increase_decreaseUploaderLikes - didnt work");e.printStackTrace();}
+
+	}
+	
 	
 	
 	
@@ -440,6 +472,7 @@ public class db_Model {
 
 			while(rs.next()) {
 				
+				uploaderID = rs.getString("uploaderID");
 				String info[] = getUsernameAndUploaderRank(rs.getString("uploaderID"));
 				highestUsername = info[0];
 				highestUploaderRank = info[1];

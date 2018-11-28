@@ -452,15 +452,16 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			String upvotes = suggestionInfo[2];
 			String downvotes = suggestionInfo[3];
 			String commentCount = suggestionInfo[4];
-			String uploader = suggestionInfo[6];
+			String uploaderRank = suggestionInfo[6];
 				
 			for(int x = 0; x < bsList.size(); x++) {
-				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploader, solutionID, ML);
+				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploaderRank, solutionID, ML);
 				
-				if(uploader.equals("teacher"))
+				if(uploaderRank.equals("teacher"))
 					bsList.get(x).addStar();
-				else if(uploader.equals("verified"));
+				else if(uploaderRank.equals("verified"))
 					bsList.get(x).addVerified();
+				
 			}
 			
 		}
