@@ -88,10 +88,10 @@ public class IG_Erwerb_Kauf_View extends View_SuperClass_2Outputs{
 		
 
 		if(fwCB.isSelected())
-			txtPreis.setText(MainModel.roundDouble_giveBack_String(Double.parseDouble(((Controller_Ausland) myController).initExecuteFWRoutine(txtPreis.getText(), fwSatz.getText()))));
+			txtPreis.setText(MainModel.roundDouble_giveBack_String(MainModel.parseDouble(((Controller_Ausland) myController).initExecuteFWRoutine(txtPreis.getText(), fwSatz.getText()))));
 			
 		String kontos[] = {konto1, finalZahlungskonto};
-		Double prices[] = {Double.parseDouble(txtPreis.getText())};
+		Double prices[] = {MainModel.parseDouble(txtPreis.getText())};
 		
 		Buchungssatz bs = myController.initpaintUpTo7(kontos, prices, leftMore);
 		

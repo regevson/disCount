@@ -1,5 +1,7 @@
 package extraViews;
 
+import View.MainModel;
+
 public class _1Stufig_ohneSteuer extends _1Stufig_Fixed_View{
 
 	@Override
@@ -17,7 +19,7 @@ public class _1Stufig_ohneSteuer extends _1Stufig_Fixed_View{
 	
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
 		String kontos[] = {Konten2[0], lblKonto1.getText()};
-		Double prices[] = {Double.parseDouble(txtPreis.getText())};
+		Double prices[] = {MainModel.parseDouble(txtPreis.getText())};
 		
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 	}

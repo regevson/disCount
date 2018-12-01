@@ -222,6 +222,9 @@ public class MessageBox extends JFrame {
 		});
 		btnAllesKlar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(!MainView.databaseIsActive)
+					return;
+				
 				dispose();
 				MLdb.initUploadToDB((String) comboBox.getSelectedItem(), txtSeite.getText(), txtNummer.getText());
 				MLdb.initSaveProject();

@@ -74,11 +74,11 @@ public class Kursdifferenz_View extends View_SuperClass{
 	}
 	
 	private void makeKursdifferenz(boolean IGErw_Impo) {
-		Double erg1 = (Double.parseDouble(txtOldPrice.getText())) / (Double.parseDouble(txtOldKurs.getText()));
+		Double erg1 = (MainModel.parseDouble(txtOldPrice.getText())) / (MainModel.parseDouble(txtOldKurs.getText()));
 		System.out.println("erg1  " + erg1);
 		System.out.println(txtOldPrice.getText() + "  oldprice");
 		System.out.println(txtNewKurs.getText() + "  kurs");
-		Double erg2 = Double.parseDouble(txtOldPrice.getText()) / Double.parseDouble(txtNewKurs.getText());
+		Double erg2 = MainModel.parseDouble(txtOldPrice.getText()) / MainModel.parseDouble(txtNewKurs.getText());
 		System.out.println("erg2  " + erg2);
 		
 		Double res = erg1 - erg2;
@@ -109,13 +109,13 @@ public class Kursdifferenz_View extends View_SuperClass{
 		
 		if(gewinn == true) {
 			String kontos[] = {konto_Vab, konto2_Gewinn};
-			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			Double prices[] = {Math.abs(MainModel.parseDouble(MainModel.roundDouble_giveBack_String(result)))};
 			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 		
 		else {
 			String kontos[] = {konto1_Verlust, konto_Vab};
-			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			Double prices[] = {Math.abs(MainModel.parseDouble(MainModel.roundDouble_giveBack_String(result)))};
 			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 	}
@@ -124,13 +124,13 @@ public class Kursdifferenz_View extends View_SuperClass{
 		
 		if(gewinn == true) {
 			String kontos[] = {konto_Vab, konto2_Gewinn};
-			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			Double prices[] = {Math.abs(MainModel.parseDouble(MainModel.roundDouble_giveBack_String(result)))};
 			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 		
 		else {
 			String kontos[] = {konto1_Verlust, konto_Vab};
-			Double prices[] = {Math.abs(Double.parseDouble(MainModel.round(result)))};
+			Double prices[] = {Math.abs(MainModel.parseDouble(MainModel.roundDouble_giveBack_String(result)))};
 			myController.initpaintUpTo7(kontos, prices, leftMore);
 		}
 	}

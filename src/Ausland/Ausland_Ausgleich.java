@@ -143,12 +143,12 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 		
 		finalZahlungskonto = konten2[0];
 		
-		this.newPrice = Double.parseDouble(txtPreis.getText());
+		this.newPrice = MainModel.parseDouble(txtPreis.getText());
 		
 		
 
 		if(fwCB.isSelected())
-			this.newPrice = Double.parseDouble(((Controller_Ausland) myController).initExecuteFWRoutine(txtPreis.getText(), fwSatz.getText()));
+			this.newPrice = MainModel.parseDouble(((Controller_Ausland) myController).initExecuteFWRoutine(txtPreis.getText(), fwSatz.getText()));
 		
 		
 		
@@ -213,7 +213,7 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 	
 	
 	private void spesenException(double price, String konto1) {
-		double spesenPreis = Double.parseDouble(spField.getText());
+		double spesenPreis = MainModel.parseDouble(spField.getText());
 		double newPrice = 0;
 		if(konto1.equals("2800")) {
 			newPrice = price - spesenPreis;
@@ -233,11 +233,11 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 	}
 	
 	private void skontoException(double oldPrice, String percent) {
-		double skPercent = Double.parseDouble(skField.getText());
+		double skPercent = MainModel.parseDouble(skField.getText());
 		
 		skonto_Brutto = MainModel.roundDouble_giveBack_Double((oldPrice / 100) * skPercent);
 		this.newPrice = MainModel.roundDouble_giveBack_Double((oldPrice / 100) * (100 - skPercent));
-		double percent_double = Double.parseDouble(percent);
+		double percent_double = MainModel.parseDouble(percent);
 		skonto_20Percent = MainModel.roundDouble_giveBack_Double((skonto_Brutto / 100) * percent_double); //Erwerbssteuer Skonto
 	}
 	

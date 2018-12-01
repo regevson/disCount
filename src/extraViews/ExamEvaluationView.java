@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import View.MainModel;
 import View.MainView;
 
 public class ExamEvaluationView extends JFrame {
@@ -107,7 +108,7 @@ public class ExamEvaluationView extends JFrame {
 		contentPane.add(student);
 		
 		studentStatus.setText(percent + "%");
-		if(Double.parseDouble(percent) <= 60)
+		if(MainModel.parseDouble(percent) <= 60)
 			studentStatus.setForeground(Color.RED);
 		else
 			studentStatus.setForeground(Color.GREEN);

@@ -36,8 +36,8 @@ public class _2Stufig_VariableKonto extends View_SuperClass{
 
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 			
-		double nettoPrice = Double.parseDouble(txtPreis.getText());
-		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		double nettoPrice = MainModel.parseDouble(txtPreis.getText());
+		double bruttoPrice = MainModel.parseDouble(txtPreis.getText());
 		
 		if(netto.isSelected())
 			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), ((String) variableTax.getSelectedItem()).substring(0, 2));

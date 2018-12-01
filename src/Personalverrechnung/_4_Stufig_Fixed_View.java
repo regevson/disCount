@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import View.MainModel;
 import View.MainView;
 import extraViews.View_SuperClass;
 import extraViews.View_SuperClass_2Outputs;
@@ -113,25 +114,25 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 	private void makeAdditionalBS() {
 		
 		String kontos[] = {"3600", "6200", "3540", "3850"};
-		Double prices[] = {Double.parseDouble(txtPrice2.getText()), Double.parseDouble(txtPrice1.getText()), Double.parseDouble(txtPrice3.getText()), Double.parseDouble(txtPrice4.getText())};
+		Double prices[] = {MainModel.parseDouble(txtPrice2.getText()), MainModel.parseDouble(txtPrice1.getText()), MainModel.parseDouble(txtPrice3.getText()), MainModel.parseDouble(txtPrice4.getText())};
 		
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 		
 		
-		double SV_DGA_Price = Double.parseDouble(SV_DGA.getText());
+		double SV_DGA_Price = MainModel.parseDouble(SV_DGA.getText());
 		double DB_Price = calcPrices(DB);
 		double DZ_Price = calcPrices(DZ);
 		double KommSt_Price = calcPrices(KommSt);
 		
 		
-		double SV_Price = Double.parseDouble(txtPrice2.getText());
-		double FA_Price = Double.parseDouble(txtPrice3.getText());
-		double Mitarbeiter_Price = Double.parseDouble(txtPrice4.getText());
+		double SV_Price = MainModel.parseDouble(txtPrice2.getText());
+		double FA_Price = MainModel.parseDouble(txtPrice3.getText());
+		double Mitarbeiter_Price = MainModel.parseDouble(txtPrice4.getText());
 		
 		
 		
 		String kontos2[] = {"3600", "6560"};
-		Double prices2[] = {Double.parseDouble(SV_DGA.getText())};
+		Double prices2[] = {MainModel.parseDouble(SV_DGA.getText())};
 		myController.initpaintUpTo7(kontos2, prices2, leftMore);
 		
 		String kontos3[] = {"3540", "6660"};

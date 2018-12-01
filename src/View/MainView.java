@@ -154,14 +154,10 @@ public static boolean isBANNED = false;
 	private static JPanel panelMiddleTemp;
 	public static JTextField numberLabel;
 
-	//public static final Color lightBlack = new Color(36, 36, 36);
 	public static final Color lightBlack = new Color(66, 66, 66);
-	//public static final Color middleBlack = new Color(33, 33, 33);
 	public static final Color middleBlack = new Color(45, 45, 45);
 	public static final Color darkBlack = new Color(37, 37, 38);
-	//public static final Color darkDisCountBlue = new Color(0, 0, 0);
 	public static final Color darkDisCountBlue = new Color(2,92,153);
-	//public static final Color disCountBlue = new Color(36, 36, 36);
 	public static final Color disCountBlue = new Color(0, 122, 204);
 	public static final Color disCountGreen = new Color(9, 110, 109);
 	public static final Color disCountPurple = new Color(105, 51, 166);
@@ -180,6 +176,8 @@ public static boolean isBANNED = false;
 
 	private static JRadioButton onlyTeacherSolutions;
 	
+	public static boolean databaseIsActive = true;
+	
 	
 	
 	public MainView() {
@@ -189,18 +187,15 @@ public static boolean isBANNED = false;
 		setIconImages(icons);
 	}
 	
-	
-
 
 
 	public void setUpBasicStuff() {
 		setTitle("disCount");
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {}
-		
 		
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -210,7 +205,7 @@ public static boolean isBANNED = false;
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout());
-		contentPane.setBackground(lightBlack);
+		contentPane.setBackground(MainView.middleBlack);
 		
 		suchenPanel = new JPanel();
 		suchenPanel.setOpaque(false);
@@ -251,7 +246,7 @@ public static boolean isBANNED = false;
 		
 		suchenField = new JTextField();
 		View_SuperClass.txtFieldDesign(suchenField);
-		suchenField.setBounds(100, 4, screen.width-200, 33);
+		suchenField.setBounds(100, 4, screen.width, 33);
 		suchenField.setFont(font_16);
 		suchenField.setBorder(new EmptyBorder(0, 10, 0, 0));
 		suchenField.setText("Eingabe...");
@@ -276,7 +271,6 @@ public static boolean isBANNED = false;
 		
 		tempPanel = new JPanel();
 		tempPanel.setBackground(new Color(51, 51, 51));
-		//tempPanel.setBounds(0, 40, 100, 100);
 		tempPanel.setPreferredSize(new Dimension(workPanel_Width, 0));
 		tempPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		tempPanel.setBorder(new LineBorder(Color.BLACK, 2));
@@ -464,8 +458,7 @@ public static boolean isBANNED = false;
 	
 
 	
-	public ArrayList<MessageBox> getPotentialMessages(LinkedList<MouseListener> llML_p){
-		this.llML = llML_p;
+	public ArrayList<MessageBox> getPotentialMessages(){
 		return ((ML_db) llML.get(9)).initConnect();
 	}
 	
@@ -665,12 +658,10 @@ public static boolean isBANNED = false;
 		JMenu menu;
 		JMenuItem menuItem;
 		JMenuItem menuItem2;
-		JMenuItem menuItem3;
 		JMenuItem menuItemEinst;
 		JMenuItem menuItemAbs;
 		JMenuItem menuItemSpeichern;
 		JMenuItem menuItemÖffnen;
-		JMenuItem menuItemEinlesen;
 		JMenuItem menuItemAvailability;
 		JMenuItem menuItemExam;
 		JMenuItem menuItemInfo;
@@ -728,21 +719,6 @@ public static boolean isBANNED = false;
 				"Alle Buchungssätze löschen");
 		menu.add(menuItemÖffnen);
 		
-		menu.addSeparator();
-		
-		
-		menuItemEinlesen = new JMenuItem("Aufgabe einlesen", KeyEvent.VK_T);
-		
-		menuItemEinlesen.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemEinlesen.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	einlesen();
-		    }
-		});
-		
-		menuItemEinlesen.getAccessibleContext().setAccessibleDescription(
-				"Alle Buchungssätze löschen");
-		menu.add(menuItemEinlesen);
 		
 		
 		
@@ -874,99 +850,101 @@ public static boolean isBANNED = false;
 		
 		
 		
+		if(databaseIsActive) {
+			
+			menu = new JMenu("VERFÜGBARKEIT");
+			menu.setMnemonic(KeyEvent.VK_N);
+			menu.getAccessibleContext().setAccessibleDescription(
+			        "Prüfe ob eine Aufgabe bereits hochgeladen wurde");
+			menuBar.add(menu);
+	
+			setJMenuBar(menuBar);
+			
+	
+			menuItemAvailability = new JMenuItem("Prüfen ob eine Aufgabe bereits hochgeladen wurde", KeyEvent.VK_T);
+			
+			menuItemAvailability.setAccelerator(KeyStroke.getKeyStroke('U', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemAvailability.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	ExerciseAvailabilityChecker_View ac = new ExerciseAvailabilityChecker_View((ML_db) llML.get(9));
+					ac.setVisible(true);
+			    }
+			});
+	
+			menu.add(menuItemAvailability);
+			
+			
+			menu = new JMenu("PRÜFUNG");
+			menu.setMnemonic(KeyEvent.VK_N);
+			menu.getAccessibleContext().setAccessibleDescription(
+			        "Starte eine neue Prüfung");
+			menuBar.add(menu);
+	
+			setJMenuBar(menuBar);
+			
+	
+			menuItemExam = new JMenuItem("Neue Prüfung starten", KeyEvent.VK_T);
+			
+			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemExam.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	ExamSetupView esv = ((ML_db) llML.get(9)).startExam();
+					esv.setVisible(true);
+			    }
+			});
+	
+			menu.add(menuItemExam);
+			
+			menuItemExam = new JMenuItem("Prüfung beitreten", KeyEvent.VK_T);
+			
+			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemExam.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	InsertExamIDView ieidv = ((ML_db) llML.get(9)).joinExam();
+			    	ieidv.setVisible(true);
+			    }
+			});
+	
+			menu.add(menuItemExam);
+			
+			
+			menuItemExam = new JMenuItem("Prüfung abgeben", KeyEvent.VK_T);
+			
+			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemExam.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	((ML_db) llML.get(9)).initHandInExam();
+			    }
+			});
+	
+			menu.add(menuItemExam);
+			
+			
+			
+			
+			
+			
+			menu = new JMenu("LEHRER");
+			menu.setMnemonic(KeyEvent.VK_N);
+			menu.getAccessibleContext().setAccessibleDescription(
+			        "Als Lehrer registrieren");
+			menuBar.add(menu);
+	
+			setJMenuBar(menuBar);
+			
+			menuItemRegisterAsTeacher = new JMenuItem("Als Lehrer registrieren", KeyEvent.VK_T);
+			
+			menuItemRegisterAsTeacher.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemRegisterAsTeacher.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	TeacherRegistration tr = new TeacherRegistration((ML_db) llML.get(9));
+			    	tr.setVisible(true);
+			    }
+			});
+	
+			menu.add(menuItemRegisterAsTeacher);
 		
-		menu = new JMenu("VERFÜGBARKEIT");
-		menu.setMnemonic(KeyEvent.VK_N);
-		menu.getAccessibleContext().setAccessibleDescription(
-		        "Prüfe ob eine Aufgabe bereits hochgeladen wurde");
-		menuBar.add(menu);
-
-		setJMenuBar(menuBar);
-		
-
-		menuItemAvailability = new JMenuItem("Prüfen ob eine Aufgabe bereits hochgeladen wurde", KeyEvent.VK_T);
-		
-		menuItemAvailability.setAccelerator(KeyStroke.getKeyStroke('U', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemAvailability.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	ExerciseAvailabilityChecker_View ac = new ExerciseAvailabilityChecker_View((ML_db) llML.get(9));
-				ac.setVisible(true);
-		    }
-		});
-
-		menu.add(menuItemAvailability);
-		
-		
-		menu = new JMenu("PRÜFUNG");
-		menu.setMnemonic(KeyEvent.VK_N);
-		menu.getAccessibleContext().setAccessibleDescription(
-		        "Starte eine neue Prüfung");
-		menuBar.add(menu);
-
-		setJMenuBar(menuBar);
-		
-
-		menuItemExam = new JMenuItem("Neue Prüfung starten", KeyEvent.VK_T);
-		
-		menuItemExam.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemExam.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	ExamSetupView esv = ((ML_db) llML.get(9)).startExam();
-				esv.setVisible(true);
-		    }
-		});
-
-		menu.add(menuItemExam);
-		
-		menuItemExam = new JMenuItem("Prüfung beitreten", KeyEvent.VK_T);
-		
-		menuItemExam.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemExam.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	InsertExamIDView ieidv = ((ML_db) llML.get(9)).joinExam();
-		    	ieidv.setVisible(true);
-		    }
-		});
-
-		menu.add(menuItemExam);
-		
-		
-		menuItemExam = new JMenuItem("Prüfung abgeben", KeyEvent.VK_T);
-		
-		menuItemExam.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemExam.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	((ML_db) llML.get(9)).initHandInExam();
-		    }
-		});
-
-		menu.add(menuItemExam);
-		
-		
-		
-		
-		
-		
-		menu = new JMenu("LEHRER");
-		menu.setMnemonic(KeyEvent.VK_N);
-		menu.getAccessibleContext().setAccessibleDescription(
-		        "Als Lehrer registrieren");
-		menuBar.add(menu);
-
-		setJMenuBar(menuBar);
-		
-		menuItemRegisterAsTeacher = new JMenuItem("Als Lehrer registrieren", KeyEvent.VK_T);
-		
-		menuItemRegisterAsTeacher.setAccelerator(KeyStroke.getKeyStroke('L', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemRegisterAsTeacher.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	TeacherRegistration tr = new TeacherRegistration((ML_db) llML.get(9));
-		    	tr.setVisible(true);
-		    }
-		});
-
-		menu.add(menuItemRegisterAsTeacher);
-		
+		}
 		
 		
 		
@@ -1215,45 +1193,6 @@ public static boolean isBANNED = false;
 		JOptionPane.showMessageDialog(contentPane, "Stellen Sie den Buchungssatz zuerst fertig!");
 	}
 	
-	private void einlesen() {
-		
-		JTextArea jta = new JTextArea("Kopieren Sie hier die Angabe hinein.");
-		jta.setBackground(MainView.darkBlack);
-		jta.setForeground(Color.WHITE);
-		jta.setBorder(new EmptyBorder(10,10,10,10));
-		jta.setFont(font_16);
-		jta.setBounds(0,0,1,1);
-		jta.setVisible(true);
-		
-		
-		JScrollPane AAJSP = new JScrollPane(jta);
-		AAJSP.setBounds(10, 40, 500, 300);
-		AAJSP.setBorder(new LineBorder(MainView.darkDisCountBlue, 2));
-		AAJSP.setVisible(true);
-		workPanel.add(AAJSP);
-		workPanel.repaint();
-		
-		
-		JButton jb = new JButton("OK");
-		jb.setBackground(MainView.darkBlack);
-		jb.setForeground(Color.WHITE);
-		jb.setContentAreaFilled(false);
-		jb.setOpaque(true);
-		jb.setFont(MainView.font_16);
-		jb.setBorder(new LineBorder(new Color(0, 117, 211), 1));
-		jb.setBounds(520, 100, 70, 30);
-		jb.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	String aufgabe = jta.getText();
-		    	jta.setVisible(false);
-		    	jb.setVisible(false);
-		    	((ML_Anlagenbewertung) llML.get(6)).aufgabeAuswerten(aufgabe);
-		    }
-		});
-		workPanel.add(jb);
-		workPanel.repaint();
-		
-	}
 	
 	public int getScreenWidth() {
 		return screenWidth;
@@ -1857,6 +1796,12 @@ public static boolean isBANNED = false;
 
 	public JPanel getWorkPanel() {
 		return workPanel;
+	}
+
+
+
+	public void getMLList(LinkedList<MouseListener> llML) {
+		this.llML = llML;
 	}
 
 

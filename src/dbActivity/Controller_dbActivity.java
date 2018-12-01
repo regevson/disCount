@@ -1,16 +1,13 @@
 package dbActivity;
 
-import java.awt.Color;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import View.Buchungssatz;

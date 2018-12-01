@@ -41,8 +41,8 @@ public class Geschäftsessen_View extends View_SuperClass{
 
 			finalZahlungskonto = Konten2[0];
 			
-			double half20 = Double.parseDouble(txtPrice2.getText())/2;
-			double half10 = Double.parseDouble(txtPrice3.getText())/2;
+			double half20 = MainModel.parseDouble(txtPrice2.getText())/2;
+			double half10 = MainModel.parseDouble(txtPrice3.getText())/2;
 		
 			
 			double res20Percent = calcRes(txtPrice2.getText(), 120);
@@ -65,7 +65,7 @@ public class Geschäftsessen_View extends View_SuperClass{
 	}
 	
 	private double calcRes(String price, int percent) {
-		double price_double = Double.parseDouble(price);
+		double price_double = MainModel.parseDouble(price);
 		return ((price_double/2)/percent)*100;
 	}
 	

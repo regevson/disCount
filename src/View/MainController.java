@@ -36,6 +36,7 @@ public class MainController{
 	}
 	
 	public void tell_View_To_setUpBasicStuff(ArrayList<MessageBox> messageBoxList) {
+		
 		if(MainView.isBANNED)
 			executeBannedRoutine();
 		
@@ -47,6 +48,7 @@ public class MainController{
 			mainView.setVisible(true);
 			displayMessages(messageBoxList);
 		}
+		
 	}
 	
 	public static void tellViewToSetCusor(Cursor cursor) {
@@ -98,7 +100,9 @@ public class MainController{
 
 	public void addMLList(LinkedList<MouseListener> llML) {
 		((ML_Tabellenkalkulation) llML.get(10)).getControllerandView(this, mainView);
-		tell_View_To_setUpBasicStuff(mainView.getPotentialMessages(llML));
+		mainView.getMLList(llML);
+		
+		tell_View_To_setUpBasicStuff(mainView.getPotentialMessages());
 		
 	}
 	

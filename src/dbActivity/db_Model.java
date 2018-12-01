@@ -167,6 +167,9 @@ public class db_Model {
 	
 	public ArrayList<MessageBox> connect() {
 		
+		if(!MainView.databaseIsActive)
+			return null;
+		
        try { 
            
            BufferedReader br = new BufferedReader(new FileReader("src/info.txt"));
@@ -993,7 +996,7 @@ public class db_Model {
 				
 				if(result != -1) {
 					if(result == -99)
-						result = Double.parseDouble("-99");
+						result = MainModel.parseDouble("-99");
 					alResults.add(result);
 					scanList.add(x);
 					setResultBackToMinusOne(x);

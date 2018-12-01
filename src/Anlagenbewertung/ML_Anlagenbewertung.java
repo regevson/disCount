@@ -113,9 +113,4 @@ public class ML_Anlagenbewertung implements MouseListener{
 		myController.exec_Abschreibung("Abschreibung", "7010", FIXEDAW, null, null, leftmore2Stufig, true, true);
 	}
 	
-	
-	public void aufgabeAuswerten(String aufgabe) {
-		myController.exec_Erweiterung_Gebäude_View(aufgabe, 400, 800);
-	}
-	
 }

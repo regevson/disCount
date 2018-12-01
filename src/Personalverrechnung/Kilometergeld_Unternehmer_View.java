@@ -49,7 +49,7 @@ public class Kilometergeld_Unternehmer_View extends View_SuperClass{
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 		
 		String kontos[] = {lblKonto1.getText(), finalZahlungskonto};
-		Double prices[] = {Double.parseDouble(txtKM.getText()) * Float.parseFloat(txtKMPrice.getText())};
+		Double prices[] = {MainModel.parseDouble(txtKM.getText()) * Float.parseFloat(txtKMPrice.getText())};
 		
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 		

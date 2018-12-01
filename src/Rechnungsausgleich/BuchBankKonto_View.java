@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 
+import View.MainModel;
 import extraViews.View_SuperClass;
 
 public class BuchBankKonto_View extends View_SuperClass{
@@ -97,7 +98,7 @@ public class BuchBankKonto_View extends View_SuperClass{
 		else if(cbEinzahlungInKassa.isSelected())
 			kontos = new String[] {"2870", "2800"};
 		
-		Double prices[] = {Double.parseDouble(txtPreis.getText())};
+		Double prices[] = {MainModel.parseDouble(txtPreis.getText())};
 		
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 

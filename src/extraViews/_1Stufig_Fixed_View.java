@@ -26,7 +26,7 @@ public class _1Stufig_Fixed_View extends View_SuperClass{
 			finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 		
 		
-		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		double bruttoPrice = MainModel.parseDouble(txtPreis.getText());
 		
 			if(netto != null && netto.isSelected())
 				bruttoPrice = myController.initNettoToBrutto(percent, txtPreis.getText());

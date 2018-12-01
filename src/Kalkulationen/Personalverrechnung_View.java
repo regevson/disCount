@@ -278,7 +278,7 @@ public void setUpStuff(boolean zumutbar, boolean unzumutbar) throws NumberFormat
 		contentPane2.add(txtAvabaeab);
 		
 		txtBemessungsgrundlage = new JTextField();
-		txtBemessungsgrundlage.setText(MainModel.round(BG));
+		txtBemessungsgrundlage.setText(MainModel.roundDouble_giveBack_String(BG));
 		View_SuperClass.txtFieldDesign(txtBemessungsgrundlage);
 		txtBemessungsgrundlage.setColumns(10);
 		txtBemessungsgrundlage.setBounds(330, 87, 160, 40);

@@ -140,7 +140,7 @@ public class Abschreibung_View extends View_SuperClass{
 		
 		for(int x = 0; x < MainView.bsList.size(); x++) {
 			if(MainView.bsList.get(x).getRadioButtonStatus())
-				AW += Double.parseDouble(MainView.bsList.get(x).getNettoPrice());
+				AW += MainModel.parseDouble(MainView.bsList.get(x).getNettoPrice());
 		}
 		
 		if(AW == 0) {

@@ -56,13 +56,13 @@ public class ML_Controls implements MouseListener{
 			MC.tellViewToRemoveExerciseSelectionPanel();
 		}
 		
-		else if(jltemp.getIcon().toString().equals("src/cloudOFF.png") && db_Model.allowSolutions && !Controller_dbActivity.inExam) {
+		else if(jltemp.getIcon().toString().equals("src/cloudOFF.png") && db_Model.allowSolutions && !Controller_dbActivity.inExam && MainView.databaseIsActive) {
 			myModel.turnOnCloud(jltemp);
 			MC.tellViewToAddExerciseSelectionPanel(false);
 		}
 		
 		
-		else if(jltemp.getIcon().toString().equals("src/bsCheck.png") && db_Model.allowSolutions == true && !Controller_dbActivity.inExam) {
+		else if(jltemp.getIcon().toString().equals("src/bsCheck.png") && db_Model.allowSolutions == true && !Controller_dbActivity.inExam && MainView.databaseIsActive) {
 			if(jltemp.isEnabled()) {
 				jltemp.setEnabled(false);
 				MC.tellViewToRemoveExerciseSelectionPanel();
@@ -75,14 +75,24 @@ public class ML_Controls implements MouseListener{
 		
 		
 		
-		else if((jltemp.getIcon().toString().equals("src/cloudOFF.png") ||  jltemp.getIcon().toString().equals("src/bsCheck.png")) && db_Model.allowSolutions == false && !Controller_dbActivity.inExam) {
-			MessageBox mb = new MessageBox("Hinweis", "Diese Funktion muss erst freigeschaltet werden!\n", "Damit die Lösungsvorschläge-Funktion und "
-		    			+ "die Feherkorrektur gut funktionieren, müssen "
-						+ "so viele Buchungssätze wie möglich vom Server abrufbar sein. Hilf deinen MitschülerInnen und veröffentliche deine Lösung!\n\n"
-						+ "Erst wenn du " + db_Model.MINIMUMADDED + " Lösungen hochgeladen hast, werden die Funktionen aktiviert.\n\n"
-								+ "Für weitere Informationen besuchen Sie bitte:\n www.discount-solutions.tk/hochladen");
+		else if((jltemp.getIcon().toString().equals("src/cloudOFF.png") ||  jltemp.getIcon().toString().equals("src/bsCheck.png")) && (!db_Model.allowSolutions || !Controller_dbActivity.inExam || !MainView.databaseIsActive)) {
 			
-			mb.setVisible(true);
+			if(!db_Model.allowSolutions) {
+				MessageBox mb = new MessageBox("Hinweis", "Diese Funktion muss erst freigeschaltet werden!\n", "Damit die Lösungsvorschläge-Funktion und "
+			    			+ "die Feherkorrektur gut funktionieren, müssen "
+							+ "so viele Buchungssätze wie möglich vom Server abrufbar sein. Hilf deinen MitschülerInnen und veröffentliche deine Lösung!\n\n"
+							+ "Erst wenn du " + db_Model.MINIMUMADDED + " Lösungen hochgeladen hast, werden die Funktionen aktiviert.\n\n"
+									+ "Für weitere Informationen besuchen Sie bitte:\n www.discount-solutions.tk/hochladen");
+				
+				mb.setVisible(true);
+			}
+			
+			else if(!MainView.databaseIsActive) {
+				MessageBox mb = new MessageBox("Hinweis", "Dies ist eine Testversion von disCount!\n", "In der Testversion wird die Verbindung zur Datenbank noch nicht erlaubt und deshalb ist diese "
+						+ "Funktion deaktiviert...");
+			
+				mb.setVisible(true);
+			}
 		}
 		
 		

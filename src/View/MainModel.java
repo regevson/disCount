@@ -10,15 +10,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.text.DateFormatSymbols;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.Locale;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -27,8 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Personalverrechnung.Tagesgeld_View;
-import extraViews.View_SuperClass;
-import extraViews.View_SuperClass_2Outputs;
 
 public class MainModel {
 	
@@ -42,22 +34,19 @@ public class MainModel {
 
 	private static LinkedList<Character> llChar;
 	
-	private static int currentIndex;
-	private static double abrechnung_netto = 0;
-	private static double abrechnung_ust = 0;
-	private static double abrechnung_brutto = 0;
 	public static double biggestNetto = 0;
 	private static String tempYear;
 	
 	public static LinkedList<String> abrAW_Konto = new LinkedList<String>();
 	public static ArrayList<Double> solutions_AUSG = new ArrayList<Double>();
 
-	private static boolean isSet = false;
-
-
-
 	public static boolean saving = false;
 
+	
+	
+	
+	
+	
 	
 
 	
@@ -68,34 +57,31 @@ public class MainModel {
 
 	
 	public String executeFWRoutine(String price, String satz) {
-		return Double.toString((Double.parseDouble(price) / Double.parseDouble(satz)));
+		return Double.toString((MainModel.parseDouble(price) / MainModel.parseDouble(satz)));
 	}
 	
 	
 //------------------------------------------------rounding-------------------------------------------------------------------------
 	
-	public static String round(double d) {
-		String str = Double.toString(d);
-		
-        BigDecimal decimal = new BigDecimal(str);
-        decimal = decimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return decimal.toString();
-    }
-	
 	
 	public static Double roundDouble_giveBack_Double(Double num) {
+		
 		String str = Double.toString(num);
         BigDecimal decimal = new BigDecimal(str);
         decimal = decimal.setScale(2, BigDecimal.ROUND_HALF_UP);
-	    return Double.parseDouble(decimal.toString());
+        
+	    return MainModel.parseDouble(decimal.toString());
+	    
 	}
 	
 	public static String roundDouble_giveBack_String(Double num) {
-		String str = Double.toString(num);
 		
+		String str = Double.toString(num);
         BigDecimal decimal = new BigDecimal(str);
         decimal = decimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+        
         return decimal.toString();
+        
 	}
 	
 	
@@ -106,63 +92,68 @@ public class MainModel {
 	
 
 	
-	public Double calculateErwerbsteuerbetrag(String price) {
-		Double tempPrice = Double.parseDouble(price);
+	public double calculateErwerbsteuerbetrag(String price) {
+	
+		double tempPrice = MainModel.parseDouble(price);
+		
 		return tempPrice / 100 * 20;
+		
 	}
 		
 	
-	public Double nettoToBrutto(String price, String percent) {
-		Double nettoPrice = null;
-		try {
-			nettoPrice = Double.parseDouble(price);
-		}catch(NumberFormatException numFormatEx) {
-			price = "00.00";
-			JOptionPane.showMessageDialog(null, "Das Komma muss als Punkt geschrieben werden!", "Warning", JOptionPane.WARNING_MESSAGE);
-		}
-		nettoPrice = Double.parseDouble(price);
-		return MainModel.roundDouble_giveBack_Double(calculateBrutto(percent, nettoPrice));
+	public double nettoToBrutto(String price, String percent) {
+	
+		double nettoPrice = MainModel.parseDouble(price);
+		double bruttoPrice = MainModel.roundDouble_giveBack_Double(calculateBrutto(percent, nettoPrice));
+		
+		return bruttoPrice;
+		
 	}
+	
+	
+	public double bruttoToNetto(String price, String percent) {
+
+		double bruttoPrice = MainModel.parseDouble(price);
+		double nettoPrice = MainModel.roundDouble_giveBack_Double(calculateNetto(percent, bruttoPrice));
+		
+		return nettoPrice;
+		
+	}
+	
+
+
 	
 	public Double[] nettoToBrutto(String nettoPrice_str, String otherPrice_str, String percent) {
-		Double otherPrice = Double.parseDouble(otherPrice_str); //emballagenpreis
-		Double nettoPrice = Double.parseDouble(nettoPrice_str);
+
+		double otherPrice = MainModel.parseDouble(otherPrice_str); //emballagenpreis
+		double nettoPrice = MainModel.parseDouble(nettoPrice_str);
 		
-		Double steuer = (nettoPrice + otherPrice) / 100 * 20;
-		Double bruttoPrice = nettoPrice + otherPrice + steuer;
+		double steuer = (nettoPrice + otherPrice) / 100 * 20;
+		double bruttoPrice = nettoPrice + otherPrice + steuer;
 		
 		return new Double[] {nettoPrice, bruttoPrice, otherPrice, steuer};
+		
 	}
 	
-	public Double bruttoToNetto(String price, String percent) {
-		Double bruttoPrice = null;
-		try {
-			bruttoPrice = Double.parseDouble(price);
-		}catch(NumberFormatException numFormatEx) {
-			price = "00.00";
-			JOptionPane.showMessageDialog(null, "Das Komma muss als Punkt geschrieben werden!", "Warning", JOptionPane.WARNING_MESSAGE);
-		}
-		bruttoPrice = Double.parseDouble(price);
-		double nettoPrice = MainModel.roundDouble_giveBack_Double(calculateNetto(percent, bruttoPrice));
-		return nettoPrice;
-	}
 	
 	public Double[] bruttoToNetto(String bruttoPrice_str, String otherPrice_str, String percent) {
-		Double otherPrice = Double.parseDouble(otherPrice_str);
-		Double bruttoPrice = Double.parseDouble(bruttoPrice_str);
-		Double nettoPrice = calculateNetto(percent, bruttoPrice) - otherPrice;
+			
+		double otherPrice = MainModel.parseDouble(otherPrice_str);
+		double bruttoPrice = MainModel.parseDouble(bruttoPrice_str);
+		double nettoPrice = calculateNetto(percent, bruttoPrice) - otherPrice;
 		
-		Double steuer = bruttoPrice - nettoPrice - otherPrice;
+		double steuer = bruttoPrice - nettoPrice - otherPrice;
 		
 		return new Double[] {nettoPrice, bruttoPrice, otherPrice, steuer};
+		
 	}
 
 	
-	public Double calculateBrutto(String percent, Double price) {
+	public double calculateBrutto(String percent, Double price) {
 		return (price / 100) * (100 + Integer.parseInt(percent));
 	}
 	
-	public Double calculateNetto(String percent, Double price) {
+	public double calculateNetto(String percent, Double price) {
 		return (price / (100 + Integer.parseInt(percent))) * 100;
 	}
 	
@@ -173,49 +164,52 @@ public class MainModel {
 
 	
 	public Double[] calcNettoKreditkarten(String bruttoPrice_str, String spesen_str) {
-		Double bruttoPrice = Double.parseDouble(bruttoPrice_str);
-		Double spesen = Double.parseDouble(spesen_str);
-		Double steuer = roundDouble_giveBack_Double(spesen / 100 * 20);
-		Double nettoPrice = bruttoPrice - spesen - steuer;
+	
+		double bruttoPrice = MainModel.parseDouble(bruttoPrice_str);
+		double spesen = MainModel.parseDouble(spesen_str);
+		double steuer = roundDouble_giveBack_Double(spesen / 100 * 20);
+		double nettoPrice = bruttoPrice - spesen - steuer;
+		
 		return new Double[] {nettoPrice, bruttoPrice, spesen, steuer};
+		
 	}
 	
 	
 	public Double[] calculateRabattPricesFromNetto(int percent, Double nettoPrice, String rabattPercentarge) {
-		Double rabattPercent = Double.parseDouble(rabattPercentarge);
-		
-		Double newNettoRabattPrice = MainModel.roundDouble_giveBack_Double((nettoPrice/100)*rabattPercent);
-		Double tax = MainModel.roundDouble_giveBack_Double((newNettoRabattPrice/100)*percent);
-		Double newBruttoRabattPrice = newNettoRabattPrice + tax;
+	
+		double rabattPercent = MainModel.parseDouble(rabattPercentarge);
+		double newNettoRabattPrice = MainModel.roundDouble_giveBack_Double((nettoPrice/100)*rabattPercent);
+		double tax = MainModel.roundDouble_giveBack_Double((newNettoRabattPrice/100)*percent);
+		double newBruttoRabattPrice = newNettoRabattPrice + tax;
 		
 		return new Double[] {newNettoRabattPrice, newBruttoRabattPrice, tax};
+		
 	}
 	
 	
 	
 	
 	
-
 	
+	public double nettoToSkontoBrutto(String price, String skPercent) {
 	
-	
-	
-	public Double nettoToSkontoBrutto(String price, String skPercent) {
-		double nettoPrice = Double.parseDouble(price);
+		double nettoPrice = MainModel.parseDouble(price);
 		double bruttoPrice = MainModel.roundDouble_giveBack_Double(calculateBrutto("20", nettoPrice));
-		double skontoPercent = Double.parseDouble(skPercent);
+		double skontoPercent = MainModel.parseDouble(skPercent);
 		double skontoBruttoPrice = MainModel.roundDouble_giveBack_Double((bruttoPrice/100)*skontoPercent);
-		bruttoPrice = bruttoPrice - skontoBruttoPrice;
 		
 		return skontoBruttoPrice;
+		
 	}
 	
-	public Double bruttoToSkontoBrutto(String price, String skPercent) {
-		double bruttoPrice = Double.parseDouble(price);
-		double skontoPercent = Double.parseDouble(skPercent);
+	public double bruttoToSkontoBrutto(String price, String skPercent) {
+		
+		double bruttoPrice = MainModel.parseDouble(price);
+		double skontoPercent = MainModel.parseDouble(skPercent);
 		double skontoBruttoPrice = (bruttoPrice/100)*skontoPercent;
 		
 		return skontoBruttoPrice;
+		
 	}
 	
 	
@@ -223,26 +217,28 @@ public class MainModel {
 	
 //------------------------------------------------Personalverrechnung-------------------------------------------------------------------------
 	
-	public Double calcGehaltsPercent(String ausgangsPreis_str, String percent_str) {
-		Double ausgangsPreis = Double.parseDouble(ausgangsPreis_str);
-		Double percent = Double.parseDouble(percent_str);
+	public double calcGehaltsPercent(String ausgangsPreis_str, String percent_str) {
+	
+		double ausgangsPreis = MainModel.parseDouble(ausgangsPreis_str);
+		double percent = MainModel.parseDouble(percent_str);
+		double newPercent = (ausgangsPreis/100)*percent; 
 		
-		return (ausgangsPreis/100)*percent;
+		return newPercent;
+		
 	}
 	
 	
-	public Double calcTagesgeld(String anzTage_str, String startZeit, String endZeit, String essen) {
-		
+	public double calcTagesgeld(String anzTage_str, String startZeit, String endZeit, String essen) {
+	
 		int anzTage = Integer.parseInt(anzTage_str) - 1;
-		System.out.println(anzTage);
 
 		String[] temp1 = startZeit.split(":");
-		Double part1Start = Double.parseDouble(temp1[0]);
-		Double part2Start =  Double.parseDouble(temp1[1]);
+		double part1Start = MainModel.parseDouble(temp1[0]);
+		double part2Start =  MainModel.parseDouble(temp1[1]);
 		
 		String[] temp2 = endZeit.split(":");
-		Double part1End =  Double.parseDouble(temp2[0]);
-		Double part2End =  Double.parseDouble(temp2[1]);
+		double part1End =  MainModel.parseDouble(temp2[0]);
+		double part2End =  MainModel.parseDouble(temp2[1]);
 		
 		if(part2Start > part2End) {
 			++part1Start;
@@ -253,9 +249,9 @@ public class MainModel {
 			part2Start = part2End;
 		
 		
-		Double newPart = part1End - part1Start;
-		Double resTG = ((anzTage*Tagesgeld_View.tagesGeld) + (Tagesgeld_View.tagesGeld*(++newPart/12))) - (Tagesgeld_View.essensGeld * Integer.parseInt(essen));
-		
+		double newPart = part1End - part1Start;
+		double resTG = ((anzTage*Tagesgeld_View.tagesGeld) + (Tagesgeld_View.tagesGeld*(++newPart/12))) - (Tagesgeld_View.essensGeld * Integer.parseInt(essen));
+	
 		return resTG;
 		
 	}
@@ -269,7 +265,7 @@ public class MainModel {
 	public Double calcAbschreibung(String anlKonto, String IBN_Monat_str, String IBN_Year, String ND_str, Double AW, String command) {
 		tempYear = IBN_Year;
 		
-		Double nd = Double.parseDouble(ND_str);
+		Double nd = MainModel.parseDouble(ND_str);
 		int IBN_Monat = Integer.parseInt(IBN_Monat_str);
 		
 		Double afaBetrag = AW/nd;
@@ -308,290 +304,6 @@ public class MainModel {
 	
 	
 	
-//----------------------------------Angabenanalyse------------------------------------------------------------------------	
-	
-	private static String replaceChars(String input, String[] replaceObj) {
-		for(int x = 0; x < replaceObj.length; x++) {
-			input = input.replace(replaceObj[x], "");
-		}
-		
-	    return input;
-	}
-	
-
-	
-	
-	private static int convert_String_to_Month_Int(String month) {
-		 Date date = null;
-			try {
-				date = new SimpleDateFormat("MMM", Locale.GERMAN).parse(month);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			    Calendar cal = Calendar.getInstance();
-			    cal.setTime(date);
-			    return (cal.get(Calendar.MONTH)) + 1;
-	}
-	
-	
-	
-	
-	
-	
-	public static double getnext€(String search, String[] replaceObj, boolean isAbrechnung) {
-		int indexSearch = llAufgabe.indexOf(search);
-		System.out.println(llAufgabe.get(indexSearch) + " theone");
-		
-		if(isAbrechnung) {
-			abrechnung_netto = getNextValue(indexSearch, replaceObj, isAbrechnung);
-			removeOffList();
-			
-			abrechnung_ust = getNextValue(currentIndex, replaceObj, isAbrechnung);
-			removeOffList();
-			
-			abrechnung_brutto = getNextValue(currentIndex, replaceObj, isAbrechnung);
-			removeOffList();
-		
-		
-			if(abrechnung_netto > biggestNetto)
-				biggestNetto = abrechnung_netto;
-			
-			bruttoValuesFromAbrechnung.add(abrechnung_brutto);
-			
-			
-			return 0.00;
-		}
-		
-		else {
-			double res = getNextValue(indexSearch, replaceObj, isAbrechnung);
-			 return res;
-		}
-		
-		
-		
-	}
-	
-	private static double getNextValue(int indexSearch, String[] replaceObj, boolean isAbrechnung) {
-		int size = abrAW_Konto.size();
-		
-		for(int x = ++indexSearch; x < llAufgabe.size(); x++) {
-			
-			String currentString = llAufgabe.get(x).toLowerCase();
-			
-			if(isAbrechnung && currentString.contains("renovierung") || currentString.contains("instand") || currentString.contains("reperatur"))
-				MainModel.abrAW_Konto.add("7200");
-			
-			
-			if(currentString.equals("€")) {
-				currentIndex = x + 1;
-				break;
-			}
-			
-		}
-		
-		if(isAbrechnung && size != abrAW_Konto.size())
-			abrAW_Konto.add("0300");
-		
-		
-		
-		String tempString = llAufgabe.get(currentIndex);
-		tempString = replaceChars(tempString, replaceObj);
-		
-		return Double.parseDouble(tempString);
-	}
-	
-	
-	
-
-	
-	private static void removeOffList() {
-		for(int x = 0; x < currentIndex; x++) {
-			 llAufgabe.removeFirst();
-		 }
-		
-		currentIndex = 0;
-	}
-	
-	
-
-	
-	public static int getNearMonth(int index) {
-		System.out.println(index);
-		System.out.println(llAufgabe.get(index) + "  !!indexNB");
-		DateFormatSymbols dfs = new DateFormatSymbols(Locale.GERMANY);
-		String[] months = dfs.getMonths();
-		int[] occuredIndexes = {9999, 9999};
-		String[] occuredMonths = {"", ""};
-		String searchedMonth = null;
-
-		 outer:
-		 for(int x = index; x < llAufgabe.size(); x++) {
-
-			 for(int y = 0; y < months.length; y++) {
-				 if(!(months[y].toLowerCase().contains(llAufgabe.get(x).toLowerCase()))) {
-					 if(llAufgabe.get(x).length() == 4 && llAufgabe.get(x).contains(".")) {
-						String substring =  llAufgabe.get(x).substring(0, 3);
-						
-						if(!(months[y].contains(substring))) 
-							continue;
-
-					 }
-					 else
-						 continue;
-				 }
-					 
-					 
-					 
-					 occuredMonths[0] = months[y];
-					 occuredIndexes[0] = x;
-					 break outer;
-				 
-			 }
-		 }
-		 
-		 
-		 outerminus:
-			 for(int x = index; x <= 0; x--) {
-				 for(int y = 0; y < months.length; y++) {
-					 if(!(months[y].toLowerCase().contains(llAufgabe.get(x).toLowerCase()))) {
-						 if(llAufgabe.get(x).length() == 4 && llAufgabe.get(x).contains(".")) {
-							String substring =  llAufgabe.get(x).substring(0, 3);
-							
-							if(!(months[y].contains(substring)))
-								continue;
-							
-						 }
-						 else
-							 continue;
-					 }
-						 
-						 
-						 
-						 occuredMonths[0] = months[y];
-						 occuredIndexes[0] = x;
-						 break outerminus;
-				} 
-			 }
-		 
-				 
-		
-			 if(occuredIndexes[0] < occuredIndexes[1])
-				 searchedMonth = occuredMonths[0];
-			 else
-				 searchedMonth = occuredMonths[1];
-		
-		 
-		return convert_String_to_Month_Int(searchedMonth);
-		
-		
-	}
-	
-	//sucht einen String und sucht dann ab diesem index nach dem nächsten String und gibt dessen Value beim dessen index - 1 zurück
-	
-	public static String getString_nearOtherString(String searchedKeyword, String searchedValue, String[] replaceObj, int offset) {
-		boolean wasSuccessful = false;
-		int stopHere = MainModel.llAufgabe.size();
-		
-		int indexRND = llAufgabe.indexOf(searchedKeyword);
-		
-		if(offset != 0)
-			stopHere = indexRND + offset;
-		
-		 for(int x = ++indexRND; x < stopHere; x++) {
-			 if(llAufgabe.get(x).equals(searchedValue)) {
-				 indexRND = x - 1;
-				 wasSuccessful = true;
-				 break;
-			 }
-			 
-		 }
-		 
-		 if(wasSuccessful == false)
-			 return "-1";
-		 
-		 else {
-			 String restND = replaceChars(llAufgabe.get(indexRND), replaceObj);
-			 return restND.replace(",", ".");
-		 }
-	}
-	
-	
-	
-	
-	
-	public static ArrayList<Double> erweiterungGeb_abrechnung_ausgleich(String[] replaceObj) {
-		
-		ArrayList<Double> solutions_ABR = new ArrayList<Double>();
-		String stringUsed;
-		
-		int indexAUSG = llAufgabe.indexOf("Ausgleich");
-		int indexBA = llAufgabe.indexOf("Bankausgang");
-		
-		System.out.println(indexAUSG + "      indexAUSG");
-		System.out.println(indexBA + "      indexBA");
-		
-		if(llAufgabe.get(indexBA + 1).equals("€"))
-			stringUsed = "Bankausgang";
-		
-		else
-			stringUsed = "Ausgleich";
-		
-		
-		
-		while(true) {
-			System.out.println("here");
-			System.out.println(stringUsed);
-			
-			int indexABR = llAufgabe.indexOf("Abrechnung");
-			int indexAG_BAG = llAufgabe.indexOf(stringUsed);
-			
-
-			
-			
-			if(indexABR < indexAG_BAG && indexABR != -1) {
-				getnext€("Abrechnung", replaceObj, true);
-				isSet = false;
-				solutions_ABR = addAbrechnungen(solutions_ABR);
-				solutions_AUSG.add(0.00);
-			}
-			
-			else if(indexAG_BAG != -1) {
-				System.out.println(stringUsed + "  str_UsedbyAngabe");
-				System.out.println(llAufgabe);
-				String isTeilausgleich = MainModel.getString_nearOtherString(stringUsed, "Teilausgleich", replaceObj, 5);
-				
-				if(isTeilausgleich.equals("-1"))
-					solutions_AUSG.add(-1.00);
-				
-				else {
-					System.out.println(llAufgabe);
-					solutions_AUSG.add(getnext€(stringUsed, replaceObj, false));
-				}
-				
-				currentIndex = indexAG_BAG + 1;
-				removeOffList();
-			}
-			else
-				break;
-			
-		}
-		
-		
-		
-		return solutions_ABR;
-		
-		
-		
-	}
-	
-	private static ArrayList<Double> addAbrechnungen(ArrayList<Double> solutions_ABR) {
-		solutions_ABR.add(abrechnung_netto);
-		solutions_ABR.add(abrechnung_brutto);
-		solutions_ABR.add(abrechnung_ust);
-		
-		return solutions_ABR;
-	}
 	
 	
 	
@@ -945,6 +657,25 @@ public class MainModel {
 	    }
         
         return list;
+	}
+	
+	
+	public static void printErrorMessage() {
+		JOptionPane.showMessageDialog(null, "Die eingegebenen Werte verursachen Fehler! \n\nHäufige Fehlerquellen: \n- Kein Punkt als Komma \n- Prozentzeichen nicht entfernt", "Warning", JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public static double parseDouble(String str) {
+		
+		double val = 0.00;
+		
+		try {
+			
+			val = Double.parseDouble(str);
+			
+		}catch(NumberFormatException numFormatEx) {val = 0.00; printErrorMessage();}
+		
+		return val;
+		
 	}
 	
 	

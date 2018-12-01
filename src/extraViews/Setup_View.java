@@ -313,6 +313,9 @@ public class Setup_View extends JFrame {
 	
 	public void connect() {
 		
+		if(!MainView.databaseIsActive)
+			return;
+		
 	       try
 	       {
 

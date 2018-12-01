@@ -60,8 +60,8 @@ public class Skonto_1_2_Stufig extends View_SuperClass_2Outputs {
 		
 		
 		
-		double nettoPrice = Double.parseDouble(txtPreis.getText());
-		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		double nettoPrice = MainModel.parseDouble(txtPreis.getText());
+		double bruttoPrice = MainModel.parseDouble(txtPreis.getText());
 		
 
 		

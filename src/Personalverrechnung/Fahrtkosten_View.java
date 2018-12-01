@@ -1,5 +1,6 @@
 package Personalverrechnung;
 
+import View.MainModel;
 import extraViews._2Stufig_VariableKonto;
 
 public class Fahrtkosten_View extends _2Stufig_VariableKonto{
@@ -13,8 +14,8 @@ public class Fahrtkosten_View extends _2Stufig_VariableKonto{
 		if(txtKontonummer.getText().equals("7341"))
 			percent = "13";
 		
-		double nettoPrice = Double.parseDouble(txtPreis.getText());
-		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		double nettoPrice = MainModel.parseDouble(txtPreis.getText());
+		double bruttoPrice = MainModel.parseDouble(txtPreis.getText());
 		
 		if(netto.isSelected())
 			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), percent);

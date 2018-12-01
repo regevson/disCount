@@ -39,6 +39,10 @@ public class ControlsModel {
 	
 	
 	public void addStufe(ML_Controls ml_Controls) {
+		
+		if(stufen > 6)
+			return;
+		
 		stufen++;
 		editorPanel.add(minus_pic, this);
 		upStufen();

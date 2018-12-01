@@ -95,8 +95,8 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		
 		finalZahlungskonto = lblKonto2Variable.getSelectedItem().toString();
 		
-		double nettoPrice = Double.parseDouble(txtPreis.getText());
-		double bruttoPrice = Double.parseDouble(txtPreis.getText());
+		double nettoPrice = MainModel.parseDouble(txtPreis.getText());
+		double bruttoPrice = MainModel.parseDouble(txtPreis.getText());
 		
 		if(netto.isSelected())
 			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), percent);
@@ -124,7 +124,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		else
 			IBN_Monat.setText("12");
 		
-		Double abschreibungsWert = ((Controller_Anlagenbewertung) myController).initCalcAbschreibung(finalAnlKonto, IBN_Monat.getText(), "2018", txtND.getText(), Double.parseDouble(txtAW.getText()), "erstes Jahr", leftMore);
+		Double abschreibungsWert = ((Controller_Anlagenbewertung) myController).initCalcAbschreibung(finalAnlKonto, IBN_Monat.getText(), "2018", txtND.getText(), MainModel.parseDouble(txtAW.getText()), "erstes Jahr", leftMore);
 	
 		make3rdBS(abschreibungsWert);
 
@@ -134,18 +134,18 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		
 		String kontos[] = {"7820", finalAnlKonto};
 		
-		Double ausbuchWert = Double.parseDouble(buchWert.getText()) - abschreibungsBetrag;
+		Double ausbuchWert = MainModel.parseDouble(buchWert.getText()) - abschreibungsBetrag;
 		Double prices[] = {ausbuchWert};
 		
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 		
-		Double richtWert = Double.parseDouble(txtPreis.getText()) - ausbuchWert;
+		Double richtWert = MainModel.parseDouble(txtPreis.getText()) - ausbuchWert;
 		Double testRes = richtWert + Math.abs(richtWert);
 		
 		if(testRes == 0)// dann richtWert ist negativ
-			openSaldBuchungen("4600", "7830", "7830", "7820", Double.parseDouble(txtPreis.getText()), MainModel.roundDouble_giveBack_Double(ausbuchWert));
+			openSaldBuchungen("4600", "7830", "7830", "7820", MainModel.parseDouble(txtPreis.getText()), MainModel.roundDouble_giveBack_Double(ausbuchWert));
 		else
-			openSaldBuchungen("4600", "4630", "4630", "7820", Double.parseDouble(txtPreis.getText()), MainModel.roundDouble_giveBack_Double(ausbuchWert));
+			openSaldBuchungen("4600", "4630", "4630", "7820", MainModel.parseDouble(txtPreis.getText()), MainModel.roundDouble_giveBack_Double(ausbuchWert));
 		
 	}
 	
