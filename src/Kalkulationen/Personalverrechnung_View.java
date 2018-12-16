@@ -74,6 +74,7 @@ public class Personalverrechnung_View extends JFrame {
 	
 
 public Personalverrechnung_View(Controller_Kalkulationen myController) {
+	MainModel.printErrorMessages = true;
 	this.myController = myController;
 	Bezugskalkulation_View.resetCoordinates();	
 	
@@ -195,30 +196,30 @@ public void setUpStuff(boolean zumutbar, boolean unzumutbar) throws NumberFormat
 	BufferedReader br = new BufferedReader(new FileReader("src/settings.txt"));
 	
 	
-	 txtCurrentSV1 = Double.parseDouble(br.readLine());
-	 txtCurrentSV2 = Double.parseDouble(br.readLine());
-	 txtCurrentSV3 = Double.parseDouble(br.readLine());
-	 txtCurrentSV4 = Double.parseDouble(br.readLine());
+	 txtCurrentSV1 = MainModel.parseDouble(br.readLine());
+	 txtCurrentSV2 = MainModel.parseDouble(br.readLine());
+	 txtCurrentSV3 = MainModel.parseDouble(br.readLine());
+	 txtCurrentSV4 = MainModel.parseDouble(br.readLine());
 	
-	 txtmind20KPP = Double.parseDouble(br.readLine());
-	 txtmehrals40KPP = Double.parseDouble(br.readLine());
-	 textField_mehrals60KPP = Double.parseDouble(br.readLine());
-	 txtmind20GPP = Double.parseDouble(br.readLine());
-	 txtmehrals40GPP = Double.parseDouble(br.readLine());
-	 textField_mehrals60GPP = Double.parseDouble(br.readLine());
+	 txtmind20KPP = MainModel.parseDouble(br.readLine());
+	 txtmehrals40KPP = MainModel.parseDouble(br.readLine());
+	 textField_mehrals60KPP = MainModel.parseDouble(br.readLine());
+	 txtmind20GPP = MainModel.parseDouble(br.readLine());
+	 txtmehrals40GPP = MainModel.parseDouble(br.readLine());
+	 textField_mehrals60GPP = MainModel.parseDouble(br.readLine());
 	 
-	 txtGeringfügigkeitsgrenze = Double.parseDouble(br.readLine());
-	 txtHöchstbeitragsgrundlage = Double.parseDouble(br.readLine());
+	 txtGeringfügigkeitsgrenze = MainModel.parseDouble(br.readLine());
+	 txtHöchstbeitragsgrundlage = MainModel.parseDouble(br.readLine());
 	 
 	 br.close();
 	 
 	
-	Double gehalt_lohn = Double.parseDouble(txtGehalt_Lohn.getText());
-	Double fahrtstrecke = Double.parseDouble(txtFahrtstrecke.getText());
-	Double freibetrag = Double.parseDouble(txtFreibetrag.getText());
-	Double eCardGebühr = Double.parseDouble(txtECardGebühr.getText());
-	Double gewerkschaftsbeitrag = Double.parseDouble(txtGewerkschaftsbeitrag.getText());
-	Double akonto = Double.parseDouble(txtAkonto.getText());
+	Double gehalt_lohn = MainModel.parseDouble(txtGehalt_Lohn.getText());
+	Double fahrtstrecke = MainModel.parseDouble(txtFahrtstrecke.getText());
+	Double freibetrag = MainModel.parseDouble(txtFreibetrag.getText());
+	Double eCardGebühr = MainModel.parseDouble(txtECardGebühr.getText());
+	Double gewerkschaftsbeitrag = MainModel.parseDouble(txtGewerkschaftsbeitrag.getText());
+	Double akonto = MainModel.parseDouble(txtAkonto.getText());
 	
 	Double BG = myController.execCalcSV_LS(gehalt_lohn, fahrtstrecke, freibetrag, eCardGebühr, gewerkschaftsbeitrag, akonto, zumutbar);
 	openBemessungsgrundlage_Input(BG, txtGehalt_Lohn.getText());
@@ -229,6 +230,9 @@ public void setUpStuff(boolean zumutbar, boolean unzumutbar) throws NumberFormat
 
 
 	private void openBemessungsgrundlage_Input(Double BG, String gehalt_lohn) {
+		
+		MainModel.printErrorMessages = true;
+		
 		JFrame jf = new JFrame();
 		jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jf.setBounds(400, 600, 661, 382);
@@ -305,6 +309,9 @@ public void setUpStuff(boolean zumutbar, boolean unzumutbar) throws NumberFormat
 	}
 	
 	private void paintSolutions(String Lohn_Gehalt_p, Double LS_p, Double SV_p, Double BG_p, Double newGehalt_p) {
+		
+		MainModel.printErrorMessages = true;
+		
 		this.Lohn_Gehalt = Lohn_Gehalt_p;
 		this.LS = LS_p;
 		this.SV = SV_p;

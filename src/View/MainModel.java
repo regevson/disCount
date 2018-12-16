@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Personalverrechnung.Tagesgeld_View;
@@ -41,6 +43,7 @@ public class MainModel {
 	public static ArrayList<Double> solutions_AUSG = new ArrayList<Double>();
 
 	public static boolean saving = false;
+	public static boolean printErrorMessages = true;
 
 	
 	
@@ -469,7 +472,7 @@ public class MainModel {
 	
 	
 	
-	public void saveProject() {
+	public String saveProject() {
 		
 		MainModel.saving = true;
 		
@@ -478,6 +481,8 @@ public class MainModel {
 		saveTxtFile(fileName);
 		
 		MainModel.saving = false;
+		
+		return fileName;
 		
 	}
 	
@@ -661,7 +666,10 @@ public class MainModel {
 	
 	
 	public static void printErrorMessage() {
-		JOptionPane.showMessageDialog(null, "Die eingegebenen Werte verursachen Fehler! \n\nHäufige Fehlerquellen: \n- Kein Punkt als Komma \n- Prozentzeichen nicht entfernt", "Warning", JOptionPane.WARNING_MESSAGE);
+		if(printErrorMessages) {
+			JOptionPane.showMessageDialog(null, "Die eingegebenen Werte verursachen Fehler! \n\nHäufige Fehlerquellen: \n- Kein Punkt als Komma \n- Prozentzeichen nicht entfernt", "Warning", JOptionPane.WARNING_MESSAGE);
+			printErrorMessages = false;
+		}
 	}
 	
 	public static double parseDouble(String str) {
@@ -675,6 +683,21 @@ public class MainModel {
 		}catch(NumberFormatException numFormatEx) {val = 0.00; printErrorMessage();}
 		
 		return val;
+		
+	}
+
+
+	public void printProject() {
+		
+		try {
+
+			JTextPane jtp = new JTextPane();
+			jtp.setBackground(Color.white);
+			jtp.setText(getTxtContent());
+			boolean show = true;
+			jtp.print(null, null, show, null, null, show);
+
+		}catch(Exception e) {e.printStackTrace(); System.out.println("MainModel - printProject - didnt work!!!");}	
 		
 	}
 	

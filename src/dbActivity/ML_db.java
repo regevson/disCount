@@ -42,6 +42,10 @@ public class ML_db implements MouseListener{
 		myController.initOpenProject();
 	}
 	
+	public void initPrintProject() {
+		myController.initPrintProject();
+	}
+	
 	public ArrayList<MessageBox> initConnect() {
 		return myController.execConnect();
 	}

@@ -35,7 +35,7 @@ public class MainController{
 		
 	}
 	
-	public void tell_View_To_setUpBasicStuff(ArrayList<MessageBox> messageBoxList) {
+	private void tell_View_To_setUpBasicStuff(ArrayList<MessageBox> messageBoxList) {
 		
 		if(MainView.isBANNED)
 			executeBannedRoutine();
@@ -202,6 +202,10 @@ public class MainController{
 	public void execSaveProject() {
 		mainModel.saveProject();
 	}
+	
+	public void execPrintProject() {
+		mainModel.printProject();
+	}
 
 	public Double execCalcGehaltsPercent(String ausgangsPreis_str, String percent_str) {
 		return mainModel.calcGehaltsPercent(ausgangsPreis_str, percent_str);
@@ -281,6 +285,7 @@ public class MainController{
 
 
 	public void execpaintUpTo7(String kontos[], String prices[], boolean leftMore) {
+		MainModel.printErrorMessages = true;
 		Buchungssatz bs = new Buchungssatz();
 		bs.initBS(kontos, prices, leftMore, mainView.getWorkPanel());
 	}

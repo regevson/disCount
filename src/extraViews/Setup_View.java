@@ -247,6 +247,10 @@ public class Setup_View extends JFrame {
 	}
 	
 	private int checkIFEmailOK() {
+		
+		if(!MainView.databaseIsActive)
+			return 0;
+		
 		 try {
 			st = conn.createStatement();
 			 rs = st.executeQuery("SELECT email FROM users");
@@ -276,7 +280,6 @@ public class Setup_View extends JFrame {
 		}
 
 		MainView view = new MainView();
-		
 		
 		MainModel model = new MainModel();
 		
@@ -325,12 +328,12 @@ public class Setup_View extends JFrame {
 	           System.out.println ("Database connection established");
 	    	   
 	    	   
-	    	   
-	    	   /*Class.forName("com.mysql.jdbc.Driver");  
+	    	   /*System.out.println("Before");
+	    	   Class.forName("com.mysql.jdbc.Driver");  
 	    	   conn=DriverManager.getConnection(  
-	    	   "jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7263852","sql7263852","RWivNgAq4P");  
-	           */
-	         
+	    	   "jdbc:mysql://192.168.50.178:3306/db_usersolutions","regevson","IHJRuKAM18+-");  */
+	           
+	         System.out.println("AFTER");
 	   	    
 	   		
 	   		    
@@ -340,6 +343,7 @@ public class Setup_View extends JFrame {
 	       {
 	    	   JOptionPane.showMessageDialog(null, "Sie brauchen eine Internetverbindung um das Programm zu startenconn!", "Nachricht", JOptionPane.PLAIN_MESSAGE);
 	    	   System.out.println("ERROR Connection setupview-classrrr");
+	    	   e.printStackTrace();
 	    	   return;
 
 	       }

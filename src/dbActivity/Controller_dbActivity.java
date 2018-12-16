@@ -46,6 +46,11 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		MC.execOpenProject();
 	}
 	
+
+	public void initPrintProject() {
+		MC.execPrintProject();
+	}
+	
 	public void initOpenProject(LinkedList<Character> char_LL) {
 		MC.execOpenProject(char_LL);
 	}
@@ -477,6 +482,11 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	public boolean execCheckTeacherCode(String enteredCode) {
 		return myModel.checkTeacherCode(enteredCode);
 	}
+
+
+
+
+
 
 
 

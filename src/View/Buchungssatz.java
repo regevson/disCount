@@ -123,7 +123,7 @@ public class Buchungssatz implements MouseListener{
 		bsNumberLabel.setFont(new Font("Roboto", Font.BOLD, 20));
 		bsNumberPanel.add(bsNumberLabel);
 		
-		
+		makeRadioButton();
 		
 		if(!MainView.isUploading)
 			makePink();
@@ -131,7 +131,6 @@ public class Buchungssatz implements MouseListener{
 		
 		
 		paintNumberOnBSNumberPanel();
-		makeRadioButton();
 		resizeWorkPanel(workPanel);
 		
 		addArrows();
@@ -145,6 +144,7 @@ public class Buchungssatz implements MouseListener{
 	public void makePink() {
 		Color bg = bsPanel.getBackground();
 		bsPanel.setBackground(MainView.disCountPurple);
+		radioButton.setBackground(MainView.disCountPurple);
 		bsPanel.repaint();
 		
 		new java.util.Timer().schedule(
@@ -152,6 +152,7 @@ public class Buchungssatz implements MouseListener{
 					@Override
 					public void run() {
 						bsPanel.setBackground(bg);
+						radioButton.setBackground(bg);
 						bsPanel.repaint();}}, 1000);
 	}
 	
@@ -238,12 +239,14 @@ public class Buchungssatz implements MouseListener{
 	private void addArrows() {
 		ImageIcon downIcon = new ImageIcon("src/downArrow.png");
 		JLabel downLabel = new JLabel(downIcon);
+		downLabel.setToolTipText("nach unten verschieben");
 		downLabel.setBounds(555, 123, 18, 12);
 		bsPanel.add(downLabel);
 		downLabel.addMouseListener(this);
 		
 		ImageIcon upIcon = new ImageIcon("src/upArrow.png");
 		JLabel upLabel = new JLabel(upIcon);
+		upLabel.setToolTipText("nach oben verschieben");
 		upLabel.setBounds(555, 103, 18, 12);
 		bsPanel.add(upLabel);
 		upLabel.addMouseListener(this);
@@ -253,6 +256,7 @@ public class Buchungssatz implements MouseListener{
 	public void addStar() {
 		ImageIcon starIcon = new ImageIcon("src/star.png");
 		JLabel starLabel = new JLabel(starIcon);
+		starLabel.setToolTipText("Lehrerlösung");
 		starLabel.setBounds(16, 20, 23, 25);
 		bsNumberPanel.add(starLabel);
 	}
@@ -260,6 +264,7 @@ public class Buchungssatz implements MouseListener{
 	public void addVerified() {
 		ImageIcon verifiedIcon = new ImageIcon("src/verified.png");
 		JLabel verifiedLabel = new JLabel(verifiedIcon);
+		verifiedLabel.setToolTipText("verifizierter Schüler");
 		verifiedLabel.setBounds(13, 20, 26, 28);
 		bsNumberPanel.add(verifiedLabel);
 	}

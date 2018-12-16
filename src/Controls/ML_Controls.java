@@ -77,7 +77,14 @@ public class ML_Controls implements MouseListener{
 		
 		else if((jltemp.getIcon().toString().equals("src/cloudOFF.png") ||  jltemp.getIcon().toString().equals("src/bsCheck.png")) && (!db_Model.allowSolutions || !Controller_dbActivity.inExam || !MainView.databaseIsActive)) {
 			
-			if(!db_Model.allowSolutions) {
+			if(!MainView.databaseIsActive) {
+				MessageBox mb = new MessageBox("Hinweis", "Dies ist eine Testversion von disCount!\n", "In der Testversion wird die Verbindung zur Datenbank noch nicht erlaubt und deshalb ist diese "
+						+ "Funktion deaktiviert...");
+			
+				mb.setVisible(true);
+			}
+			
+			else if(!db_Model.allowSolutions) {
 				MessageBox mb = new MessageBox("Hinweis", "Diese Funktion muss erst freigeschaltet werden!\n", "Damit die Lösungsvorschläge-Funktion und "
 			    			+ "die Feherkorrektur gut funktionieren, müssen "
 							+ "so viele Buchungssätze wie möglich vom Server abrufbar sein. Hilf deinen MitschülerInnen und veröffentliche deine Lösung!\n\n"
@@ -87,12 +94,7 @@ public class ML_Controls implements MouseListener{
 				mb.setVisible(true);
 			}
 			
-			else if(!MainView.databaseIsActive) {
-				MessageBox mb = new MessageBox("Hinweis", "Dies ist eine Testversion von disCount!\n", "In der Testversion wird die Verbindung zur Datenbank noch nicht erlaubt und deshalb ist diese "
-						+ "Funktion deaktiviert...");
 			
-				mb.setVisible(true);
-			}
 		}
 		
 		

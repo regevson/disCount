@@ -153,6 +153,7 @@ public static boolean isBANNED = false;
 	public static int numOfPanels = 1;
 	private static JPanel panelMiddleTemp;
 	public static JTextField numberLabel;
+	
 
 	public static final Color lightBlack = new Color(66, 66, 66);
 	public static final Color middleBlack = new Color(45, 45, 45);
@@ -662,6 +663,7 @@ public static boolean isBANNED = false;
 		JMenuItem menuItemAbs;
 		JMenuItem menuItemSpeichern;
 		JMenuItem menuItemÖffnen;
+		JMenuItem menuItemPrint;
 		JMenuItem menuItemAvailability;
 		JMenuItem menuItemExam;
 		JMenuItem menuItemInfo;
@@ -683,7 +685,7 @@ public static boolean isBANNED = false;
 		setJMenuBar(menuBar);
 		
 
-		menuItemSpeichern = new JMenuItem("als Textdatei speichern", KeyEvent.VK_T);
+		menuItemSpeichern = new JMenuItem("Projekt speichern", KeyEvent.VK_T);
 		
 		menuItemSpeichern.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItemSpeichern.addActionListener(new ActionListener() {
@@ -718,6 +720,20 @@ public static boolean isBANNED = false;
 		menuItemÖffnen.getAccessibleContext().setAccessibleDescription(
 				"Alle Buchungssätze löschen");
 		menu.add(menuItemÖffnen);
+		
+		
+		menuItemPrint = new JMenuItem("Projekt drucken", KeyEvent.VK_T);
+		
+		menuItemPrint.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItemPrint.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	((ML_db) llML.get(9)).initPrintProject();
+		    }
+		});
+		
+		menuItemPrint.getAccessibleContext().setAccessibleDescription(
+				"Alle Buchungssätze löschen");
+		menu.add(menuItemPrint);
 		
 		
 		
@@ -1154,14 +1170,19 @@ public static boolean isBANNED = false;
 		tempPanel.add(menuPanel);
 		
 		addPic = makeMenuLabels("src/addPic.png", 20, -1, 8, 60, 60);
+		addPic.setToolTipText("Buchungssatz erstellen");
 		
 		checkedPic = makeMenuLabels("src/checkedPic.png", 90, -4, 8, 60, 60);
+		checkedPic.setToolTipText("Buchungssatz fertig");
 		
 		tableViewPic = makeMenuLabels("src/table_icon.png", 195, -4, 10, 60, 60);
+		tableViewPic.setToolTipText("Tabellenansicht");
 		
 		cloudPic = makeMenuLabels("src/cloudOFF.png", 310, 1, 8, 52, 51);
+		cloudPic.setToolTipText("Lösungsvorschläge");
 		
 		bsCheck = makeMenuLabels("src/bsCheck.png", 410, 1, 8, 76, 68);
+		bsCheck.setToolTipText("Fehlerkorrektur");
 		bsCheck.setEnabled(false);
 		
 		JLabel collapsePic = makeMenuLabels("src/collapse.png", 540, -5, 8, 60, 60);

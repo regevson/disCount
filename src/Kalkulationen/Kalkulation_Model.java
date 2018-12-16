@@ -18,15 +18,17 @@ public class Kalkulation_Model {
 	
 public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String rechnP_str, String rabattPercent_str, String faktSp_str, String skontoPercent_str, String eigBezSp_str)  {
 		
-		Double rechnPr = Double.parseDouble(rechnP_str);
+		MainModel.printErrorMessages = true;
+	
+		Double rechnPr = MainModel.parseDouble(rechnP_str);
 		view.txtRechnungspreis.setText(MainModel.roundDouble_giveBack_String(rechnPr));
 		
-		Double rabattPercent = Double.parseDouble(rabattPercent_str);
-		Double faktSp = Double.parseDouble(faktSp_str);
+		Double rabattPercent = MainModel.parseDouble(rabattPercent_str);
+		Double faktSp = MainModel.parseDouble(faktSp_str);
 		view.txtFakturenspesen.setText(MainModel.roundDouble_giveBack_String(faktSp));
 		
-		Double skontoPercent = Double.parseDouble(skontoPercent_str);
-		Double eigBezSp = Double.parseDouble(eigBezSp_str);
+		Double skontoPercent = MainModel.parseDouble(skontoPercent_str);
+		Double eigBezSp = MainModel.parseDouble(eigBezSp_str);
 		view.txtEigeneBezugsspesen.setText(MainModel.roundDouble_giveBack_String(eigBezSp));
 		
 		
@@ -53,15 +55,18 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 	
 	
 	public void calcBezugsspesenKalkulation_Ret(Bezugskalkulation_View view, String einstPreis_str, String rabattPercent_str, String faktSp_str, String skontoPercent_str, String eigBezSp_str)  {
-		Double einstPreis = Double.parseDouble(einstPreis_str);
+		
+		MainModel.printErrorMessages = true;
+		
+		Double einstPreis = MainModel.parseDouble(einstPreis_str);
 		view.txtEinstandspreis.setText(MainModel.roundDouble_giveBack_String(einstPreis));
 		
-		Double rabattPercent = Double.parseDouble(rabattPercent_str);
-		Double faktSp = Double.parseDouble(faktSp_str);
+		Double rabattPercent = MainModel.parseDouble(rabattPercent_str);
+		Double faktSp = MainModel.parseDouble(faktSp_str);
 		view.txtFakturenspesen.setText(MainModel.roundDouble_giveBack_String(faktSp));
 		
-		Double skontoPercent = Double.parseDouble(skontoPercent_str);
-		Double eigBezSp = Double.parseDouble(eigBezSp_str);
+		Double skontoPercent = MainModel.parseDouble(skontoPercent_str);
+		Double eigBezSp = MainModel.parseDouble(eigBezSp_str);
 		view.txtEigeneBezugsspesen.setText(MainModel.roundDouble_giveBack_String(eigBezSp));
 		
 		
@@ -176,15 +181,15 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 	}
 	
 	public Double calcLS(Double BG, String Gss_str, String AVAB_str) {
-		Double Gss = Double.parseDouble(Gss_str);
-		Double AVAB = Double.parseDouble(AVAB_str);
+		Double Gss = MainModel.parseDouble(Gss_str);
+		Double AVAB = MainModel.parseDouble(AVAB_str);
 		
 		Double LS = MainModel.roundDouble_giveBack_Double((BG/100)*Gss);
 		return LS - AVAB - PE;
 	}
 	
 	public Double calcNewGehalt(Double LS, String gehalt_lohn_str) {
-		Double gehalt_lohn = Double.parseDouble(gehalt_lohn_str);
+		Double gehalt_lohn = MainModel.parseDouble(gehalt_lohn_str);
 		
 		return gehalt_lohn - SV - LS - gewerkschaftsBeitrag - Akonto - eCard;
 	}
@@ -209,29 +214,32 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 
 	
 	public void calcAbsatzkalkulation_Pro(Absatzkalkulation_View view, String selbstK_str, String gewinn_str, String nomSK_str, String verk_Provision_str, String skonto_str, String mengenr_str, String sonderr_str, String groﬂr_str, String einzelr_str) {
-		Double selbstK = Double.parseDouble(selbstK_str);
+	
+		MainModel.printErrorMessages = true;
+		
+		Double selbstK = MainModel.parseDouble(selbstK_str);
 		view.txtSelbstkosten.setText(MainModel.roundDouble_giveBack_String(selbstK));
 		
-		Double gewinnPreis = MainModel.roundDouble_giveBack_Double((selbstK / 100) * Double.parseDouble(gewinn_str));
+		Double gewinnPreis = MainModel.roundDouble_giveBack_Double((selbstK / 100) * MainModel.parseDouble(gewinn_str));
 		view.txtGewinn.setText(Double.toString(gewinnPreis));
 		
 		Double nettoVP = MainModel.roundDouble_giveBack_Double(selbstK + gewinnPreis);
 		view.txtNettoverkaufspreis.setText(Double.toString(nettoVP));
 		
-		Double nomSK = Double.parseDouble(nomSK_str);
+		Double nomSK = MainModel.parseDouble(nomSK_str);
 		view.txtNomSK.setText(Double.toString(nomSK));
 		System.out.println(nomSK);
 		
 		Double ZWS = MainModel.roundDouble_giveBack_Double(nettoVP + nomSK);
 		view.txtZwischensumme.setText(Double.toString(ZWS));
 		
-		Double verk_Provision = MainModel.roundDouble_giveBack_Double((ZWS / (100 - Double.parseDouble(verk_Provision_str))) * Double.parseDouble(verk_Provision_str));
+		Double verk_Provision = MainModel.roundDouble_giveBack_Double((ZWS / (100 - MainModel.parseDouble(verk_Provision_str))) * MainModel.parseDouble(verk_Provision_str));
 		view.txtVerkaufsprovision.setText(Double.toString(verk_Provision));
 		
 		Double kassaPreis = MainModel.roundDouble_giveBack_Double(ZWS + verk_Provision);
 		view.txtKassapreis.setText(Double.toString(kassaPreis));
 		
-		Double skonto = MainModel.roundDouble_giveBack_Double((kassaPreis / (100 - Double.parseDouble(skonto_str)) * Double.parseDouble(skonto_str)));
+		Double skonto = MainModel.roundDouble_giveBack_Double((kassaPreis / (100 - MainModel.parseDouble(skonto_str)) * MainModel.parseDouble(skonto_str)));
 		view.txtSkonto.setText(Double.toString(skonto));
 		
 		Double zielPreis = MainModel.roundDouble_giveBack_Double(kassaPreis + skonto);
@@ -239,7 +247,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(mengenr_str != null) {
-			Double mengenRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - Double.parseDouble(mengenr_str)) * Double.parseDouble(mengenr_str)));
+			Double mengenRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - MainModel.parseDouble(mengenr_str)) * MainModel.parseDouble(mengenr_str)));
 			view.txtMengenRabatt.setText(Double.toString(mengenRabatt));
 			zielPreis = zielPreis + mengenRabatt;
 		}
@@ -248,7 +256,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(sonderr_str != "0") {
-			Double sonderRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - Double.parseDouble(sonderr_str)) * Double.parseDouble(sonderr_str)));
+			Double sonderRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - MainModel.parseDouble(sonderr_str)) * MainModel.parseDouble(sonderr_str)));
 			view.txtSonderRabatt.setText(Double.toString(sonderRabatt));
 			zielPreis = zielPreis + sonderRabatt;
 		}
@@ -258,7 +266,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(groﬂr_str != "0") {
-			Double groﬂhandelsRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - Double.parseDouble(groﬂr_str)) * Double.parseDouble(groﬂr_str)));
+			Double groﬂhandelsRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - MainModel.parseDouble(groﬂr_str)) * MainModel.parseDouble(groﬂr_str)));
 			view.txtGroﬂhandelsRabatt.setText(Double.toString(groﬂhandelsRabatt));
 			zielPreis = zielPreis + groﬂhandelsRabatt;
 		}
@@ -267,15 +275,15 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(einzelr_str != "0") {
-			Double einzelhandelsRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - Double.parseDouble(einzelr_str)) * Double.parseDouble(einzelr_str)));
+			Double einzelhandelsRabatt = MainModel.roundDouble_giveBack_Double((zielPreis / (100 - MainModel.parseDouble(einzelr_str)) * MainModel.parseDouble(einzelr_str)));
 			view.txtEinzelhandelsRabatt.setText(Double.toString(einzelhandelsRabatt));
 			zielPreis = zielPreis + einzelhandelsRabatt;
 		}
 		else
 			view.txtEinzelhandelsRabatt.setText("0");
 		
-		double tempVal = MainModel.roundDouble_giveBack_Double(Double.parseDouble(view.txtMengenRabatt.getText()) + Double.parseDouble(view.txtSonderRabatt.getText()) + Double.parseDouble(view.txtGroﬂhandelsRabatt.getText()) + Double.parseDouble(view.txtEinzelhandelsRabatt.getText()));
-		Double bruttoVPexkl = MainModel.roundDouble_giveBack_Double(tempVal + Double.parseDouble(view.txtZielpreis.getText()));
+		double tempVal = MainModel.roundDouble_giveBack_Double(MainModel.parseDouble(view.txtMengenRabatt.getText()) + MainModel.parseDouble(view.txtSonderRabatt.getText()) + MainModel.parseDouble(view.txtGroﬂhandelsRabatt.getText()) + MainModel.parseDouble(view.txtEinzelhandelsRabatt.getText()));
+		Double bruttoVPexkl = MainModel.roundDouble_giveBack_Double(tempVal + MainModel.parseDouble(view.txtZielpreis.getText()));
 		view.txtBruttoVPexkl.setText(Double.toString(bruttoVPexkl));
 		
 		Double USt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * 20);
@@ -288,7 +296,10 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 	
 	
 	public void calcAbsatzkalkulation_Ret(Absatzkalkulation_View view, String bruttoVP_inkl_str, String gewinn_str, String nomSK_str, String verk_Provision_str, String skonto_str, String mengenr_str, String sonderr_str, String groﬂr_str, String einzelr_str) {
-		Double bruttoVPinkl = Double.parseDouble(bruttoVP_inkl_str);
+	
+		MainModel.printErrorMessages = true;
+		
+		Double bruttoVPinkl = MainModel.parseDouble(bruttoVP_inkl_str);
 		view.txtBruttoVP.setText(MainModel.roundDouble_giveBack_String(bruttoVPinkl));
 		
 		Double USt = MainModel.roundDouble_giveBack_Double((bruttoVPinkl / 120) * 20);
@@ -299,7 +310,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(einzelr_str != "0") {
-			Double einzelhandelsRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * Double.parseDouble(einzelr_str));
+			Double einzelhandelsRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * MainModel.parseDouble(einzelr_str));
 			view.txtEinzelhandelsRabatt.setText(Double.toString(einzelhandelsRabatt));
 			bruttoVPexkl = bruttoVPexkl - einzelhandelsRabatt;
 		}
@@ -308,7 +319,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(groﬂr_str != "0") {
-			Double groﬂhandelsRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * Double.parseDouble(groﬂr_str));
+			Double groﬂhandelsRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * MainModel.parseDouble(groﬂr_str));
 			view.txtGroﬂhandelsRabatt.setText(Double.toString(groﬂhandelsRabatt));
 			bruttoVPexkl = bruttoVPexkl - groﬂhandelsRabatt;
 		}
@@ -316,7 +327,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 			view.txtGroﬂhandelsRabatt.setText("0");
 		
 		if(sonderr_str != "0") {
-			Double sonderRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * Double.parseDouble(sonderr_str));
+			Double sonderRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / 100) * MainModel.parseDouble(sonderr_str));
 			view.txtSonderRabatt.setText(Double.toString(sonderRabatt));
 			bruttoVPexkl = bruttoVPexkl - sonderRabatt;
 		}
@@ -325,7 +336,7 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		
 		
 		if(mengenr_str != null) {
-			Double mengenRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / (100 - Double.parseDouble(mengenr_str)) * Double.parseDouble(mengenr_str)));
+			Double mengenRabatt = MainModel.roundDouble_giveBack_Double((bruttoVPexkl / (100 - MainModel.parseDouble(mengenr_str)) * MainModel.parseDouble(mengenr_str)));
 			view.txtMengenRabatt.setText(Double.toString(mengenRabatt));
 			bruttoVPexkl = bruttoVPexkl - mengenRabatt;
 		}
@@ -333,18 +344,18 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 			view.txtMengenRabatt.setText("0");
 		
 		
-		double tempVal = MainModel.roundDouble_giveBack_Double(Double.parseDouble(view.txtMengenRabatt.getText()) + Double.parseDouble(view.txtSonderRabatt.getText()) + Double.parseDouble(view.txtGroﬂhandelsRabatt.getText()) + Double.parseDouble(view.txtEinzelhandelsRabatt.getText()));
+		double tempVal = MainModel.roundDouble_giveBack_Double(MainModel.parseDouble(view.txtMengenRabatt.getText()) + MainModel.parseDouble(view.txtSonderRabatt.getText()) + MainModel.parseDouble(view.txtGroﬂhandelsRabatt.getText()) + MainModel.parseDouble(view.txtEinzelhandelsRabatt.getText()));
 		
-		Double zielPreis = MainModel.roundDouble_giveBack_Double(Double.parseDouble(view.txtBruttoVPexkl.getText()) - tempVal);
+		Double zielPreis = MainModel.roundDouble_giveBack_Double(MainModel.parseDouble(view.txtBruttoVPexkl.getText()) - tempVal);
 		view.txtZielpreis.setText(Double.toString(zielPreis));
 		
-		Double skonto = MainModel.roundDouble_giveBack_Double((zielPreis / 100) * Double.parseDouble(skonto_str));
+		Double skonto = MainModel.roundDouble_giveBack_Double((zielPreis / 100) * MainModel.parseDouble(skonto_str));
 		view.txtSkonto.setText(Double.toString(skonto));
 		
 		Double kassaPreis = MainModel.roundDouble_giveBack_Double(zielPreis - skonto);
 		view.txtKassapreis.setText(Double.toString(kassaPreis));
 		
-		Double verkaufsProv = MainModel.roundDouble_giveBack_Double((kassaPreis / 100) * Double.parseDouble(verk_Provision_str));
+		Double verkaufsProv = MainModel.roundDouble_giveBack_Double((kassaPreis / 100) * MainModel.parseDouble(verk_Provision_str));
 		view.txtVerkaufsprovision.setText(Double.toString(verkaufsProv));
 		
 		Double ZWS = MainModel.roundDouble_giveBack_Double(kassaPreis - verkaufsProv);
@@ -354,14 +365,14 @@ public void calcBezugsspesenKalkulation_Pro(Bezugskalkulation_View view, String 
 		view.txtNomSK.setText("0");
 		
 		if(!(nomSK_str.equals("0"))) {
-			nomSK = MainModel.roundDouble_giveBack_Double(Double.parseDouble(nomSK_str));
+			nomSK = MainModel.roundDouble_giveBack_Double(MainModel.parseDouble(nomSK_str));
 			view.txtNomSK.setText(Double.toString(nomSK));
 		}
 		
 		Double nettoVP = ZWS - nomSK;
 		view.txtNettoverkaufspreis.setText(Double.toString(nettoVP));
 		
-		Double gewinn = MainModel.roundDouble_giveBack_Double((nettoVP / (100 + Double.parseDouble(gewinn_str))) * Double.parseDouble(gewinn_str));
+		Double gewinn = MainModel.roundDouble_giveBack_Double((nettoVP / (100 + MainModel.parseDouble(gewinn_str))) * MainModel.parseDouble(gewinn_str));
 		view.txtGewinn.setText(Double.toString(gewinn));
 		
 		Double SK = nettoVP - gewinn;
