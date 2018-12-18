@@ -267,6 +267,10 @@ public class MainController{
 	public JPanel execGetWorkPanel() {
 		return mainView.getWorkPanel();
 	}
+	
+	public void execPaintBSListToWorkPanel() {
+		mainModel.paintBSListToWorkPanel(execGetWorkPanel());
+	}
 
 	public Buchungssatz execpaintUpTo7(String kontos[], Double prices[], boolean leftMore) {
 
@@ -289,6 +293,8 @@ public class MainController{
 		Buchungssatz bs = new Buchungssatz();
 		bs.initBS(kontos, prices, leftMore, mainView.getWorkPanel());
 	}
+
+	
 
 	
 

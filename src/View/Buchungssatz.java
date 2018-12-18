@@ -57,6 +57,8 @@ public class Buchungssatz implements MouseListener{
 	
 	private String[] kontoList;
 	private String[] priceList;
+	private ArrayList<JLabel> llKontos;
+	private ArrayList<JLabel> llPrices;
 	private String nettoPrice;
 	
 	private ArrayList<JLabel> fieldList = new ArrayList<JLabel>();
@@ -70,6 +72,7 @@ public class Buchungssatz implements MouseListener{
 	private JPanel infoPanel;
 	private JLabel thumbsUpLabel;
 	private JLabel thumbsDownLabel;
+	
 
 	
 	
@@ -80,7 +83,6 @@ public class Buchungssatz implements MouseListener{
 	public JPanel createBSContainer(JPanel workPanel) {
 		
 		bsPanelMargin = MainView.bsPanelMargin;
-		
 
 		bsPanel = new JPanel();
 		bsPanel.setBounds(5, bsPanelMargin, 585, bsPanelHeight);
@@ -104,7 +106,7 @@ public class Buchungssatz implements MouseListener{
 		workPanel.add(bsPanel);
 		MainView.bsList.addLast(this);
 		workPanel.repaint();
-		
+			
 		
 		bsNumberPanel = new JPanel();
 		
@@ -140,7 +142,7 @@ public class Buchungssatz implements MouseListener{
 		return bsPanel;
 		
 	}
-	
+
 	public void makePink() {
 		Color bg = bsPanel.getBackground();
 		bsPanel.setBackground(MainView.disCountPurple);
@@ -336,6 +338,10 @@ public class Buchungssatz implements MouseListener{
 		infoPanel.add(label);
 	}
 	
+	/*public insertBS() {
+		
+	}*/
+	
 	
 	
 	
@@ -383,7 +389,8 @@ public class Buchungssatz implements MouseListener{
 			marginLeft_PricesOther = 450;
 		}
 		
-		
+		llKontos = new ArrayList<JLabel>();
+		llPrices = new ArrayList<JLabel>();
 		
 		if(kontoList.length == 2) //einstufig
 			init2KontenAnd1Price();
@@ -399,10 +406,10 @@ public class Buchungssatz implements MouseListener{
 	private void init2KontenAnd1Price() {
 		stufen = 1;
 		
-		addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, bsPanelHeight - 100, 200, 30); //kontoLeft1
-		addFieldToContainer(kontoList[1], marginLeft_KontenRight1, bsPanelHeight - 100, 200, 30); //kontoRight1
+		llKontos.add(addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, bsPanelHeight - 100, 200, 30)); //kontoLeft1
+		llKontos.add(addFieldToContainer(kontoList[1], marginLeft_KontenRight1, bsPanelHeight - 100, 200, 30)); //kontoRight1
 		
-		addFieldToContainer(priceList[0], marginLeft_singlePrice, bsPanelHeight - 100, 200, 30); //priceLeft1
+		llPrices.add(addFieldToContainer(priceList[0], marginLeft_singlePrice, bsPanelHeight - 100, 200, 30)); //priceLeft1
 		
 		writeTxtFileEinstufig();
 		encode();
@@ -432,16 +439,16 @@ public class Buchungssatz implements MouseListener{
 		else
 			adaptMargin = -(9 * (stufen - 1)) + 17;
 		
-		addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, marginTop + adaptMargin, 100, 100);
-		addFieldToContainer(kontoList[1], marginLeft_KontenRight1, marginTop + adaptMargin, 100, 100);
+		llKontos.add(addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, marginTop + adaptMargin, 100, 100));
+		llKontos.add(addFieldToContainer(kontoList[1], marginLeft_KontenRight1, marginTop + adaptMargin, 100, 100));
 		
-		addFieldToContainer(priceList[0], marginLeft_PricesLeft1, marginTop + adaptMargin, 100, 100);
-		addFieldToContainer(priceList[1], marginLeft_PricesRight1, marginTop + adaptMargin, 100, 100);
+		llPrices.add(addFieldToContainer(priceList[0], marginLeft_PricesLeft1, marginTop + adaptMargin, 100, 100));
+		llPrices.add(addFieldToContainer(priceList[1], marginLeft_PricesRight1, marginTop + adaptMargin, 100, 100));
 		
 		for(int x = 2; x < kontoList.length; x++) {
 			
-			addFieldToContainer(kontoList[x], marginLeft_KontenOther, marginTop + adaptMargin + 20, 120, 100);
-			addFieldToContainer(priceList[x], marginLeft_PricesOther, marginTop + adaptMargin + 20, 120, 100);
+			llKontos.add(addFieldToContainer(kontoList[x], marginLeft_KontenOther, marginTop + adaptMargin + 20, 120, 100));
+			llPrices.add(addFieldToContainer(priceList[x], marginLeft_PricesOther, marginTop + adaptMargin + 20, 120, 100));
 			
 			adaptMargin += 20;
 		}
@@ -631,12 +638,28 @@ public class Buchungssatz implements MouseListener{
 		return solutionID;
 	}
 	
+	public ArrayList<JLabel> getKontoList() {
+		return llKontos;
+	}
+	
+	public ArrayList<JLabel> getPriceList() {
+		return llPrices;
+	}
+	
+	public boolean isLeftMore() {
+		return leftMore;
+	}
+	
 	public void setRadioButtonSelected(boolean selected) {
 		radioButton.setSelected(selected);
 	}
 	
 	private void setSolutionID(String solutionID) {
 		this.solutionID = solutionID;
+	}
+	
+	public void setBSPanelMargin(int margin) {
+		bsPanelMargin = margin;
 	}
 	
 	

@@ -413,6 +413,7 @@ public class MainModel {
 		return prepareCollection(0, workPanel, bsList);
 	}
 	
+	
 	private LinkedList<Character> loadFileIntoLLChar(File file) {
 		
 		//Add characters to char-LinkedList
@@ -698,6 +699,25 @@ public class MainModel {
 			jtp.print(null, null, show, null, null, show);
 
 		}catch(Exception e) {e.printStackTrace(); System.out.println("MainModel - printProject - didnt work!!!");}	
+		
+	}
+
+
+	public void paintBSListToWorkPanel(JPanel workPanel) {
+		
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			
+			MainView.bsList.get(x).getBSPanel().setBounds(5, MainView.bsPanelMargin, 585, Buchungssatz.bsPanelHeight);
+			MainView.bsList.get(x).setBSPanelMargin(MainView.bsPanelMargin);
+			workPanel.add(MainView.bsList.get(x).getBSPanel());
+			MainView.bsPanelMargin += 170;
+			
+		}
+		
+		MainView.bsList.getLast().paintNumberOnBSNumberPanel();
+		
+		MainView.workPanel.revalidate();
+		MainView.workPanel.repaint();
 		
 	}
 	

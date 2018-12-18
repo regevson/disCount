@@ -328,12 +328,12 @@ public class Setup_View extends JFrame {
 	           System.out.println ("Database connection established");
 	    	   
 	    	   
-	    	   /*System.out.println("Before");
-	    	   Class.forName("com.mysql.jdbc.Driver");  
-	    	   conn=DriverManager.getConnection(  
-	    	   "jdbc:mysql://192.168.50.178:3306/db_usersolutions","regevson","IHJRuKAM18+-");  */
-	           
-	         System.out.println("AFTER");
+	    	  /* String url = "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	           Class.forName ("com.mysql.jdbc.Driver");
+	           conn = DriverManager.getConnection (url,"root","juwalRegev1");
+	           System.out.println ("Database connection established");
+	    	   
+	         System.out.println("AFTER");*/
 	   	    
 	   		
 	   		    

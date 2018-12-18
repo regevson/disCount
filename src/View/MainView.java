@@ -142,7 +142,6 @@ public static boolean isBANNED = false;
 
 	public static LinkedList<Buchungssatz> bsList = new LinkedList<Buchungssatz>();
 	public static LinkedList<JLabel> llSearchNames = new LinkedList<JLabel>();
-	public static LinkedList<ArrayList<ArrayList<JLabel>>> llThumbsGroups = new LinkedList<ArrayList<ArrayList<JLabel>>>();
 	public static HashMap<JPanel, String> hmPanelCodeID = new HashMap<JPanel, String>();
 	
 	public static ArrayList<Image> icons = new ArrayList<Image>();

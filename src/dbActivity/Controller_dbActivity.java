@@ -100,20 +100,36 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public void execCheckBS(String codeInfo, boolean onlyTS) {
+		
 		if(MainModel.getCodeOnWorkPanel().equals(""))
 			return;
 					
 		String[] llSolution = myModel.getBestARMatch(codeInfo, onlyTS);
 		
 		if(llSolution != null) {
-			LinkedList<String> oldBSList = new LinkedList<String>();
-			MainModel.getWorkPanelCodeIntoList(oldBSList);
+			
+			LinkedList<Buchungssatz> unsureBSList = new LinkedList<Buchungssatz>();
+			unsureBSList.addAll(MainView.bsList);
 			
 			MainModel.deleteAll(MC.execGetWorkPanel());
-			MC.execOpenProject(MainModel.convertStringToLL_Char(llSolution[0]));
-			myModel.checkBS(oldBSList);
+			
+			initOpenProject(MainModel.convertStringToLL_Char(llSolution[0]));
+			
+			LinkedList<Buchungssatz> correctBSList = new LinkedList<Buchungssatz>();
+			correctBSList.addAll(MainView.bsList);
+			
+			LinkedList<Buchungssatz> temp = myModel.checkBS(unsureBSList, correctBSList);
+			
+			MainModel.deleteAll(MC.execGetWorkPanel());
+			
+			MainView.bsList.addAll(temp);
+			
+			MC.execPaintBSListToWorkPanel();
+			
 		}
+		
 	}
+	
 	
 	public void execUploadToDB(String jahrgang, String seite, String nummer) {
 		myModel.uploadToDB(jahrgang, seite, nummer);
@@ -341,10 +357,27 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public double execHandInExam(JPanel workPanel) {
 		inExam = false;
-		LinkedList<String> studentSolution = MainModel.getWorkPanelCodeIntoList(new LinkedList<String>());
-		MainModel.deleteAll(workPanel);
+		
+		LinkedList<Buchungssatz> unsureBSList = new LinkedList<Buchungssatz>();
+		unsureBSList.addAll(MainView.bsList);
+		
+		MainModel.deleteAll(MC.execGetWorkPanel());
+		
 		initOpenProject(MainModel.convertStringToLL_Char(myModel.getSolution()));
-		ArrayList<Integer> outcomeList = myModel.checkBSExam(studentSolution);
+		
+		LinkedList<Buchungssatz> correctBSList = new LinkedList<Buchungssatz>();
+		correctBSList.addAll(MainView.bsList);
+		
+		LinkedList<Buchungssatz> temp = myModel.checkBSExam(unsureBSList, correctBSList);
+		
+		MainModel.deleteAll(MC.execGetWorkPanel());
+		
+		MainView.bsList.addAll(temp);
+		
+		MC.execPaintBSListToWorkPanel();
+		
+		
+		ArrayList<Integer> outcomeList = myModel.getExamBSList();
 		
 		double percentage = calcPercentage(outcomeList);
 		
@@ -454,14 +487,14 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			String upvotes = suggestionInfo[2];
 			String downvotes = suggestionInfo[3];
 			String commentCount = suggestionInfo[4];
-			String uploaderRank = suggestionInfo[6];
+			String uploaderTier = suggestionInfo[6];
 				
 			for(int x = 0; x < bsList.size(); x++) {
-				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploaderRank, solutionID, ML);
+				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploaderTier, solutionID, ML);
 				
-				if(uploaderRank.equals("teacher"))
+				if(uploaderTier.equals("teacher"))
 					bsList.get(x).addStar();
-				else if(uploaderRank.equals("verified"))
+				else if(uploaderTier.equals("verified"))
 					bsList.get(x).addVerified();
 				
 			}

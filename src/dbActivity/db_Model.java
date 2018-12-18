@@ -1,5 +1,6 @@
 package dbActivity;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -69,11 +70,12 @@ public class db_Model {
 	private String solution = "";
 	private int myID;
 	private int studentNumber; //tells you which column you are in exam-database
-	private String myRank;
-	private String uploaderRank;
+	private String myTier;
+	private String uploaderTier;
 	private boolean inputToSuggestionIsIncorrect;
 	private String schoolClass;
 	private String uploaderID;
+	private ArrayList<Integer> examBSList;
 	
 	
 	
@@ -139,23 +141,23 @@ public class db_Model {
 		
 		try {
 
-			rs = st.executeQuery("SELECT totalLikes, rank FROM users WHERE id='" + uploaderID + "'");
+			rs = st.executeQuery("SELECT totalLikes, tier FROM users WHERE id='" + uploaderID + "'");
 
 			int totalLikes = 0;
-			String uploaderRank = "";
+			String uploaderTier = "";
 
 			if(rs.next()) {
 				totalLikes = rs.getInt("totalLikes");
-				uploaderRank = rs.getString("rank");
+				uploaderTier = rs.getString("tier");
 			}
 			
-			if(totalLikes + value == minLikesToBeVerified && uploaderRank.equals("student"))
-				uploaderRank = "verified";
+			if(totalLikes + value == minLikesToBeVerified && uploaderTier.equals("student"))
+				uploaderTier = "verified";
 			
-			else if(totalLikes + value < minLikesToBeVerified && uploaderRank.equals("verified"))
-				uploaderRank = "student";
+			else if(totalLikes + value < minLikesToBeVerified && uploaderTier.equals("verified"))
+				uploaderTier = "student";
 			
-			st.executeUpdate("UPDATE users SET totalLikes ='" + (totalLikes += value) + "', rank='" + uploaderRank + "' WHERE id='" + uploaderID + "'");
+			st.executeUpdate("UPDATE users SET totalLikes ='" + (totalLikes += value) + "', tier='" + uploaderTier + "' WHERE id='" + uploaderID + "'");
 			
 		} catch(SQLException e) {System.out.println("dbModel - increase_decreaseUploaderLikes - didnt work");e.printStackTrace();}
 
@@ -177,13 +179,13 @@ public class db_Model {
    		   schoolType = br.readLine();
    		   email = br.readLine();
    		   schoolClass = br.readLine();
-   		   myRank = br.readLine();
+   		   myTier = br.readLine();
    		   
    		   
    		   st = conn.createStatement();
    		   
            if(!Main.alreadyDone) {
-	           st.executeUpdate("INSERT INTO users (name, school, email, rank, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('" + name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','" + schoolClass + "',"+ "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");                                                       
+	           st.executeUpdate("INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('" + name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','" + schoolClass + "',"+ "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");                                                       
 	           setUpMACAddress();
            }
            
@@ -470,24 +472,24 @@ public class db_Model {
 			int highestDownvotes = -1;
 			String highestSolutionID = "";
 			int highestCommentCount = -1;
-			String highestUploaderRank = "";
+			String highestUploaderTier = "";
 
 
 			while(rs.next()) {
 				
 				uploaderID = rs.getString("uploaderID");
-				String info[] = getUsernameAndUploaderRank(rs.getString("uploaderID"));
+				String info[] = getUsernameAndUploaderTier(rs.getString("uploaderID"));
 				highestUsername = info[0];
-				highestUploaderRank = info[1];
+				highestUploaderTier = info[1];
 				
-				if(rs.getInt("upVotes") > highestUpvotes || highestUploaderRank.equals("teacher")) {
+				if(rs.getInt("upVotes") > highestUpvotes || highestUploaderTier.equals("teacher")) {
 					highestCode = rs.getString("code");
 					highestUpvotes = rs.getInt("upVotes");
 					highestDownvotes = rs.getInt("downVotes");
 					highestCommentCount = rs.getInt("commentCount");
 					highestSolutionID = rs.getString("id");
 
-					if(highestUploaderRank.equals("teacher"))
+					if(highestUploaderTier.equals("teacher"))
 						break;
 				}
 
@@ -497,12 +499,12 @@ public class db_Model {
 			if(highestCode.equals(""))
 				MainView.addNoteToCheckPanel("Diese Aufgabe ist noch nicht verfügbar!");
 			
-			else if(onlyTS && !highestUploaderRank.equals("teacher"))
+			else if(onlyTS && !highestUploaderTier.equals("teacher"))
 				MainView.addNoteToCheckPanel("Es gibt noch keine Leherlösung!");
 
 			else {
 				MainView.addNoteToCheckPanel("\u00a9" + highestUsername + "  " + "(" + highestUpvotes + " Like(s))");
-				return new String[] {highestCode, highestUsername, Integer.toString(highestUpvotes), Integer.toString(highestDownvotes), Integer.toString(highestCommentCount), highestSolutionID, highestUploaderRank};
+				return new String[] {highestCode, highestUsername, Integer.toString(highestUpvotes), Integer.toString(highestDownvotes), Integer.toString(highestCommentCount), highestSolutionID, highestUploaderTier};
 			}
 
 		} catch(Exception e) {e.printStackTrace();}
@@ -516,19 +518,19 @@ public class db_Model {
 	
 		
 		
-	private String[] getUsernameAndUploaderRank(String uploaderID) {
+	private String[] getUsernameAndUploaderTier(String uploaderID) {
 		
 		try {
 			
 			st = conn.createStatement();
-			ResultSet rs = st.executeQuery("SELECT name, rank FROM users WHERE id='" + uploaderID + "'");
+			ResultSet rs = st.executeQuery("SELECT name, tier FROM users WHERE id='" + uploaderID + "'");
 	
 			if(rs.next())
-				return new String[] {rs.getString("name"), rs.getString("rank")};
+				return new String[] {rs.getString("name"), rs.getString("tier")};
 			
 			rs.close();
 			
-		} catch (SQLException e) {System.out.println("dbModel - getUsernameAndUploaderRank - doesnt work");e.printStackTrace();}
+		} catch (SQLException e) {System.out.println("dbModel - getUsernameAndUploaderTier - doesnt work");e.printStackTrace();}
 		
 		return null;
 		
@@ -536,22 +538,27 @@ public class db_Model {
 
 
 
-
-	public void checkBS(LinkedList<String> oldBSList) {
+	public LinkedList<Buchungssatz> checkBS(LinkedList<Buchungssatz> unsureBSList, LinkedList<Buchungssatz> correctBSList) {
+		
+		LinkedList<Buchungssatz> newBSList = new LinkedList<Buchungssatz>();
 		
 		try {
            
-           for(int y = 0; y < MainView.bsList.size(); y++) {
-        	   if(y == oldBSList.size())
-        		   oldBSList.addLast(null);
-        	   if(MainView.bsList.get(y).getCode().equals(oldBSList.get(y)))
-        		   MainView.bsList.get(y).addCheckMark(null, -1);
+           for(int y = 0; y < correctBSList.size(); y++) {
+        	   
+        	   if(y == unsureBSList.size())
+        		   unsureBSList.addLast(createBSWithNote("Dieser Buchungssatz wurde automatisch hinzugefügt"));
+        	   
+        	   if(correctBSList.get(y).getCode().equals(unsureBSList.get(y).getCode()))
+        		   sortNewBSList(newBSList, correctBSList.get(y), unsureBSList.get(y), true, null, -1);
         	   
         	   else {
-        		   int tempY = checkIfBSmissing(y, oldBSList, null);
+        		   
+        		   int tempY = checkIfBSmissing(newBSList, y, unsureBSList, correctBSList, null);
         		   
         		   if(tempY == y)
-        			   checkIfBSOverload(y, oldBSList, null);
+        			   checkIfBSOverload(newBSList, y, unsureBSList, correctBSList, null);
+
         		   else
         			   y = tempY;
         		   
@@ -560,108 +567,213 @@ public class db_Model {
            }
 
            increaseSkillStats();
+           
         	   
 		}catch(Exception e) {e.printStackTrace();}
+		
+		 return newBSList;
+		 
 	}
+	
+	
+	
 		
-	public ArrayList<Integer> checkBSExam(LinkedList<String> studentSolution) {
-		
-		//save();
+	public LinkedList<Buchungssatz> checkBSExam(LinkedList<Buchungssatz> unsureBSList, LinkedList<Buchungssatz> correctBSList) {
+
+		LinkedList<Buchungssatz> newBSList = new LinkedList<Buchungssatz>();
 		int overloadSize = 0;
 		String temp = solution;
+
 		int bsNumber = temp.length() - temp.replace("#", "").length();
-		ArrayList<Integer> examBSList = new ArrayList<Integer>();
+
+		examBSList = new ArrayList<Integer>();
 		for(int x = 0; x < bsNumber; x++) {
 			examBSList.add(0);
 		}
-		
+
 		try {
-           
-           for(int y = 0; y < MainView.bsList.size(); y++) {
-        	   if(y == studentSolution.size())
-        		   studentSolution.addLast(null);
-        	   if(MainView.bsList.get(y).getCode().equals(studentSolution.get(y)))
-        		   MainView.bsList.get(y).addCheckMark(examBSList, y);
-        	   
-        	   else {
-        		   int tempY = checkIfBSmissing(y, studentSolution, examBSList);
-        		   
-        		   if(tempY == y)
-        			   overloadSize += checkIfBSOverload(y, studentSolution, examBSList);
-        		   else
-        			   y = tempY;
-        		   
-        	   }
 
-           }
+			for(int y = 0; y < correctBSList.size(); y++) {
+				
+				if(y == unsureBSList.size())
+					unsureBSList.addLast(createBSWithNote("Dieser Buchungssatz wurde automatisch hinzugefügt"));
+				
+				if(correctBSList.get(y).getCode().equals(unsureBSList.get(y).getCode()))
+					sortNewBSList(newBSList, correctBSList.get(y), unsureBSList.get(y), true, examBSList, y);
 
-           increaseSkillStats();
-        	   
-		}catch(Exception e) {e.printStackTrace();}
-		
+				else {
+
+					int tempY = checkIfBSmissing(newBSList, y, unsureBSList, correctBSList, null);
+
+					if(tempY == y)
+						checkIfBSOverload(newBSList, y, unsureBSList, correctBSList, null);
+					
+					else
+						y = tempY;
+
+				}
+
+			}
+
+			increaseSkillStats();
+
+		} catch(Exception e) {e.printStackTrace(); System.out.println("db_Model - checkBSExam - didint work!");}
+
 		examBSList.add(-overloadSize);
+
+		return newBSList;
 		
-		return examBSList;
 	}
 		
 		
 	
 	
 	
-	private int checkIfBSmissing(int index, LinkedList<String> compareToList,  ArrayList<Integer> examBSList) {
+	private int checkIfBSmissing(LinkedList<Buchungssatz> newBSList, int index, LinkedList<Buchungssatz> unsureBSList,  LinkedList<Buchungssatz> correctBSList, ArrayList<Integer> examBSList) {
 
-		 ArrayList<Buchungssatz> wrongPanel = new ArrayList<Buchungssatz>();
+		 ArrayList<Buchungssatz> missingPanel = new ArrayList<Buchungssatz>();
 		
-   		   for(int i = index; i < MainView.bsList.size(); i++) {
-   			   if(MainView.bsList.get(i).getCode().equals(compareToList.get(index))) {
-   				   for(int k = 0; k < wrongPanel.size(); k++) {
-   					   compareToList.add(index, null);
-   					   wrongPanel.get(k).addErrorIcon();
+   		   for(int i = index; i < correctBSList.size(); i++) {
+   			   
+   			   if(correctBSList.get(i).getCode().equals(unsureBSList.get(index).getCode())) {
+   				   
+   				   for(int k = 0; k < missingPanel.size(); k++) {
+   					   
+   					   unsureBSList.add(index, createBSWithNote("Dieser Buchungssatz fehlte bei Ihnen"));
+   					   sortNewBSList(newBSList, missingPanel.get(k), unsureBSList.get(index), false, null, 0);
+   					   
    				   }
    				   
-   				   MainView.bsList.get(i).addCheckMark(examBSList, i);
+   				   sortNewBSList(newBSList, correctBSList.get(i), unsureBSList.get(index + missingPanel.size()), true, examBSList, i);
    				   return i;
+   				   
    			   }
+   			   
    			   else
-   				   wrongPanel.add(MainView.bsList.get(i));
+   				   missingPanel.add(correctBSList.get(i));
 
    		   }
 		
    		   return index;
+   		   
 	}
 	
 	
-	private int checkIfBSOverload(int index, LinkedList<String> compareToList, ArrayList<Integer> examBSList) {
+	private int checkIfBSOverload(LinkedList<Buchungssatz> newBSList, int index, LinkedList<Buchungssatz> unsureBSList, LinkedList<Buchungssatz> correctBSList, ArrayList<Integer> examBSList) {
 		
 		int overloadSize = 0;
-		String messageSingular = " Buchungssatz zu viel!";
-		String messagePlural = " Buchungssätze zu viel!";
+		ArrayList<Buchungssatz> overloadList = new ArrayList<Buchungssatz>(); 
 		
-		   for(int l = index; l < compareToList.size(); l++) {
+		   for(int l = index; l < unsureBSList.size(); l++) {
 			   
-			   if(MainView.bsList.get(index).getCode().equals(compareToList.get(l))) {
-				   if(overloadSize == 1)
-					   MainView.bsList.get(index).addNoteToPanel("Darüber " + overloadSize + messageSingular, 220);
-				   else
-					   MainView.bsList.get(index).addNoteToPanel("Darüber " + overloadSize + messagePlural, 220);
+			   if(correctBSList.get(index).getCode().equals(unsureBSList.get(l).getCode())) {
 				   
-				   compareToList.remove(index);
-				   MainView.bsList.get(index).addCheckMark(examBSList, index);
+				   for(int k = 0; k < overloadList.size(); k++) {
+					   
+					   unsureBSList.remove(overloadList.get(k));
+   					   sortNewBSList(newBSList, null, overloadList.get(k), false, null, 0);
+   					   
+   				   }
+				   
+				   sortNewBSList(newBSList, correctBSList.get(index), unsureBSList.get(l - overloadList.size()), true, examBSList, index);
 				   return overloadSize;
+				   
 			   }
 			   
-			   else
+			   else {
+				   overloadList.add(unsureBSList.get(l));
 				   overloadSize++;
+			   }
 
 		   }
 		   
 		   //wenn ich bis hier komme, ist es ein struktureller Fehler im Buchungssatz und kein Fehlen bzw. zu viel sein eines BS.
-		   MainView.bsList.get(index).addErrorIcon();
+		   investigateError(index, correctBSList, unsureBSList, false);
+		   sortNewBSList(newBSList, correctBSList.get(index), unsureBSList.get(index), false, examBSList, -1);
 		   
 		   return 0;
 		   
 	}
 	
+	private Buchungssatz createBSWithNote(String note) {
+		Buchungssatz bs = new Buchungssatz();
+		bs.createBSContainer(MainView.workPanel);
+		bs.addNoteToPanel(note, 100);
+		return bs;
+	}
+
+
+	private void sortNewBSList(LinkedList<Buchungssatz> newBSList, Buchungssatz correctSolution, Buchungssatz unsureSolution, boolean checkMark, ArrayList<Integer> examBSList, int value) {
+		
+		if(correctSolution == null)
+			unsureSolution.addNoteToPanel("Zu viele BS", 100);
+
+		else
+			newBSList.addLast(correctSolution);
+
+		 newBSList.addLast(unsureSolution);
+		 
+		 if(checkMark)
+			 unsureSolution.addCheckMark(examBSList, value);
+		 else
+			 unsureSolution.addErrorIcon();
+		
+	}
+	
+	private void investigateError(int index,  LinkedList<Buchungssatz> correctBSList, LinkedList<Buchungssatz> unsureBSList, boolean allRed) {
+
+		ArrayList<JLabel> unsureKontoList = unsureBSList.get(index).getKontoList();
+		ArrayList<JLabel> unsurePriceList = unsureBSList.get(index).getPriceList();
+		
+		if(unsureKontoList == null)
+			return;
+		
+		if(allRed) {
+			paintAllRed(unsureKontoList);
+			paintAllRed(unsurePriceList);
+			return;
+		}
+		
+		ArrayList<JLabel> correctKontoList = correctBSList.get(index).getKontoList();
+		ArrayList<JLabel> correctPriceList = correctBSList.get(index).getPriceList();
+
+		
+		if((correctKontoList.size() != unsureKontoList.size()))
+			paintAllRed(unsureKontoList);
+		
+		if((correctPriceList.size() != unsurePriceList.size()))
+			paintAllRed(unsurePriceList);
+		
+		else if((correctBSList.get(index).isLeftMore() != unsureBSList.get(index).isLeftMore())) {
+			unsureBSList.get(index).addNoteToPanel("leftMore Konflikt", 100);
+			paintAllRed(unsurePriceList);
+			paintAllRed(unsureKontoList);
+		}
+		
+		else {
+			
+			for(int x = 0; x < correctKontoList.size(); x++) {
+				checkAndHighlightIfWrong(unsureKontoList, correctKontoList, x);
+			}
+			
+			for(int x = 0; x < correctPriceList.size(); x++) {
+				checkAndHighlightIfWrong(unsurePriceList, correctPriceList, x);
+			}
+			
+		}
+	}
+	
+	private void paintAllRed(ArrayList<JLabel> labelList) {
+		for(int x = 0; x < labelList.size(); x++) {
+			labelList.get(x).setForeground(Color.RED);
+		}
+	}
+	
+	private void checkAndHighlightIfWrong(ArrayList<JLabel> unsureList, ArrayList<JLabel> correctList, int index) {
+		if(!correctList.get(index).getText().equals(unsureList.get(index).getText())) {
+			unsureList.get(index).setForeground(Color.RED);
+		}
+	}
 
 	public boolean checkExerciseAvailability(String jahrgang, String seite, String nummer) {
 		
@@ -1265,11 +1377,13 @@ public class db_Model {
 			rs = st.executeQuery("SELECT code FROM teacherCodes WHERE code='" + enteredCode + "'");
 			
 			if(rs.next()) {
-				myRank = "teacher";
+				myTier = "teacher";
 				updateTxtInfoFile();
-				updateRankOnDB();
+				updateTierOnDB();
+				deleteCodeFromDB(enteredCode);
 				return true;
 			}
+
 			
 		} catch (SQLException e) {System.out.println("dbModel - checkTeacherCode - doesnt work");e.printStackTrace();}
 		
@@ -1280,6 +1394,7 @@ public class db_Model {
 
 
 	private void updateTxtInfoFile() {
+		
 		PrintStream fileStream;
 		
 		try {
@@ -1289,20 +1404,30 @@ public class db_Model {
 			fileStream.println(schoolType);
 			fileStream.println(email);
 			fileStream.println(schoolClass);
-			fileStream.println(myRank);
+			fileStream.println(myTier);
 			fileStream.close();
 			
 		} catch (FileNotFoundException e) {System.out.println("dbModel - updateTxtInfoFile - doesnt work");e.printStackTrace();}
 		
 	}
 	
-	private void updateRankOnDB() {
+	private void updateTierOnDB() {
 		
 		try {
 			
-			st.executeUpdate("UPDATE users SET rank='" + myRank + "' WHERE id='" + myID + "'");
+			st.executeUpdate("UPDATE users SET tier='" + myTier + "' WHERE id='" + myID + "'");
 		
-		} catch (SQLException e) {System.out.println("updateRankOnDB didnt work -- db_Model");e.printStackTrace();}
+		} catch (SQLException e) {System.out.println("updateTierOnDB didnt work -- db_Model");e.printStackTrace();}
+		
+	}
+	
+	private void deleteCodeFromDB(String enteredCode) {
+		
+		try {
+			
+			st.executeUpdate("DELETE FROM teachercodes WHERE code='" + enteredCode + "'");
+		
+		} catch (SQLException e) {System.out.println("deleteCodeFromDB didnt work -- db_Model");e.printStackTrace();}
 		
 	}
 
@@ -1331,8 +1456,8 @@ public class db_Model {
 		return BScount;
 	}
 	
-	public String getUploaderRank() {
-		return uploaderRank;
+	public String getUploaderTier() {
+		return uploaderTier;
 	}
 	
 	public int getUpVotes() {
@@ -1390,6 +1515,10 @@ public class db_Model {
 
 	public boolean getInputToSuggestionIsIncorrect() {
 		return inputToSuggestionIsIncorrect;
+	}
+	
+	public ArrayList<Integer> getExamBSList() {
+		return examBSList;
 	}
 
 
