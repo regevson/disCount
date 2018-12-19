@@ -76,6 +76,7 @@ public class db_Model {
 	private String schoolClass;
 	private String uploaderID;
 	private ArrayList<Integer> examBSList;
+	private Color bsColor = MainView.disCountPurple;
 	
 	
 	
@@ -547,7 +548,7 @@ public class db_Model {
            for(int y = 0; y < correctBSList.size(); y++) {
         	   
         	   if(y == unsureBSList.size())
-        		   unsureBSList.addLast(createBSWithNote("Dieser Buchungssatz wurde automatisch hinzugefügt"));
+        		   unsureBSList.addLast(createBSWithNote("Dieser Buchungssatz fehlte bei Ihnen!"));
         	   
         	   if(correctBSList.get(y).getCode().equals(unsureBSList.get(y).getCode()))
         		   sortNewBSList(newBSList, correctBSList.get(y), unsureBSList.get(y), true, null, -1);
@@ -596,7 +597,7 @@ public class db_Model {
 			for(int y = 0; y < correctBSList.size(); y++) {
 				
 				if(y == unsureBSList.size())
-					unsureBSList.addLast(createBSWithNote("Dieser Buchungssatz wurde automatisch hinzugefügt"));
+					unsureBSList.addLast(createBSWithNote("Dieser Buchungssatz fehlte bei Ihnen!"));
 				
 				if(correctBSList.get(y).getCode().equals(unsureBSList.get(y).getCode()))
 					sortNewBSList(newBSList, correctBSList.get(y), unsureBSList.get(y), true, examBSList, y);
@@ -698,20 +699,34 @@ public class db_Model {
 	private Buchungssatz createBSWithNote(String note) {
 		Buchungssatz bs = new Buchungssatz();
 		bs.createBSContainer(MainView.workPanel);
-		bs.addNoteToPanel(note, 100);
+		bs.addInfoToPanel(note);
 		return bs;
 	}
 
 
 	private void sortNewBSList(LinkedList<Buchungssatz> newBSList, Buchungssatz correctSolution, Buchungssatz unsureSolution, boolean checkMark, ArrayList<Integer> examBSList, int value) {
+
+		Color color = MainView.disCountBlue;
+		
+		if(bsColor == color)
+			color = MainView.disCountPurple;
+		else
+			color = MainView.disCountBlue;
+		
+		bsColor = color;
 		
 		if(correctSolution == null)
-			unsureSolution.addNoteToPanel("Zu viele BS", 100);
+			unsureSolution.addInfoToPanel("Dieser Buchungssatz ist in der Lösung nicht vorhanden!");
 
-		else
+		else {
 			newBSList.addLast(correctSolution);
+			correctSolution.paintBorder(color);
+			correctSolution.getBSNumberPanel().setBackground(color);
+		}
 
 		 newBSList.addLast(unsureSolution);
+		 unsureSolution.paintBorder(color);
+		 unsureSolution.getBSNumberPanel().setBackground(color);
 		 
 		 if(checkMark)
 			 unsureSolution.addCheckMark(examBSList, value);
@@ -745,7 +760,7 @@ public class db_Model {
 			paintAllRed(unsurePriceList);
 		
 		else if((correctBSList.get(index).isLeftMore() != unsureBSList.get(index).isLeftMore())) {
-			unsureBSList.get(index).addNoteToPanel("leftMore Konflikt", 100);
+			unsureBSList.get(index).addInfoToPanel("Der Buchungssatz wäre umgedreht richtig!");
 			paintAllRed(unsurePriceList);
 			paintAllRed(unsureKontoList);
 		}
@@ -764,15 +779,18 @@ public class db_Model {
 	}
 	
 	private void paintAllRed(ArrayList<JLabel> labelList) {
+		
 		for(int x = 0; x < labelList.size(); x++) {
 			labelList.get(x).setForeground(Color.RED);
 		}
+		
 	}
 	
 	private void checkAndHighlightIfWrong(ArrayList<JLabel> unsureList, ArrayList<JLabel> correctList, int index) {
-		if(!correctList.get(index).getText().equals(unsureList.get(index).getText())) {
+		
+		if(!correctList.get(index).getText().equals(unsureList.get(index).getText()))
 			unsureList.get(index).setForeground(Color.RED);
-		}
+		
 	}
 
 	public boolean checkExerciseAvailability(String jahrgang, String seite, String nummer) {
@@ -791,13 +809,10 @@ public class db_Model {
          }
 
          
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
+		}catch(Exception ex) {ex.printStackTrace();System.out.println("dbModel - checkExerciseAvailability - didnt work");}
 		
 		return false;
          
-		
 	}
 	
 	

@@ -18,7 +18,7 @@ public class RoundedBorder {
 
     private JPanel workPanel;
 
-	public void paintPanel(JComponent comp, Color borderColor, Color compColor, int thickness, int radius, JPanel workPanel) {
+	public void paintBorder(JComponent comp, Color borderColor, Color compColor, int thickness, int radius, JPanel workPanel) {
                 AbstractBorder brdrRight = new TextBubbleBorder(borderColor, thickness, radius, 25, false, workPanel);
 
                 comp.setBackground(compColor);

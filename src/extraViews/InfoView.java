@@ -26,7 +26,7 @@ public class InfoView extends JFrame {
 		JLabel lblDiscountEin = new JLabel("disCount - Ein Rechnungswesen-Programm f\u00FCr Sch\u00FClerInnen");
 		lblDiscountEin.setForeground(MainView.disCountBlue);
 		lblDiscountEin.setFont(new Font("Roboto", Font.BOLD, 22));
-		lblDiscountEin.setBounds(248, 36, 593, 68);
+		lblDiscountEin.setBounds(248, 36, 800, 68);
 		contentPane.add(lblDiscountEin);
 		
 		JLabel lblEntwickler = new JLabel("Entwickler:");
@@ -50,19 +50,19 @@ public class InfoView extends JFrame {
 		JLabel lblJuwalRegev = new JLabel("Juwal Regev");
 		lblJuwalRegev.setFont(new Font("Roboto", Font.BOLD, 18));
 		lblJuwalRegev.setForeground(Color.WHITE);
-		lblJuwalRegev.setBounds(244, 192, 104, 35);
+		lblJuwalRegev.setBounds(244, 192, 800, 35);
 		contentPane.add(lblJuwalRegev);
 		
 		JLabel lblJuwalregevhotmailcom = new JLabel("juwal.regev@hotmail.com");
 		lblJuwalregevhotmailcom.setFont(new Font("Roboto", Font.BOLD, 18));
 		lblJuwalregevhotmailcom.setForeground(Color.WHITE);
-		lblJuwalregevhotmailcom.setBounds(245, 239, 247, 35);
+		lblJuwalregevhotmailcom.setBounds(245, 239, 800, 35);
 		contentPane.add(lblJuwalregevhotmailcom);
 		
 		JLabel label = new JLabel("066910983630");
 		label.setFont(new Font("Roboto", Font.BOLD, 18));
 		label.setForeground(Color.WHITE);
-		label.setBounds(244, 287, 208, 35);
+		label.setBounds(244, 287, 800, 35);
 		contentPane.add(label);
 	}
 }

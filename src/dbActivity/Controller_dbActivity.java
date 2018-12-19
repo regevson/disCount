@@ -113,7 +113,9 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			
 			MainModel.deleteAll(MC.execGetWorkPanel());
 			
+			MainView.noColorFade = true;
 			initOpenProject(MainModel.convertStringToLL_Char(llSolution[0]));
+			MainView.noColorFade = false;
 			
 			LinkedList<Buchungssatz> correctBSList = new LinkedList<Buchungssatz>();
 			correctBSList.addAll(MainView.bsList);

@@ -166,6 +166,7 @@ public static boolean isBANNED = false;
 	
 	
 	public static boolean isUploading = false;
+	public static boolean noColorFade = false;
 	public static boolean suggestionsEnabled = false;
 
 	private static JPanel commentPanel;
@@ -900,7 +901,7 @@ public static boolean isBANNED = false;
 	
 			menuItemExam = new JMenuItem("Neue Prüfung starten", KeyEvent.VK_T);
 			
-			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 			menuItemExam.addActionListener(new ActionListener() {
 			    public void actionPerformed(ActionEvent e) {
 			    	ExamSetupView esv = ((ML_db) llML.get(9)).startExam();
@@ -925,7 +926,7 @@ public static boolean isBANNED = false;
 			
 			menuItemExam = new JMenuItem("Prüfung abgeben", KeyEvent.VK_T);
 			
-			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('A', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 			menuItemExam.addActionListener(new ActionListener() {
 			    public void actionPerformed(ActionEvent e) {
 			    	((ML_db) llML.get(9)).initHandInExam();
@@ -1752,7 +1753,7 @@ public static boolean isBANNED = false;
 		
 		JMenuItem menuItemExam = new JMenuItem("Prüfung abgeben", KeyEvent.VK_T);
 		
-		menuItemExam.setAccelerator(KeyStroke.getKeyStroke('H', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItemExam.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItemExam.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	((ML_db) llML.get(9)).initHandInExam();

@@ -72,6 +72,8 @@ public class Buchungssatz implements MouseListener{
 	private JPanel infoPanel;
 	private JLabel thumbsUpLabel;
 	private JLabel thumbsDownLabel;
+	private RoundedBorder roundedBorder;
+	private JPanel workPanel;
 	
 
 	
@@ -83,15 +85,16 @@ public class Buchungssatz implements MouseListener{
 	public JPanel createBSContainer(JPanel workPanel) {
 		
 		bsPanelMargin = MainView.bsPanelMargin;
+		this.workPanel = workPanel;
 
 		bsPanel = new JPanel();
 		bsPanel.setBounds(5, bsPanelMargin, 585, bsPanelHeight);
-		RoundedBorder rb = new RoundedBorder();
+		roundedBorder = new RoundedBorder();
 		
 		if(MainView.isUploading)
-			rb.paintPanel(bsPanel, MainView.disCountDarkGreen, MainView.middleBlack, 5, 24, workPanel);
+			roundedBorder.paintBorder(bsPanel, MainView.disCountDarkGreen, MainView.middleBlack, 5, 24, workPanel);
 		else
-			rb.paintPanel(bsPanel, MainView.disCountBlue, MainView.middleBlack, 5, 24, workPanel);
+			roundedBorder.paintBorder(bsPanel, MainView.disCountBlue, MainView.middleBlack, 5, 24, workPanel);
 		
 		workPanel.add(bsPanel);
 		
@@ -127,9 +130,8 @@ public class Buchungssatz implements MouseListener{
 		
 		makeRadioButton();
 		
-		if(!MainView.isUploading)
+		if(!MainView.isUploading && !MainView.noColorFade)
 			makePink();
-		
 		
 		
 		paintNumberOnBSNumberPanel();
@@ -141,6 +143,10 @@ public class Buchungssatz implements MouseListener{
 		
 		return bsPanel;
 		
+	}
+	
+	public void paintBorder(Color borderColor) {
+		roundedBorder.paintBorder(bsPanel, borderColor, MainView.middleBlack, 5, 24, workPanel);
 	}
 
 	public void makePink() {
@@ -323,6 +329,26 @@ public class Buchungssatz implements MouseListener{
 		setSolutionID(solutionID);
 		
 		paintNumberOnBSNumberPanel();
+		
+		bsPanel.revalidate();
+		bsPanel.repaint();
+		
+	}
+	
+	public void addInfoToPanel(String message) {
+		
+		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", 17, 120, 9, 18, 18);
+		infoLabel.addMouseListener(this);
+		bsNumberPanel.add(infoLabel);
+		
+		infoPanel = new JPanel();
+		infoPanel.setBounds(60, 118, 520, 40);
+		infoPanel.setBackground(MainView.darkBlack);
+		infoPanel.setLayout(null);
+		bsPanel.add(infoPanel);
+		infoPanel.setVisible(false);
+		
+		createBSInfoContents(10, 500, message, infoPanel);
 		
 		bsPanel.revalidate();
 		bsPanel.repaint();
@@ -624,6 +650,10 @@ public class Buchungssatz implements MouseListener{
 	
 	public boolean getRadioButtonStatus() {
 		return radioButton.isSelected();
+	}
+	
+	public JPanel getBSNumberPanel() {
+		return bsNumberPanel;
 	}
 	
 	public JLabel getBSNumberLabel() {
