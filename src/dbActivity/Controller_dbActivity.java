@@ -63,8 +63,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.changeRatio(value, solutionID);
 	}
 
-	public ArrayList<MessageBox> execConnect() {
-		return myModel.connect();
+	public ArrayList<MessageBox> execConnect(String email) {
+		return myModel.connect(email);
 	}
 	
 	public String execGetSolutionID() {

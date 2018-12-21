@@ -93,12 +93,11 @@ public class MainController{
 	}
 
 	public LinkedList<Controller_AbstractClass> getControllerList() {
-		
 		return controllerList;
-		
 	}
 
 	public void addMLList(LinkedList<MouseListener> llML) {
+		
 		((ML_Tabellenkalkulation) llML.get(10)).getControllerandView(this, mainView);
 		mainView.getMLList(llML);
 		

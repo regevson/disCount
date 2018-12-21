@@ -49,15 +49,12 @@ import View.MainController;
 import View.MainModel;
 import View.MainView;
 import dbActivity.ML_db;
+import disCount.Main;
 import stats.ML_Stats;
 
 public class Setup_View extends JFrame {
 	
 	private JPanel contentPane;
-	private JTextField txtAkonto;
-	private static JTextField txtGrenzss;
-	private static JTextField txtAvabaeab;
-	private JTextField txtBemessungsgrundlage;
 	private JTextField txtName;
 
 	private JTextField txtJahrgang;
@@ -66,6 +63,8 @@ public class Setup_View extends JFrame {
 	private Connection conn;
 	private Statement st;
 	private ResultSet rs;
+	
+	private String loginEmail;
 	
 	
 	
@@ -275,7 +274,7 @@ public class Setup_View extends JFrame {
 	public void startApp() {
 		
 		if(!netIsAvailable()) {
-			JOptionPane.showMessageDialog(null, "Sie brauchen eine Internetverbindung um das Programm zu starten!", "Nachricht", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Sie brauchen eine Internetverbindung um das Programm zu starten-sorry!", "Nachricht", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
 
@@ -298,7 +297,7 @@ public class Setup_View extends JFrame {
 		llML.addLast(new ML_Anlagenbewertung(mainController));
 		llML.addLast(new ML_Kalkulationen(mainController));
 		llML.addLast(new ML_Controls(mainController)); // is not in controllerList!!!
-		llML.addLast(new ML_db(mainController, conn));
+		llML.addLast(new ML_db(mainController, conn, loginEmail));
 		ML_Tabellenkalkulation ML_TABKALK = new ML_Tabellenkalkulation();
 		llML.addLast(ML_TABKALK);
 		llML.addLast(new ML_TableSelectionTopics(ML_TABKALK));
@@ -366,6 +365,28 @@ public class Setup_View extends JFrame {
 	    }*/
 		return true;
 	}
+
+
+	public void setLoginEmail(String loginEmail) {
+		this.loginEmail = loginEmail;
+	}
+
+
+	public void printAlreadyDoneText() {
+		
+		PrintStream fileStream;
+
+			try {
+				
+				fileStream = new PrintStream(new File("src/setup.txt"));
+				fileStream.println("alreadyDone");
+				
+				Main.alreadyDone = true;
+				
+			} catch(FileNotFoundException e) {e.printStackTrace();}
+			
+	}
+	
 
 	
 }

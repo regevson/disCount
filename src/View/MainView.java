@@ -196,7 +196,7 @@ public static boolean isBANNED = false;
 		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {}
+		} catch (Exception e) {e.printStackTrace();}
 		
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();

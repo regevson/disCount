@@ -25,6 +25,7 @@ import View.MainModel;
 import View.MainView;
 import disCount.Main;
 import extraViews.MessageBox;
+import extraViews.Setup_View;
 
 public class db_Model {
 	
@@ -168,13 +169,19 @@ public class db_Model {
 	
 	
 	
-	public ArrayList<MessageBox> connect() {
+	public ArrayList<MessageBox> connect(String loginEmail) {
 		
-		if(!MainView.databaseIsActive)
-			return null;
+		 try {
+			 
+			st = conn.createStatement();
+			
+			if(!MainView.databaseIsActive)
+				return null;
 		
-       try { 
            
+    	   if(Main.retireveLocalInfo)
+        	   retireveLocalInfo(loginEmail);
+    	   
            BufferedReader br = new BufferedReader(new FileReader("src/info.txt"));
    		   name = br.readLine();
    		   schoolType = br.readLine();
@@ -183,12 +190,14 @@ public class db_Model {
    		   myTier = br.readLine();
    		   
    		   
-   		   st = conn.createStatement();
    		   
            if(!Main.alreadyDone) {
 	           st.executeUpdate("INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('" + name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','" + schoolClass + "',"+ "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");                                                       
+	           loadInfoUpToDB();
 	           setUpMACAddress();
            }
+           
+          
            
            checkIfBanned();
 	           
@@ -210,6 +219,62 @@ public class db_Model {
 	       
 	}
 	
+	private void retireveLocalInfo(String loginEmail) {
+
+		email = loginEmail;
+		String localInfo = "";
+		
+		try {
+			System.out.println(email);
+			rs = st.executeQuery("SELECT localInfo FROM users WHERE email='" + loginEmail + "'");
+	
+	        if(rs.next()) {
+	        	
+	     	   localInfo = rs.getString("localInfo");
+	     	   writeLocalInfoToFile(localInfo);
+	     	   Main.retireveLocalInfo = false;
+	     	   
+	        }
+        
+		} catch (SQLException e) {e.printStackTrace();}
+		
+	}
+
+
+
+
+	private void writeLocalInfoToFile(String localInfo) {
+		
+		PrintStream fileStream;
+		
+		try {
+			
+			fileStream = new PrintStream(new File("src/info.txt"));
+			fileStream.println(localInfo);
+			
+		} catch (FileNotFoundException e) {e.printStackTrace();}
+		
+	}
+
+
+
+
+	private void loadInfoUpToDB() {
+		
+		String localInfo = name + "\n" + schoolType + "\n" + email + "\n" + schoolClass + "\n" + myTier;
+		
+		 try {
+			 
+			st = conn.createStatement();
+			st.executeUpdate("UPDATE users SET localInfo='" + localInfo + "' WHERE email='" + email + "'");
+			
+		} catch (SQLException e) {e.printStackTrace();}
+		
+	}
+
+
+
+
 	private void getMyID() throws SQLException {
 		
 		rs = st.executeQuery("SELECT id FROM users WHERE email='" + email + "'");
@@ -883,6 +948,7 @@ public class db_Model {
 		
 			JOptionPane.showMessageDialog(null, msg, "disCount konnte nicht gestartet werden", JOptionPane.ERROR_MESSAGE);
 			Main.execdisCount = false;
+			e.printStackTrace();
 		}
 		
 	}
@@ -1392,11 +1458,14 @@ public class db_Model {
 			rs = st.executeQuery("SELECT code FROM teacherCodes WHERE code='" + enteredCode + "'");
 			
 			if(rs.next()) {
+				
 				myTier = "teacher";
 				updateTxtInfoFile();
 				updateTierOnDB();
+				loadInfoUpToDB();
 				deleteCodeFromDB(enteredCode);
 				return true;
+				
 			}
 
 			
