@@ -18,6 +18,7 @@ import View.MainView;
 import extraViews.ExamLobby;
 import extraViews.ExamSetupView;
 import extraViews.MessageBox;
+import extraViews.Setup_View;
 import extraViews.WaitForStartSignalView;
 
 public class Controller_dbActivity extends Controller_AbstractClass{
@@ -33,9 +34,9 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	
 	
 
-	public Controller_dbActivity(MainController MC, Connection conn) {
+	public Controller_dbActivity(MainController MC, Setup_View setupView) {
 		super(MC);
-		myModel = new db_Model(conn);
+		myModel = new db_Model(setupView.getConn());
 	}
 	
 	
@@ -63,8 +64,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		return myModel.changeRatio(value, solutionID);
 	}
 
-	public ArrayList<MessageBox> execConnect(String email) {
-		return myModel.connect(email);
+	public ArrayList<MessageBox> execConnect(Setup_View setupView) {
+		return myModel.connect(setupView);
 	}
 	
 	public String execGetSolutionID() {

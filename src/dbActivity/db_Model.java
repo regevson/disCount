@@ -169,7 +169,7 @@ public class db_Model {
 	
 	
 	
-	public ArrayList<MessageBox> connect(String loginEmail) {
+	public ArrayList<MessageBox> connect(Setup_View setupView) {
 		
 		 try {
 			 
@@ -180,25 +180,33 @@ public class db_Model {
 		
            
     	   if(Main.retireveLocalInfo)
-        	   retireveLocalInfo(loginEmail);
+        	   retireveLocalInfo(setupView);
     	   
-           BufferedReader br = new BufferedReader(new FileReader("src/info.txt"));
-   		   name = br.readLine();
-   		   schoolType = br.readLine();
-   		   email = br.readLine();
-   		   schoolClass = br.readLine();
-   		   myTier = br.readLine();
+			else {
+
+				BufferedReader br = new BufferedReader(new FileReader("src/info.txt"));
+				name = br.readLine();
+				schoolType = br.readLine();
+				email = br.readLine();
+				schoolClass = br.readLine();
+				myTier = br.readLine();
+
+				if(!Main.alreadyDone) {
+					
+					st.executeUpdate(
+							"INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('"
+									+ name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','"
+									+ schoolClass + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + ""
+									+ "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");
+					
+					setUpMACAddress();
+					
+				}
+
+			}
    		   
    		   
-   		   
-           if(!Main.alreadyDone) {
-	           st.executeUpdate("INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('" + name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','" + schoolClass + "',"+ "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");                                                       
-	           loadInfoUpToDB();
-	           setUpMACAddress();
-           }
-           
-          
-           
+      
            checkIfBanned();
 	           
            compareMACAddress();
@@ -219,19 +227,24 @@ public class db_Model {
 	       
 	}
 	
-	private void retireveLocalInfo(String loginEmail) {
+	
+	
+	private void retireveLocalInfo(Setup_View setupView) {
 
-		email = loginEmail;
-		String localInfo = "";
+		email = setupView.getLoginEmail();
 		
 		try {
 			System.out.println(email);
-			rs = st.executeQuery("SELECT localInfo FROM users WHERE email='" + loginEmail + "'");
+			rs = st.executeQuery("SELECT name, school, class, tier FROM users WHERE email='" + email + "'");
 	
 	        if(rs.next()) {
 	        	
-	     	   localInfo = rs.getString("localInfo");
-	     	   writeLocalInfoToFile(localInfo);
+	     	   name = rs.getString("name");
+	     	   schoolType = rs.getString("school");
+	     	   schoolClass = rs.getString("class");
+	     	   myTier = rs.getString("tier");
+	     	   
+	     	   setupView.writeInfoIntoFile(name, schoolType, email, schoolClass, myTier);
 	     	   Main.retireveLocalInfo = false;
 	     	   
 	        }
@@ -239,40 +252,6 @@ public class db_Model {
 		} catch (SQLException e) {e.printStackTrace();}
 		
 	}
-
-
-
-
-	private void writeLocalInfoToFile(String localInfo) {
-		
-		PrintStream fileStream;
-		
-		try {
-			
-			fileStream = new PrintStream(new File("src/info.txt"));
-			fileStream.println(localInfo);
-			
-		} catch (FileNotFoundException e) {e.printStackTrace();}
-		
-	}
-
-
-
-
-	private void loadInfoUpToDB() {
-		
-		String localInfo = name + "\n" + schoolType + "\n" + email + "\n" + schoolClass + "\n" + myTier;
-		
-		 try {
-			 
-			st = conn.createStatement();
-			st.executeUpdate("UPDATE users SET localInfo='" + localInfo + "' WHERE email='" + email + "'");
-			
-		} catch (SQLException e) {e.printStackTrace();}
-		
-	}
-
-
 
 
 	private void getMyID() throws SQLException {
@@ -920,7 +899,6 @@ public class db_Model {
 		String storedMAC = null;
 			
 		try {
-			
 			rs = st.executeQuery("SELECT mac FROM users WHERE email='" + email + "'");
 			
 			if(rs.next())
@@ -1440,9 +1418,8 @@ public class db_Model {
 		try {
 			
 			st.executeUpdate("UPDATE exams SET student" + studentNumber + "='" + -99 + "' WHERE id='" + resultID + "'");
-			System.out.println("UPDATED");
 		
-		} catch (SQLException e) {System.out.println("notifyTeacherOfLeave didnt work -- db_Model");e.printStackTrace();}
+		} catch(SQLException e) {System.out.println("notifyTeacherOfLeave didnt work -- db_Model");e.printStackTrace();}
 
 	}
 	
@@ -1462,7 +1439,6 @@ public class db_Model {
 				myTier = "teacher";
 				updateTxtInfoFile();
 				updateTierOnDB();
-				loadInfoUpToDB();
 				deleteCodeFromDB(enteredCode);
 				return true;
 				

@@ -167,27 +167,16 @@ public class Setup_View extends JFrame {
 			btnLos.setBounds(701, 540, 371, 48);
 			btnLos.addActionListener(new ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					PrintStream fileStream;
-					try {
-						if(checkIFEmailOK() == -1) {
-							JOptionPane.showMessageDialog(null, "Diese Email-Addresse wurde bereits verwendet!", "Nachricht", JOptionPane.PLAIN_MESSAGE);
-							return;
-						}
-
-						fileStream = new PrintStream(new File("src/setup.txt"));
-						fileStream.println("alreadyDone");
-						fileStream = new PrintStream(new File("src/info.txt"));
-						fileStream.println(txtName.getText());
-						fileStream.println(cbSchule.getSelectedItem());
-						fileStream.println(txtEmail.getText());
-						fileStream.println(txtJahrgang.getText());
-						fileStream.println("student");
-						fileStream.close();
-						dispose();
-						startApp();
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
+					
+					if(checkIFEmailOK() == -1) {
+						JOptionPane.showMessageDialog(null, "Diese Email-Addresse wurde bereits verwendet!", "Nachricht", JOptionPane.PLAIN_MESSAGE);
+						return;
 					}
+					
+					writeInfoIntoFile(txtName.getText(), (String) cbSchule.getSelectedItem(), txtEmail.getText(), txtJahrgang.getText(), "student");
+					dispose();
+					startApp();
+					
 					
 				}
 
@@ -237,6 +226,28 @@ public class Setup_View extends JFrame {
 			e.printStackTrace();
 		}
 }
+	
+	public void writeInfoIntoFile(String name, String school, String email, String schoolClass, String tier) {
+		
+		PrintStream fileStream;
+		
+		try {
+
+			fileStream = new PrintStream(new File("src/setup.txt"));
+			fileStream.println("alreadyDone");
+			fileStream = new PrintStream(new File("src/info.txt"));
+			fileStream.println(name);
+			fileStream.println(school);
+			fileStream.println(email);
+			fileStream.println(schoolClass);
+			fileStream.println(tier);
+			fileStream.close();
+
+		} catch (FileNotFoundException e1) {e1.printStackTrace();}
+		
+	}
+
+
 	
 	
 	public static void labelDesign(JLabel jl) {
@@ -297,7 +308,7 @@ public class Setup_View extends JFrame {
 		llML.addLast(new ML_Anlagenbewertung(mainController));
 		llML.addLast(new ML_Kalkulationen(mainController));
 		llML.addLast(new ML_Controls(mainController)); // is not in controllerList!!!
-		llML.addLast(new ML_db(mainController, conn, loginEmail));
+		llML.addLast(new ML_db(mainController, this));
 		ML_Tabellenkalkulation ML_TABKALK = new ML_Tabellenkalkulation();
 		llML.addLast(ML_TABKALK);
 		llML.addLast(new ML_TableSelectionTopics(ML_TABKALK));
@@ -327,7 +338,7 @@ public class Setup_View extends JFrame {
 	           System.out.println ("Database connection established");
 	    	   
 	    	   
-	    	  /* String url = "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	    	   /*String url = "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	           Class.forName ("com.mysql.jdbc.Driver");
 	           conn = DriverManager.getConnection (url,"root","juwalRegev1");
 	           System.out.println ("Database connection established");
@@ -370,23 +381,14 @@ public class Setup_View extends JFrame {
 	public void setLoginEmail(String loginEmail) {
 		this.loginEmail = loginEmail;
 	}
-
-
-	public void printAlreadyDoneText() {
-		
-		PrintStream fileStream;
-
-			try {
-				
-				fileStream = new PrintStream(new File("src/setup.txt"));
-				fileStream.println("alreadyDone");
-				
-				Main.alreadyDone = true;
-				
-			} catch(FileNotFoundException e) {e.printStackTrace();}
-			
+	
+	public Connection getConn() {
+		return conn;
 	}
 	
+	public String getLoginEmail() {
+		return loginEmail;
+	}
 
 	
 }

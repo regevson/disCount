@@ -2,7 +2,6 @@ package dbActivity;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -20,6 +19,7 @@ import extraViews.ExamLobby;
 import extraViews.ExamSetupView;
 import extraViews.InsertExamIDView;
 import extraViews.MessageBox;
+import extraViews.Setup_View;
 import extraViews.WaitForStartSignalView;
 
 public class ML_db implements MouseListener{
@@ -28,15 +28,15 @@ public class ML_db implements MouseListener{
 	private JButton button = null;
 	private int studentCount;
 	private String solution;
-	private String email;
+	private Setup_View setupView;
 	
 	
 	
 	
-	public ML_db(MainController mainController, Connection conn, String email) {
-		myController = new Controller_dbActivity(mainController, conn);
+	public ML_db(MainController mainController, Setup_View setupView) {
+		myController = new Controller_dbActivity(mainController, setupView);
 		mainController.getControllerList().addLast(myController);
-		this.email = email;
+		this.setupView = setupView;
 	}
 
 	
@@ -49,7 +49,7 @@ public class ML_db implements MouseListener{
 	}
 	
 	public ArrayList<MessageBox> initConnect() {
-		return myController.execConnect(email);
+		return myController.execConnect(setupView);
 	}
 	
 	public String initGetSolutionID() {

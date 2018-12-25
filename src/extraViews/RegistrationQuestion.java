@@ -68,7 +68,6 @@ public class RegistrationQuestion extends JFrame implements ActionListener{
 		btnAnmelden.setBounds(732, 373, 170, 52);
 		btnAnmelden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setup_View.printAlreadyDoneText();
 				setup_View.setLoginEmail(email.getText());
 				setup_View.startApp();
 				dispose();
