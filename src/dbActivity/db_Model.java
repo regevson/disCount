@@ -60,6 +60,7 @@ public class db_Model {
 	
 	private int added = 0;
 	public static double skill;
+	public static String currentGroup;
 	private double dependence;
 	private double community;
 	private boolean alreadyPunished = false; // wurde dependence schon erhöht? -- Wird nämlich nur 1 Mal pro Session vermerkt
@@ -887,7 +888,6 @@ public class db_Model {
 		         
 		         
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
@@ -1490,6 +1490,116 @@ public class db_Model {
 		} catch (SQLException e) {System.out.println("deleteCodeFromDB didnt work -- db_Model");e.printStackTrace();}
 		
 	}
+	
+	
+
+	
+//---------------------------------------Groups----------------------------------------
+	
+	
+	
+	public ArrayList<String> getAllGroups() {
+		
+		ArrayList<String> groupList = new ArrayList<String>(); 
+		
+		try {
+			
+			rs = st.executeQuery("SELECT groupName FROM groups WHERE groupAdmin='" + myID + "'");
+			
+			while(rs.next())
+				groupList.add(rs.getString("groupName"));
+
+			
+		} catch(SQLException e) {e.printStackTrace();}
+		
+		return groupList;
+		
+	}
+	
+	public void removeGroup(String groupName) {
+		
+		try {
+			
+			st.executeUpdate("DELETE FROM groups WHERE groupName='" + groupName + "' AND groupAdmin='" + myID + "'");
+		
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		
+	}
+	
+	public ArrayList<String> searchForStudents(String searchString, boolean byClass) {
+		
+		ArrayList<String> resultList = new ArrayList<String>(); 
+		
+		try {
+			
+			if(byClass)
+				rs = st.executeQuery("SELECT name, email, class FROM users WHERE class LIKE '" + searchString + "%'");
+			
+			else
+				rs = st.executeQuery("SELECT name, email, class FROM users WHERE name LIKE '" + searchString + "%'");
+			
+			while(rs.next())
+				resultList.add(rs.getString("email") + "  |  " + rs.getString("name") + "  |  " + rs.getString("class"));
+
+			
+		} catch(SQLException e) {e.printStackTrace();}
+		
+		return resultList;
+		
+	}
+	
+	public void addStudentToGroup(String studentEmail) {
+		
+		studentEmail = studentEmail.substring(0, studentEmail.indexOf("|") - 1);
+		studentEmail = studentEmail.replace(" ", "");
+
+		int groupID = 0;
+		
+		try {
+			
+			rs = st.executeQuery("SELECT id FROM groups WHERE groupName='" + db_Model.currentGroup + "' AND groupAdmin='" + myID + "'");
+			
+			if(rs.next())
+				groupID = rs.getInt("id");
+			
+			st.executeUpdate("UPDATE users SET groupID='" + groupID + "' WHERE email='" + studentEmail + "'");
+		
+		} catch (SQLException e) {e.printStackTrace();}
+		
+	}
+	
+	public String checkIfStudentInGroup(String studentInfo) {
+		
+		studentInfo = studentInfo.substring(0, studentInfo.indexOf("|") - 1);
+		studentInfo = studentInfo.replace(" ", "");
+
+		int groupID = 0;
+		String groupName = "";
+		
+		try {
+			
+			rs = st.executeQuery("SELECT groupID FROM users WHERE email='" + studentInfo + "'");
+			
+			if(rs.next())
+				groupID = rs.getInt("groupID");
+			
+			if(groupID == 0)
+				return "ist in keiner Gruppe";
+			
+			rs = st.executeQuery("SELECT groupName FROM groups WHERE id='" + groupID + "'");
+			
+			if(rs.next())
+				groupName = rs.getString("groupName");
+			
+			return "ist Mitglied bei " + groupName;
+			
+		
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return groupName;
+		
+	}
 
 
 
@@ -1580,18 +1690,8 @@ public class db_Model {
 	public ArrayList<Integer> getExamBSList() {
 		return examBSList;
 	}
-
-
-
-
 	
-
-
-
-
 	
-
-
 
 
 

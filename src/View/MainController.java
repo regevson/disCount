@@ -293,6 +293,22 @@ public class MainController{
 		bs.initBS(kontos, prices, leftMore, mainView.getWorkPanel());
 	}
 
+	public void execSetupSuchenWorkSpace() {
+		mainView.makeSuchenWorkSpace();
+	}
+
+	public void execRemoveSuchenPanel() {
+		mainView.removeSuchenPanel();
+	}
+
+	public void execPaintGroups(ArrayList<String> groupList) {
+		mainView.paintGroups(groupList);
+	}
+
+	public void execRemoveGroupFromMiddlePanel(JPanel parent) {
+		mainView.removeGroupFromMiddlePanel(parent);
+	}
+
 	
 
 	

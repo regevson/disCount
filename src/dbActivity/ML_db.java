@@ -1,5 +1,6 @@
 package dbActivity;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -161,6 +162,10 @@ public class ML_db implements MouseListener{
 		return myController.execChangeRatio(value, solutionID);
 	}
 	
+	public ArrayList<String> initGetAllGroups() {
+		return myController.execGetAllGroups();
+	}
+	
 	
 	
 	
@@ -207,7 +212,19 @@ public class ML_db implements MouseListener{
 				button = null;
 			}
 			
+			else if(jltemp.getIcon().toString().equals("src/groupAdd.png")) {
+				db_Model.currentGroup = ((JLabel) jltemp.getParent().getComponent(0)).getText();
+				myController.initSetupSuchenWorkSpace();
+			}
 			
+			else if(jltemp.getIcon().toString().equals("src/trashCan.png")) {
+				myController.execRemoveGroup(((JLabel) jltemp.getParent().getComponent(0)).getText());
+				myController.initPaintGroups(initGetAllGroups());
+				myController.initRemoveGroupFromMiddlePanel((JPanel) jltemp.getParent());
+			}
+			
+			else if(jltemp.getIcon().toString().equals("src/studentAdd.png"))
+				myController.execAddStudentToGroup(((JLabel) jltemp.getParent()).getText());
 			
 		}
 		
@@ -235,6 +252,14 @@ public class ML_db implements MouseListener{
 	
 	public boolean initCheckTeacherCode(String enteredCode) {
 		return myController.execCheckTeacherCode(enteredCode);
+	}
+	
+	public ArrayList<String> initSearchForStudents(String searchString, boolean byClass) {
+		return myController.execSearchForStudents(searchString, byClass);
+	}
+	
+	public String initCheckIfStudentInGroup(String studentInfo) {
+		return myController.execCheckIfStudentInGroup(studentInfo);
 	}
 	
 	
@@ -272,6 +297,15 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
+
+
+	
+
+
+	
 
 
 	

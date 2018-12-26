@@ -511,21 +511,42 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		msg.setVisible(true);
 	}
 
-
-
-
-
 	public boolean execCheckTeacherCode(String enteredCode) {
 		return myModel.checkTeacherCode(enteredCode);
 	}
 
-
-
-
-
-
-
-
-
+	public ArrayList<String> execGetAllGroups() {
+		return myModel.getAllGroups();
+	}
 	
+	public void initSetupSuchenWorkSpace() {
+		MC.execSetupSuchenWorkSpace();
+	}
+	
+	public ArrayList<String> execSearchForStudents(String searchString, boolean byClass) {
+		return myModel.searchForStudents(searchString, byClass);
+	}
+	
+	public void execAddStudentToGroup(String studentEmail) {
+		myModel.addStudentToGroup(studentEmail);
+	}
+
+	public void execRemoveGroup(String groupName) {
+		myModel.removeGroup(groupName);
+	}
+
+	public void initPaintGroups(ArrayList<String> groupList) {
+		MC.execPaintGroups(groupList);
+	}
+
+	public void initRemoveGroupFromMiddlePanel(JPanel parent) {
+		MC.execRemoveGroupFromMiddlePanel(parent);
+	}
+
+	public String execCheckIfStudentInGroup(String studentInfo) {
+		return myModel.checkIfStudentInGroup(studentInfo);
+	}
+
+
+
 }

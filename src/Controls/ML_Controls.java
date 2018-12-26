@@ -112,6 +112,18 @@ public class ML_Controls implements MouseListener{
 			MainView.addPic.setEnabled(true);
 		}
 		
+		else if(jltemp.getIcon().toString().equals("src/checkedPic.png")) {
+			putIntoFile(myModel.getStufen(), myModel.getLastStufen());
+			MainView.addPic.setEnabled(true);
+		}
+		
+		
+		else if(jltemp.getIcon().toString().equals("src/escapeSmall.png")) {
+			System.out.println("HERE");
+			MC.execRemoveSuchenPanel();
+		}
+		
+		
 		
 		
 	

@@ -208,51 +208,8 @@ public static boolean isBANNED = false;
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(MainView.middleBlack);
 		
-		suchenPanel = new JPanel();
-		suchenPanel.setOpaque(false);
-		suchenPanel.setBackground(new Color(0,0,0,0));
-		suchenPanel.setPreferredSize(new Dimension(screen.width, 210));
-		suchenPanel.setLayout(null);
-		contentPane.add(suchenPanel, BorderLayout.SOUTH);
-		suchenPanel.setVisible(false);
 		
-		innerSuchenPanel = new JPanel();
-		innerSuchenPanel.setBackground(MainView.darkDisCountBlue);
-		innerSuchenPanel.setBounds(0, 170, screen.width-25, 40);
-		innerSuchenPanel.setLayout(null);
-		suchenPanel.add(innerSuchenPanel);
-		
-		searchTempPanel = new JPanel();
-		searchTempPanel.setBackground(MainView.darkBlack);
-		searchTempPanel.setBounds(0, 0, screen.width, 170);
-		searchTempPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-		suchenPanel.add(searchTempPanel);
-		searchTempPanel.setVisible(false);
-		
-		recommendPanel = new JPanel();
-		recommendPanel.setBackground(MainView.darkBlack);
-		recommendPanel.setPreferredSize(new Dimension(screen.width-40, 3000));
-		recommendPanel.setLayout(null);
-		
-		JScrollPane searchJSP = new JScrollPane(recommendPanel);
-		searchJSP.setBorder(null);
-		searchJSP.setPreferredSize(new Dimension(screen.width, 170));
-		searchTempPanel.add(searchJSP);
-		searchJSP.setVisible(true);
-		
-		JLabel suchenLabel = new JLabel("Suchen:");
-		suchenLabel.setBounds(20, 5, 400, 33);
-		suchenLabel.setFont(font_18);
-		innerSuchenPanel.add(suchenLabel);
-		
-		suchenField = new JTextField();
-		View_SuperClass.txtFieldDesign(suchenField);
-		suchenField.setBounds(100, 4, screen.width, 33);
-		suchenField.setFont(font_16);
-		suchenField.setBorder(new EmptyBorder(0, 10, 0, 0));
-		suchenField.setText("Eingabe...");
-		innerSuchenPanel.add(suchenField);
-		
+		setupSuchen();
 		
 	
 		
@@ -327,6 +284,10 @@ public static boolean isBANNED = false;
 		String[] namesKalkulationen = {"~  Bezugskalkulation", "~  Personalverrechnung", "~  Absatzkalkulation"};
 		panel_GiveAway = makeNewEntryOnSideBar("Kalkulationen", panelLeft, contentPane, screen, namesKalkulationen, llML.get(7));
 		
+		
+		String[] namesGroups = {"~  Meine Gruppen"};
+		makeNewEntryOnSideBar("Gruppen", panelLeft, contentPane, screen, namesGroups, null);
+		
 		String[] namesStats = {"~  Skill", "~  Abhängigkeit", "~  Beirag zur Community"};
 		makeNewEntryOnSideBar("Stats", panelLeft, contentPane, screen, namesStats, null);
 		
@@ -369,6 +330,55 @@ public static boolean isBANNED = false;
 		jSP.setPreferredSize(new Dimension(workPanel_Width-3, screen.height));
 		jSP.setVisible(true);
 		
+		
+	}
+	
+	private void setupSuchen() {
+		
+		suchenPanel = new JPanel();
+		suchenPanel.setOpaque(false);
+		suchenPanel.setBackground(new Color(0,0,0,0));
+		suchenPanel.setPreferredSize(new Dimension(screenWidth, 210));
+		suchenPanel.setLayout(null);
+		contentPane.add(suchenPanel, BorderLayout.SOUTH);
+		suchenPanel.setVisible(false);
+		
+		innerSuchenPanel = new JPanel();
+		innerSuchenPanel.setBackground(MainView.darkDisCountBlue);
+		innerSuchenPanel.setBounds(0, 170, screenWidth-25, 40);
+		innerSuchenPanel.setLayout(null);
+		suchenPanel.add(innerSuchenPanel);
+		
+		searchTempPanel = new JPanel();
+		searchTempPanel.setBackground(MainView.darkBlack);
+		searchTempPanel.setBounds(0, 0, screenWidth, 170);
+		searchTempPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		suchenPanel.add(searchTempPanel);
+		searchTempPanel.setVisible(false);
+		
+		recommendPanel = new JPanel();
+		recommendPanel.setBackground(MainView.darkBlack);
+		recommendPanel.setPreferredSize(new Dimension(screenWidth-40, 3000));
+		recommendPanel.setLayout(null);
+		
+		JScrollPane searchJSP = new JScrollPane(recommendPanel);
+		searchJSP.setBorder(null);
+		searchJSP.setPreferredSize(new Dimension(screenWidth, 170));
+		searchTempPanel.add(searchJSP);
+		searchJSP.setVisible(true);
+		
+		JLabel suchenLabel = new JLabel("Suchen:");
+		suchenLabel.setBounds(20, 5, 400, 33);
+		suchenLabel.setFont(font_18);
+		innerSuchenPanel.add(suchenLabel);
+		
+		suchenField = new JTextField();
+		View_SuperClass.txtFieldDesign(suchenField);
+		suchenField.setBounds(100, 4, screenWidth - 700, 33);
+		suchenField.setFont(font_16);
+		suchenField.setBorder(new EmptyBorder(0, 10, 0, 0));
+		suchenField.setText("Eingabe...");
+		innerSuchenPanel.add(suchenField);
 		
 	}
 	
@@ -473,7 +483,7 @@ public static boolean isBANNED = false;
 		JLabel sideBarSpacers = new JLabel();
 		LinkedList<JLabel> labels = makeEntryOnSidebar(panelMiddle, title, links, ML, panelLeft, sideBarSpacers);
 		
-		if(!title.equals("Stats"))
+		if(!title.equals("Stats") && !title.equals("Gruppen"))
 			makeSearchIcon(panelMiddle);
 			
 		makeSBLabels(panelMiddle, title, links, ML, panelLeft, sideBarSpacers, labels);
@@ -538,8 +548,6 @@ public static boolean isBANNED = false;
 	
 	private void makeSBLabels(JPanel panelMiddle, String title, String[] links, MouseListener ML, JPanel panelLeft, JLabel sideBarSpacers, LinkedList<JLabel> labels) {
 		
-		
-	
 		llSearchNames.add(entryOnSB);
 		Dimension dimension = new Dimension(310, 40);
 		entryOnSB.setMaximumSize(dimension);
@@ -620,6 +628,9 @@ public static boolean isBANNED = false;
 					
 					if(title.equals("Stats"))
 						((ML_Stats) llML.get(12)).paintGraphs(panelMiddle, labels);
+					
+					else if(title.equals("Gruppen"))
+						paintGroups(((ML_db) llML.get(9)).initGetAllGroups());
 					
 					
 				}
@@ -856,7 +867,7 @@ public static boolean isBANNED = false;
 		menuItemSuchen2.setAccelerator(KeyStroke.getKeyStroke('M', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItemSuchen2.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	suchenPanel.setVisible(false);
+		    	removeSuchenPanel();
 		    }
 		});
 		
@@ -988,6 +999,10 @@ public static boolean isBANNED = false;
 
 	}
 	
+	public void removeSuchenPanel() {
+		suchenPanel.setVisible(false);
+	}
+	
 	public static JPanel getPanel() {
 		return panel_GiveAway;
 	}
@@ -1032,8 +1047,51 @@ public static boolean isBANNED = false;
 			}
 		});
 	}
+	
+	public void makeSuchenWorkSpace() {
+		
+		searchTempPanel.setVisible(true);
+		suchenPanel.setVisible(true);
+		JRadioButton searchByClassButton = new JRadioButton();
+		searchByClassButton.setBounds(screenWidth - 500, 6, 300, 30);
+		searchByClassButton.setFont(font_17);
+		searchByClassButton.setForeground(Color.WHITE);
+		searchByClassButton.setBackground(MainView.darkDisCountBlue);
+		searchByClassButton.setText("nach Klassen suchen");
+		innerSuchenPanel.add(searchByClassButton);
+		addXImage();
+		suchenField.addKeyListener(new KeyListener() {
+			
+		    public void keyPressed(KeyEvent e) {
+		    	
+		    	if(e.getKeyChar() == 27)
+		    		suchenPanel.setVisible(false);
+		    	
+		    	else {
+		    		
+		    		recommendPanel.removeAll();
+		    		ySearch = 0;
+		    		recommendPanel.repaint();
+		    		ArrayList<String> resultList = ((ML_db) llML.get(9)).initSearchForStudents(suchenField.getText(), searchByClassButton.isSelected());
+		    		
+		    		for(int x = 0; x < resultList.size(); x++) {
+		    			
+		    			JLabel studentLabel = drawHits(((ML_db) llML.get(9)), resultList.get(x), "");
+		    			addIconsToStudentLabel(studentLabel);
+		    			addGroupInfo(studentLabel, resultList.get(x));
+		    			
+		    		}
+		    		
+		    	}
+		    }
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {}@Override public void keyTyped(KeyEvent arg0) {;}});
+		
+	}
 
 	private void doASearch(String searchText, String[] namesEKVK, String[] namesRechnungsausgleich, String[] namesSteuer, String[] namesTourismus, String[] namesPersonalverrechnung, String[] namesAusland, String[] namesAnlagenbwertung, String[] namesKalkulationen) {
+		
 		LinkedList<LinkedList<String>> allCalcs = new LinkedList<LinkedList<String>>();
 		
 		LinkedList<String> temp1 = new LinkedList<String>(Arrays.asList(namesEKVK));
@@ -1063,80 +1121,51 @@ public static boolean isBANNED = false;
 		allCalcs.add(temp8);
 		
 		for(int x = 0; x < allCalcs.size(); x++) {
+			
 			LinkedList<String> unterMenuArray = allCalcs.get(x);
 			
 			for(int y = 0; y < unterMenuArray.size()-1; y++) {
+				
 				String unterMenu = allCalcs.get(x).get(y);
 				
 					if(unterMenu.toLowerCase().contains(searchText.toLowerCase()))
 						drawHits(llML.get(x), unterMenu, unterMenuArray.getLast() + unterMenu);
 					
-						
-			}//inner for
-		}//outer for	
+			}
+			
+		}
 			
 	}
 	
 	
 	
-	private void drawHits(MouseListener ML, String target, String path) {
-		JLabel jb = new JLabel(target + path);
-		jb.addMouseListener(ML);
-		jb.setBackground(lightBlack);
-		jb.setOpaque(true);
-		jb.setForeground(Color.WHITE);
-		jb.setFont(font_16);
-		jb.setBorder(new EmptyBorder(0, 30, 0, 0));
-		jb.setBounds(20,  ySearch+10, screenWidth/2+300, 30);
-		recommendPanel.add(jb);
-		jb.add(makeDecorationPanels(0, darkDisCountBlue));
-		jb.add(makeDecorationPanels(screenWidth/2+290, Color.CYAN));
+	private JLabel drawHits(MouseListener ML, String target, String path) {
+
+		JLabel label = new JLabel(target + path);
+		label.addMouseListener(ML);
+		label.setBackground(lightBlack);
+		label.setOpaque(true);
+		label.setForeground(Color.WHITE);
+		label.setFont(font_16);
+		label.setBorder(new EmptyBorder(0, 30, 0, 0));
+		label.setBounds(20,  ySearch+10, screenWidth/2+300, 30);
+		recommendPanel.add(label);
 		
+		label.add(makeDecorationPanels(0, darkDisCountBlue));
+		label.add(makeDecorationPanels(screenWidth/2+290, Color.CYAN));
+		
+		recommendPanel.add(label);
 		ySearch = ySearch + 50;
 		recommendPanel.repaint();
+		
+		return label;
+		
 	}
 	
 	private void addXImage() {
-		BufferedImage xPic;
-		try {
-			xPic = ImageIO.read(new File("src/escapeSmall.png"));
-			JLabel picLabel = new JLabel(new ImageIcon(xPic));
-			picLabel.setBounds(screenWidth-60,  14,  14, 14);
-			innerSuchenPanel.add(picLabel);
-			picLabel.addMouseListener(new MouseListener() {
-
-				@Override
-				public void mouseClicked(java.awt.event.MouseEvent arg0) {
-					suchenPanel.setVisible(false);
-				}
-
-				@Override
-				public void mouseEntered(java.awt.event.MouseEvent arg0) {
-					setYourCursor(handCursor());
-					
-				}
-
-				@Override
-				public void mouseExited(java.awt.event.MouseEvent arg0) {
-					setYourCursor(normalCursor());
-					
-				}
-
-				@Override
-				public void mousePressed(java.awt.event.MouseEvent arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void mouseReleased(java.awt.event.MouseEvent arg0) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
-		}catch(Exception e) {
-			
-		}
+		JLabel escape = makeMenuLabels("src/escapeSmall.png", screenWidth - 60, 14, 8, 14, 14);
+		menuPanel.remove(escape);
+		innerSuchenPanel.add(escape);
 	}
 	
 	
@@ -1810,7 +1839,72 @@ public static boolean isBANNED = false;
 		legalWindowChange = false;
 		System.out.println("isFORBIDDEN!!");
 	}
+	
+	
+	
+	
+	
+//----------------------------------GROUPS----------------------
 
+	
+	public void paintGroups(ArrayList<String> groupList) {
+		
+		int margin = 70;
+		
+		for(int x = 0; x < groupList.size(); x++) {
+
+			JLabel groupAdd = makeMenuLabels("src/groupAdd.png", 700, 8, 9, 24, 14);
+			menuPanel.remove(groupAdd);
+			
+			JLabel trashCan = makeMenuLabels("src/trashCan.png", 735, 6, 9, 17, 20);
+			menuPanel.remove(trashCan);
+			
+			JPanel groupPanel = new JPanel();
+			groupPanel.setBounds(40, margin, 800, 30);
+			groupPanel.setBackground(MainView.lightBlack);
+			groupPanel.setLayout(null);
+			turnedOnPanel.add(groupPanel);	
+			
+			JLabel groupLabel = new JLabel();
+			groupLabel.setBounds(10, 1, 300, 30);
+			groupLabel.setForeground(Color.WHITE);
+			groupLabel.setFont(font_16);
+			groupLabel.setText(groupList.get(x));
+			groupPanel.add(groupLabel);
+			
+			groupPanel.add(groupAdd);
+			groupPanel.add(trashCan);
+			
+			margin += 40;
+			
+		}
+		
+		turnedOnPanel.repaint();
+		
+	}
+	
+	private void addIconsToStudentLabel(JLabel studentLabel) {
+		
+		JLabel studentAdd = makeMenuLabels("src/studentAdd.png", 900, 5, 9, 24, 18);
+		menuPanel.remove(studentAdd);
+		
+		studentLabel.add(studentAdd);
+		
+	}
+	
+	private void addGroupInfo(JLabel studentLabel, String studentInfo) {
+		
+		JLabel groupInfo = new JLabel();
+		groupInfo.setBounds(500, 0, 200, 30);
+		groupInfo.setFont(font_16);
+		groupInfo.setForeground(Color.ORANGE);
+		studentLabel.add(groupInfo);
+		
+		 String message = ((ML_db) llML.get(9)).initCheckIfStudentInGroup(studentInfo);
+		 groupInfo.setText(message);
+		
+	}
+	
 
 
 
@@ -1819,15 +1913,12 @@ public static boolean isBANNED = false;
 		return workPanel;
 	}
 
-
-
 	public void getMLList(LinkedList<MouseListener> llML) {
 		this.llML = llML;
 	}
 
+	public void removeGroupFromMiddlePanel(JPanel groupPanel) {
+		turnedOnPanel.remove(groupPanel);
+	}
 
-
-	
-	
-	
 }
