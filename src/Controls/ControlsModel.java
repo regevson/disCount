@@ -70,7 +70,7 @@ public class ControlsModel {
 
 	public void turnOnCloud(JLabel jltemp) {
 		MainView.menuPanel.remove(jltemp);
-		JLabel label = MainView.makeMenuLabels("src/cloudON.gif", 310, 1, 8, 51, 51);
+		JLabel label = MainView.makeMenuLabels("src/cloudON.gif", "Lösungsvorschläge deaktivieren", 310, 1, 8, 51, 51);
 		MainView.menuPanel.add(label);
 		MainView.menuPanel.repaint();
 		MainView.suggestionsEnabled = true;		
@@ -78,7 +78,7 @@ public class ControlsModel {
 
 	public void turnOffCloud(JLabel jltemp) {
 		MainView.menuPanel.remove(jltemp);
-		JLabel label = MainView.makeMenuLabels("src/cloudOFF.png", 310, 1, 8, 52, 51);
+		JLabel label = MainView.makeMenuLabels("src/cloudOFF.png", "Lösungsvorschläge aktivieren", 310, 1, 8, 52, 51);
 		MainView.menuPanel.add(label);
 		MainView.menuPanel.repaint();
 		MainView.suggestionsEnabled = false;

@@ -309,6 +309,14 @@ public class MainController{
 		mainView.removeGroupFromMiddlePanel(parent);
 	}
 
+	public void execMakeAllStudentsWorkSpace(ArrayList<String> studentList) {
+		mainView.makeAllStudentsWorkSpace(studentList);
+	}
+
+	public ArrayList<JPanel> execGetGroupPanelList() {
+		return mainView.getGroupPanelList();
+	}
+
 	
 
 	

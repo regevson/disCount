@@ -306,7 +306,7 @@ public class Buchungssatz implements MouseListener{
 	
 	public void addInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, MouseListener ML) {
 		
-		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", 17, 120, 9, 18, 18);
+		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", "Informationen", 17, 120, 9, 18, 18);
 		infoLabel.addMouseListener(this);
 		bsNumberPanel.add(infoLabel);
 		
@@ -337,7 +337,7 @@ public class Buchungssatz implements MouseListener{
 	
 	public void addInfoToPanel(String message) {
 		
-		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", 17, 120, 9, 18, 18);
+		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", "Informationen", 17, 120, 9, 18, 18);
 		infoLabel.addMouseListener(this);
 		bsNumberPanel.add(infoLabel);
 		

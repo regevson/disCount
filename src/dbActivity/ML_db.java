@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import View.MainController;
 import View.MainModel;
@@ -20,6 +21,7 @@ import extraViews.ExamLobby;
 import extraViews.ExamSetupView;
 import extraViews.InsertExamIDView;
 import extraViews.MessageBox;
+import extraViews.NewGroupView;
 import extraViews.Setup_View;
 import extraViews.WaitForStartSignalView;
 
@@ -35,9 +37,11 @@ public class ML_db implements MouseListener{
 	
 	
 	public ML_db(MainController mainController, Setup_View setupView) {
+		
 		myController = new Controller_dbActivity(mainController, setupView);
 		mainController.getControllerList().addLast(myController);
 		this.setupView = setupView;
+		
 	}
 
 	
@@ -78,8 +82,10 @@ public class ML_db implements MouseListener{
 	}
 	
 	public void initPrintComments(String solutionID) {
+		
 		myController.initTellViewToRemoveExerciseSelectionPanel();
 		myController.execPrintComments(solutionID);
+		
 	}
 	
 	public int initGetCommentCount() {
@@ -91,9 +97,11 @@ public class ML_db implements MouseListener{
 	}
 	
 	public String initOpenSolution() {
+		
 		myController.initOpenProject();
 		solution = MainModel.getCodeOnWorkPanel();
 		return solution;
+		
 	}
 	
 	public void setStudentCount(int studentCount) {
@@ -101,6 +109,7 @@ public class ML_db implements MouseListener{
 	}
 	
 	public void continueWithStudentLogin(boolean enableBSHelp) {
+		
 		int pid = myController.execSetUpExamOnDB(solution, studentCount, enableBSHelp);
 		ExamLobby lobby = new ExamLobby(this, pid);
 		lobby.setVisible(true);
@@ -108,6 +117,7 @@ public class ML_db implements MouseListener{
 		myController.setStudentCount(this.studentCount);
 		myController.setTimer(new Timer());
 		new Thread(myController.scanForLobbyJoins).start();
+		
 	}
 	
 	public void initProvideStartSignal() {
@@ -130,6 +140,7 @@ public class ML_db implements MouseListener{
 	}
 	
 	public void initSignInStudent(String pid) {
+		
 		myController.setPID(Integer.parseInt(pid));
 		System.out.println("Passed PID: " + Integer.parseInt(pid));
 		WaitForStartSignalView waitView = new WaitForStartSignalView();
@@ -137,21 +148,26 @@ public class ML_db implements MouseListener{
 		myController.setWaitView(waitView);
 		
 		myController.execSignInStudent();
+		
 	}
 	
 	public void initHandInExam() {
+		
 		double percentage = myController.execHandInExam(myController.initGetWorkPanel());
 		MessageBox msg = new MessageBox("Resultat", "Du hast " + percentage + "% erreicht!", "Gratulation!");
 		msg.setVisible(true);
+		
 	}
 	
 	public void openAuswertungView() {
+		
 		ExamEvaluationView ee = new ExamEvaluationView();
 		ee.setVisible(true);
 		ArrayList<String> percentList = myController.execGetEvaluation();
 		ee.displayEvaluation(percentList);
 		
 		myController.execDeleteExam();
+		
 	}
 	
 	public void initNotifyTeacherOfLeave() {
@@ -178,12 +194,16 @@ public class ML_db implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		
 		if(!(e.getSource() instanceof JLabel)) { //dann Antwort-Button
+			
 			if(button == null) {
+				
 				button = (JButton) e.getSource();
 				myController.initProvideAnswerPanel(button.getText());
+				
 			}
 			
 			else {
+				
 				String qORA = ((JTextArea)((JScrollPane) (((JButton) e.getSource()).getParent().getComponent(2))).getViewport().getView()).getText();
 				LinkedList<QuestionComment> questionList = myController.initGetQuestionList();
 				
@@ -200,7 +220,9 @@ public class ML_db implements MouseListener{
 				myController.initRemoveNewQuestionPanel();
 				myController.initCloseAnswerPanel();
 				button = null;
+				
 			}
+			
 		}
 		
 		else {
@@ -208,23 +230,43 @@ public class ML_db implements MouseListener{
 			JLabel jltemp = (JLabel) e.getSource();
 			
 			if(jltemp.getIcon().toString().equals("src/exit_white.png")) {
+				
 				myController.initCloseAnswerPanel();
 				button = null;
+				
 			}
 			
-			else if(jltemp.getIcon().toString().equals("src/groupAdd.png")) {
+			else if(jltemp.getIcon().toString().equals("src/addStudents.png")) {
+				
 				db_Model.currentGroup = ((JLabel) jltemp.getParent().getComponent(0)).getText();
 				myController.initSetupSuchenWorkSpace();
+				
 			}
 			
+			else if(jltemp.getIcon().toString().equals("src/allStudentsInGroup.png")) {
+				ArrayList<String> studentList = myController.execGetAllStudentsInGroup(((JLabel) jltemp.getParent().getComponent(0)).getText());
+				myController.initMakeAllStudentsWorkSpace(studentList);
+			}
+			
+			
 			else if(jltemp.getIcon().toString().equals("src/trashCan.png")) {
+				
 				myController.execRemoveGroup(((JLabel) jltemp.getParent().getComponent(0)).getText());
-				myController.initPaintGroups(initGetAllGroups());
+				
 				myController.initRemoveGroupFromMiddlePanel((JPanel) jltemp.getParent());
+				myController.initPaintGroups(initGetAllGroups());
+				
 			}
 			
 			else if(jltemp.getIcon().toString().equals("src/studentAdd.png"))
 				myController.execAddStudentToGroup(((JLabel) jltemp.getParent()).getText());
+			
+			else if(jltemp.getIcon().toString().equals("src/addGroup.png")) {
+				
+				NewGroupView ngv = new NewGroupView("Geben Sie einen Gruppennamen ein", "Gruppenname", "Erstellen", this);
+				ngv.setVisible(true);
+				
+			}
 			
 		}
 		
@@ -260,6 +302,13 @@ public class ML_db implements MouseListener{
 	
 	public String initCheckIfStudentInGroup(String studentInfo) {
 		return myController.execCheckIfStudentInGroup(studentInfo);
+	}
+	
+	public void initCreateNewGroup(String groupName) {
+		
+		myController.execCreateNewGroup(groupName);
+		myController.initPaintGroups(initGetAllGroups());
+		
 	}
 	
 	
@@ -298,20 +347,6 @@ public class ML_db implements MouseListener{
 		
 	}
 
-
-	
-
-
-	
-
-
-	
-
-
-	
-
-
-	
 
 
 

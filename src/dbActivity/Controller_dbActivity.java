@@ -135,7 +135,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	
 	
 	public void execUploadToDB(String jahrgang, String seite, String nummer) {
-		myModel.uploadToDB(jahrgang, seite, nummer);
+		myModel.uploadToDB(jahrgang, seite, nummer, MC.execGetGroupPanelList());
 	}
 
 	public void initSaveProject() {
@@ -545,6 +545,18 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public String execCheckIfStudentInGroup(String studentInfo) {
 		return myModel.checkIfStudentInGroup(studentInfo);
+	}
+
+	public void execCreateNewGroup(String groupName) {
+		myModel.createNewGroup(groupName);
+	}
+
+	public ArrayList<String> execGetAllStudentsInGroup(String groupName) {
+		return myModel.getAllStudentsInGroup(groupName);
+	}
+
+	public void initMakeAllStudentsWorkSpace(ArrayList<String> studentList) {
+		MC.execMakeAllStudentsWorkSpace(studentList);
 	}
 
 

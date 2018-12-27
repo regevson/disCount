@@ -18,14 +18,14 @@ import javax.swing.border.LineBorder;
 import View.MainView;
 import dbActivity.ML_db;
 
-public class InsertExamIDView extends JFrame {
+public class NewGroupView extends JFrame {
 
 	private JPanel contentPane;
 
 
 	
 	
-	public InsertExamIDView(ML_db ML) {
+	public NewGroupView(String labelText, String textFieldText, String buttonText, ML_db ML) {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
@@ -40,19 +40,19 @@ public class InsertExamIDView extends JFrame {
 		
 		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
 		
-		JLabel lblGebenSieDie = new JLabel("Geben Sie die Pr\u00FCfungs-ID ein!");
-		lblGebenSieDie.setFont(MainView.font_20);
-		lblGebenSieDie.setForeground(MainView.disCountBlue);
-		lblGebenSieDie.setBounds(151, 33, 400, 55);
-		contentPane.add(lblGebenSieDie);
+		JLabel label = new JLabel(labelText);
+		label.setFont(MainView.font_20);
+		label.setForeground(MainView.disCountBlue);
+		label.setBounds(151, 33, 400, 55);
+		contentPane.add(label);
 		
-		JTextField txtId = new JTextField();
-		txtId.setText("ID");
-		txtId.setBounds(221, 154, 140, 39);
-		View_SuperClass.txtFieldDesign(txtId);
-		contentPane.add(txtId);
+		JTextField tf = new JTextField();
+		tf.setText(textFieldText);
+		tf.setBounds(221, 154, 140, 39);
+		View_SuperClass.txtFieldDesign(tf);
+		contentPane.add(tf);
 		
-		JButton btnJoin = new JButton("Beitreten");
+		JButton btnJoin = new JButton(buttonText);
 		btnJoin.setBackground(MainView.darkBlack);
 		btnJoin.setForeground(Color.WHITE);
 		btnJoin.setContentAreaFilled(false);
@@ -64,8 +64,7 @@ public class InsertExamIDView extends JFrame {
 			
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				
-				ML.initSignInStudent(txtId.getText());
-				ML.execScanForStartSignal();
+				ML.initCreateNewGroup(tf.getText());
 				dispose();
 				
 			}

@@ -15,14 +15,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -58,6 +55,7 @@ import extraViews.ExerciseAvailabilityChecker_View;
 import extraViews.InfoView;
 import extraViews.InsertExamIDView;
 import extraViews.MessageBox;
+import extraViews.NewGroupView;
 import extraViews.Personalverrechnung_Settings_View;
 import extraViews.TeacherRegistration;
 import extraViews.View_SuperClass;
@@ -174,6 +172,8 @@ public static boolean isBANNED = false;
 	private JMenuBar menuBar;
 
 	private JMenuBar tempMenuBar;
+
+	public ArrayList<JPanel> groupPanelList;
 
 	private static JRadioButton onlyTeacherSolutions;
 	
@@ -335,13 +335,24 @@ public static boolean isBANNED = false;
 	
 	private void setupSuchen() {
 		
-		suchenPanel = new JPanel();
-		suchenPanel.setOpaque(false);
-		suchenPanel.setBackground(new Color(0,0,0,0));
-		suchenPanel.setPreferredSize(new Dimension(screenWidth, 210));
-		suchenPanel.setLayout(null);
-		contentPane.add(suchenPanel, BorderLayout.SOUTH);
-		suchenPanel.setVisible(false);
+		if(suchenPanel == null) {
+			
+			suchenPanel = new JPanel();
+			suchenPanel.setOpaque(false);
+			suchenPanel.setBackground(new Color(0,0,0,0));
+			suchenPanel.setPreferredSize(new Dimension(screenWidth, 210));
+			suchenPanel.setLayout(null);
+			contentPane.add(suchenPanel, BorderLayout.SOUTH);
+			suchenPanel.setVisible(false);
+			
+		}
+		
+		else {
+			
+			suchenPanel.removeAll();
+			ySearch = 0;
+			
+		}
 		
 		innerSuchenPanel = new JPanel();
 		innerSuchenPanel.setBackground(MainView.darkDisCountBlue);
@@ -485,6 +496,9 @@ public static boolean isBANNED = false;
 		
 		if(!title.equals("Stats") && !title.equals("Gruppen"))
 			makeSearchIcon(panelMiddle);
+		
+		else if(title.equals("Gruppen"))
+			addAddGroupIcon(labels);
 			
 		makeSBLabels(panelMiddle, title, links, ML, panelLeft, sideBarSpacers, labels);
 		
@@ -493,6 +507,16 @@ public static boolean isBANNED = false;
 	}
 	
 	
+	private void addAddGroupIcon(LinkedList<JLabel> labels) {
+		
+		JLabel studentAdd = makeMenuLabels("src/addGroup.png", "Gruppe erstellen", 900, 4, 9, 21, 21);
+		menuPanel.remove(studentAdd);
+		labels.get(0).add(studentAdd);
+		
+	}
+
+
+
 	private JPanel makeMiddlePanel() {
 		
 		JPanel panelMiddle = new JPanel();
@@ -1017,21 +1041,28 @@ public static boolean isBANNED = false;
 	}
 	
 	private void makeSuchenWorkSpace(String[] namesEKVK, String[] namesRechnungsausgleich, String[] namesSteuer, String[] namesTourismus, String[] namesPersonalverrechnung, String[] namesAusland, String[] namesAnlagenbwertung, String[] namesKalkulationen) {
+		
+		setupSuchen();
+		
 		searchTempPanel.setVisible(true);
 		suchenPanel.setVisible(true);
 		addXImage();
 
 		suchenField.addKeyListener(new KeyListener() {
 		    public void keyPressed(KeyEvent e) {
+		    	
 		    	if(e.getKeyChar() == 27)
 		    		suchenPanel.setVisible(false);
 		    	
 		    	else {
+		    		
 		    		recommendPanel.removeAll();
 		    		ySearch = 0;
 		    		recommendPanel.repaint();
 		    		doASearch(suchenField.getText(), namesEKVK, namesRechnungsausgleich, namesSteuer, namesTourismus, namesPersonalverrechnung, namesAusland, namesAnlagenbwertung, namesKalkulationen);
+		    	
 		    	}
+		    	
 		    }
 
 			@Override
@@ -1046,9 +1077,12 @@ public static boolean isBANNED = false;
 				
 			}
 		});
+		
 	}
 	
 	public void makeSuchenWorkSpace() {
+		
+		setupSuchen();
 		
 		searchTempPanel.setVisible(true);
 		suchenPanel.setVisible(true);
@@ -1087,6 +1121,21 @@ public static boolean isBANNED = false;
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {}@Override public void keyTyped(KeyEvent arg0) {;}});
+		
+	}
+	
+	public void makeAllStudentsWorkSpace(ArrayList<String> studentList) {
+		
+		setupSuchen();
+		
+		searchTempPanel.setVisible(true);
+		suchenPanel.setVisible(true);
+		suchenField.setEditable(false);
+		addXImage();
+		
+		for(int x = 0; x < studentList.size(); x++) {
+			drawHits(null, studentList.get(x), "");
+		}
 		
 	}
 
@@ -1163,7 +1212,7 @@ public static boolean isBANNED = false;
 	}
 	
 	private void addXImage() {
-		JLabel escape = makeMenuLabels("src/escapeSmall.png", screenWidth - 60, 14, 8, 14, 14);
+		JLabel escape = makeMenuLabels("src/escapeSmall.png", "Schließen", screenWidth - 60, 14, 8, 14, 14);
 		menuPanel.remove(escape);
 		innerSuchenPanel.add(escape);
 	}
@@ -1198,23 +1247,18 @@ public static boolean isBANNED = false;
 		menuPanel.setBorder(new MatteBorder(0,0,3,0, MainView.disCountBlue));
 		tempPanel.add(menuPanel);
 		
-		addPic = makeMenuLabels("src/addPic.png", 20, -1, 8, 60, 60);
-		addPic.setToolTipText("Buchungssatz erstellen");
+		addPic = makeMenuLabels("src/addPic.png", "Buchungssatz erstellen", 20, -1, 8, 60, 60);
 		
-		checkedPic = makeMenuLabels("src/checkedPic.png", 90, -4, 8, 60, 60);
-		checkedPic.setToolTipText("Buchungssatz fertig");
+		checkedPic = makeMenuLabels("src/checkedPic.png", "Buchungssatz fertig", 90, -4, 8, 60, 60);
 		
-		tableViewPic = makeMenuLabels("src/table_icon.png", 195, -4, 10, 60, 60);
-		tableViewPic.setToolTipText("Tabellenansicht");
+		tableViewPic = makeMenuLabels("src/table_icon.png", "Tabellenansicht", 195, -4, 10, 60, 60);
 		
-		cloudPic = makeMenuLabels("src/cloudOFF.png", 310, 1, 8, 52, 51);
-		cloudPic.setToolTipText("Lösungsvorschläge");
+		cloudPic = makeMenuLabels("src/cloudOFF.png", "Lösungsvorschläge", 310, 1, 8, 52, 51);
 		
-		bsCheck = makeMenuLabels("src/bsCheck.png", 410, 1, 8, 76, 68);
-		bsCheck.setToolTipText("Fehlerkorrektur");
+		bsCheck = makeMenuLabels("src/bsCheck.png", "Fehlerkorrektur", 410, 1, 8, 76, 68);
 		bsCheck.setEnabled(false);
 		
-		JLabel collapsePic = makeMenuLabels("src/collapse.png", 540, -5, 8, 60, 60);
+		JLabel collapsePic = makeMenuLabels("src/collapse.png", "Panel minimieren", 540, -5, 8, 60, 60);
 		collapsePic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 			}
@@ -1228,13 +1272,14 @@ public static boolean isBANNED = false;
 	}
 	
 	
-	public static JLabel makeMenuLabels(String source, int x, int y, int mouseListener, int width, int height) {
+	public static JLabel makeMenuLabels(String source, String toolTipText, int x, int y, int mouseListener, int width, int height) {
 		ImageIcon icon = new ImageIcon(source);
 		JLabel picLabel = new JLabel(icon);
 		picLabel.setBounds(x, y, width, height);
 		picLabel.setFont(font_17);
 		menuPanel.add(picLabel);
 		picLabel.addMouseListener(llML.get(mouseListener));
+		picLabel.setToolTipText(toolTipText);
 		return picLabel;
 	}
 	
@@ -1362,7 +1407,7 @@ public static boolean isBANNED = false;
 		onlyTeacherSolutions.setText("nur Lehrerlösungen");
 		grammarCheckPanel.add(onlyTeacherSolutions);
 		
-		JLabel checkTHEMPic = makeMenuLabels("src/checkTHEM.png", workPanel_Width-90, 2, 8, 88, 55);
+		JLabel checkTHEMPic = makeMenuLabels("src/checkTHEM.png", "Los", workPanel_Width-90, 2, 8, 88, 55);
 		checkTHEMPic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				if(check)
@@ -1849,21 +1894,32 @@ public static boolean isBANNED = false;
 	
 	public void paintGroups(ArrayList<String> groupList) {
 		
+		if(groupPanelList == null)
+			groupPanelList = new ArrayList<JPanel>();
+		
 		int margin = 70;
 		
 		for(int x = 0; x < groupList.size(); x++) {
 
-			JLabel groupAdd = makeMenuLabels("src/groupAdd.png", 700, 8, 9, 24, 14);
+			JLabel groupAdd = makeMenuLabels("src/addStudents.png", "Schüler hinzufügen", 665, 8, 9, 24, 14);
 			menuPanel.remove(groupAdd);
 			
-			JLabel trashCan = makeMenuLabels("src/trashCan.png", 735, 6, 9, 17, 20);
+			JLabel allStudents = makeMenuLabels("src/allStudentsInGroup.png", "Alle Mitglieder dieser Gruppe anzeigen", 700, 3, 9, 24, 24);
+			menuPanel.remove(allStudents);
+			
+			JLabel trashCan = makeMenuLabels("src/trashCan.png", "Gruppe löschen", 735, 6, 9, 17, 20);
 			menuPanel.remove(trashCan);
+			
+			JRadioButton jrb = new JRadioButton();
+			jrb.setBackground(MainView.lightBlack);
+			jrb.setBounds(770, 0, 50, 30);
 			
 			JPanel groupPanel = new JPanel();
 			groupPanel.setBounds(40, margin, 800, 30);
 			groupPanel.setBackground(MainView.lightBlack);
 			groupPanel.setLayout(null);
-			turnedOnPanel.add(groupPanel);	
+			turnedOnPanel.add(groupPanel);
+			groupPanelList.add(groupPanel);
 			
 			JLabel groupLabel = new JLabel();
 			groupLabel.setBounds(10, 1, 300, 30);
@@ -1873,7 +1929,9 @@ public static boolean isBANNED = false;
 			groupPanel.add(groupLabel);
 			
 			groupPanel.add(groupAdd);
+			groupPanel.add(allStudents);
 			groupPanel.add(trashCan);
+			groupPanel.add(jrb);
 			
 			margin += 40;
 			
@@ -1885,7 +1943,7 @@ public static boolean isBANNED = false;
 	
 	private void addIconsToStudentLabel(JLabel studentLabel) {
 		
-		JLabel studentAdd = makeMenuLabels("src/studentAdd.png", 900, 5, 9, 24, 18);
+		JLabel studentAdd = makeMenuLabels("src/studentAdd.png", "Diesen Schüler hinzufügen", 900, 5, 9, 24, 18);
 		menuPanel.remove(studentAdd);
 		
 		studentLabel.add(studentAdd);
@@ -1918,7 +1976,15 @@ public static boolean isBANNED = false;
 	}
 
 	public void removeGroupFromMiddlePanel(JPanel groupPanel) {
-		turnedOnPanel.remove(groupPanel);
+		
+		for(int x = 0; x < groupPanelList.size(); x++) {
+			turnedOnPanel.remove(groupPanelList.get(x));
+		}
+		
+	}
+
+	public ArrayList<JPanel> getGroupPanelList() {
+		return groupPanelList;
 	}
 
 }

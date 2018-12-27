@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,6 +18,7 @@ import java.util.LinkedList;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import View.Buchungssatz;
 import View.MainModel;
@@ -303,7 +303,7 @@ public class db_Model {
 	}
 	
 	
-	public void uploadToDB(String jahrgang, String seite, String nummer) {
+	public void uploadToDB(String jahrgang, String seite, String nummer, ArrayList<JPanel> groupPanelList) {
 		
 		if(checkExerciseAvailability(jahrgang, seite, nummer)) {
 			MessageBox mb = new MessageBox("Fehler beim Hochladen", "Eine Lösung dieser Aufgabe existiert bereits!", "Bitte versuche eine andere Lösung hochzuladen.\n"
@@ -319,12 +319,13 @@ public class db_Model {
 		if(exercise == null || exercise.equals(""))
 			return;
 		
+		String groupIDs = checkForGroups(groupPanelList);
 		
 		String code_str = MainModel.getCodeOnWorkPanel();
 		
 		 try {
 			st = conn.createStatement();
-			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (uploaderID, code, codeInfo) VALUES ('" + myID + "','" + code_str + "'," + "'" + exercise + "'" + ")");
+			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (uploaderID, code, codeInfo, groupIDs) VALUES ('" + myID + "','" + code_str + "'," + "'" + exercise + "'," + "'" + groupIDs + "'" + ")");
 			
 			increaseCommunityStats(1);
 			checkAdded();
@@ -339,6 +340,27 @@ public class db_Model {
 	
 	
 	
+	private String checkForGroups(ArrayList<JPanel> groupPanelList) {
+		
+		String groupIDs = "";
+		
+		if(groupPanelList == null)
+			return "";
+		
+		for(int x = 0; x < groupPanelList.size(); x++) {
+			
+			if(((JRadioButton) groupPanelList.get(x).getComponent(groupPanelList.get(x).getComponentCount() - 1)).isSelected())
+				groupIDs += getGroupIDByName(((JLabel) groupPanelList.get(x).getComponent(0)).getText()) + "#";
+			
+		}
+		
+		return groupIDs;
+		
+	}
+
+
+
+
 	private void increaseSkillStats() throws SQLException {
 		st = conn.createStatement();
 		st.executeUpdate("UPDATE users SET skill='" + skill + "' WHERE email='" + email + "'");
@@ -508,8 +530,9 @@ public class db_Model {
 	public String[] getBestARMatch(String codeInfo, boolean onlyTS) {
 		
 		try {
+			
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT id, uploaderID, code, codeInfo, upVotes, downVotes, commentCount, comments FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
+			rs = st.executeQuery("SELECT id, uploaderID, code, codeInfo, upVotes, downVotes, commentCount, comments, groupIDs FROM usersolutions" + schoolType.toLowerCase() + " WHERE codeInfo='" + codeInfo + "' ORDER BY upVotes DESC");
 			
 			
 			String highestCode = "";
@@ -529,14 +552,27 @@ public class db_Model {
 				highestUploaderTier = info[1];
 				
 				if(rs.getInt("upVotes") > highestUpvotes || highestUploaderTier.equals("teacher")) {
+					
 					highestCode = rs.getString("code");
 					highestUpvotes = rs.getInt("upVotes");
 					highestDownvotes = rs.getInt("downVotes");
 					highestCommentCount = rs.getInt("commentCount");
 					highestSolutionID = rs.getString("id");
 
-					if(highestUploaderTier.equals("teacher"))
-						break;
+					if(highestUploaderTier.equals("teacher")) {
+						
+						if(checkIfStudentInAllowedGroup(rs.getString("groupIDs")))
+							break;
+							
+						else {
+
+							highestCode = "";
+							highestUpvotes = -1;
+							
+						}
+						
+					}
+					
 				}
 
 			}
@@ -549,8 +585,10 @@ public class db_Model {
 				MainView.addNoteToCheckPanel("Es gibt noch keine Leherlösung!");
 
 			else {
+				
 				MainView.addNoteToCheckPanel("\u00a9" + highestUsername + "  " + "(" + highestUpvotes + " Like(s))");
 				return new String[] {highestCode, highestUsername, Integer.toString(highestUpvotes), Integer.toString(highestDownvotes), Integer.toString(highestCommentCount), highestSolutionID, highestUploaderTier};
+			
 			}
 
 		} catch(Exception e) {e.printStackTrace();}
@@ -564,6 +602,32 @@ public class db_Model {
 	
 		
 		
+	private boolean checkIfStudentInAllowedGroup(String groupIDs) {
+		
+		int groupID = getGroupIDByEmail(email);
+		
+		int startIndex = 0;
+
+		for(int x = 0; x < MainModel.countOccurencesOfChar(groupIDs, "#"); x++) {
+			
+			String allowedGroup = groupIDs.substring(startIndex, groupIDs.indexOf("#"));
+			
+			if(groupID == Integer.parseInt(allowedGroup))
+				return true;
+			
+			System.out.println(groupID + " diesnt equal " + allowedGroup);
+			
+			groupIDs = groupIDs.substring(groupIDs.indexOf("#") + 1);
+		
+		}
+		
+		return false;
+		
+	}
+
+
+
+
 	private String[] getUsernameAndUploaderTier(String uploaderID) {
 		
 		try {
@@ -1558,14 +1622,43 @@ public class db_Model {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT id FROM groups WHERE groupName='" + db_Model.currentGroup + "' AND groupAdmin='" + myID + "'");
-			
-			if(rs.next())
-				groupID = rs.getInt("id");
+			groupID = getGroupIDByName(db_Model.currentGroup);
 			
 			st.executeUpdate("UPDATE users SET groupID='" + groupID + "' WHERE email='" + studentEmail + "'");
 		
 		} catch (SQLException e) {e.printStackTrace();}
+		
+	}
+	
+	public int getGroupIDByName(String groupName) {
+		
+		try {
+			
+			rs = st.executeQuery("SELECT id FROM groups WHERE groupName='" + groupName + "' AND groupAdmin='" + myID + "'");
+			
+			if(rs.next())
+				return rs.getInt("id");
+			
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return 0;
+		
+	}
+	
+	
+	
+	public int getGroupIDByEmail(String email) {
+		
+		try {
+			
+			rs = st.executeQuery("SELECT groupID FROM users WHERE email='" + email + "'");
+			
+			if(rs.next())
+				return rs.getInt("groupID");
+			
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return 0;
 		
 	}
 	
@@ -1595,11 +1688,44 @@ public class db_Model {
 			return "ist Mitglied bei " + groupName;
 			
 		
-		} catch (SQLException e) {e.printStackTrace();}
+		} catch(SQLException e) {e.printStackTrace();}
 		
 		return groupName;
 		
 	}
+	
+
+	public void createNewGroup(String groupName) {
+		
+		try {
+			
+			st.executeUpdate("INSERT INTO groups (groupName, groupAdmin) VALUES ('" + groupName + "', '" + myID + "')");
+		
+		} catch(SQLException e) {e.printStackTrace();}
+		
+	}
+	
+
+	public ArrayList<String> getAllStudentsInGroup(String groupName) {
+	
+		ArrayList<String> studentList = new ArrayList<String>();
+		
+		try {
+			
+			int groupID = getGroupIDByName(groupName);
+
+			rs = st.executeQuery("SELECT name, email, class FROM users WHERE groupID='" + groupID + "'");
+			
+			while(rs.next())
+				studentList.add(rs.getString("email") + "  |  " + rs.getString("name") + "  |  " + rs.getString("class"));
+
+		} catch(SQLException e) {e.printStackTrace();}
+		
+		return studentList;
+		
+	}
+
+
 
 
 
@@ -1690,8 +1816,8 @@ public class db_Model {
 	public ArrayList<Integer> getExamBSList() {
 		return examBSList;
 	}
-	
-	
+
+
 
 
 
