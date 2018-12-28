@@ -72,11 +72,20 @@ public class Bezugskalkulation_View extends JFrame {
 			setContentPane(contentPane);
 			contentPane.setLayout(null);
 			
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+			
 			JLabel lblHeading = new JLabel("Bezugsspesenkalkulation");
 			lblHeading.setFont(MainView.font_20);
 			lblHeading.setForeground(Color.WHITE);
 			lblHeading.setBounds(136, 35, 240, 42);
 			contentPane.add(lblHeading);
+			
+			JLabel infoLabel = new JLabel("Unbenutzte Felder 0-setzen!");
+			infoLabel.setBounds(20, 570, 200, 30);
+			infoLabel.setFont(MainView.font_16);
+			infoLabel.setForeground(Color.WHITE);
+			contentPane.add(infoLabel);
 			
 			int x = 71;
 			int y = 130;
@@ -143,7 +152,7 @@ public class Bezugskalkulation_View extends JFrame {
 					setUpStuff();
 					dispose();
 					++(MainView.kalkulationsOpen);
-					MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + MainView.kalkulationsOpen);
+					MainView.llSearchNames.get(MainView.llSearchNames.size() - 3).setText("Kalkulationen" + "   " + MainView.kalkulationsOpen);
 				}
 	
 			});
@@ -304,7 +313,7 @@ public class Bezugskalkulation_View extends JFrame {
 				tempPanel.setVisible(true);
 				mainPane.setVisible(false);
 				mainPane = null;
-				MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + --MainView.kalkulationsOpen);
+				MainView.llSearchNames.get(MainView.llSearchNames.size() - 3).setText("Kalkulationen" + "   " + --MainView.kalkulationsOpen);
 			}
 
 		});

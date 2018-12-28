@@ -27,14 +27,17 @@ public class ML_Controls implements MouseListener{
 	
 
 	public ML_Controls(MainController mainController) {
+		
 		MC = mainController;
 		myModel = new ControlsModel();
+		
 	}
 
 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		
 		JLabel jltemp = (JLabel) e.getSource();
 		
 		if(jltemp.getIcon().toString().equals("src/addBS.png") && jltemp.isEnabled())
@@ -52,25 +55,36 @@ public class ML_Controls implements MouseListener{
 			myModel.switchRightToLeft();
 		
 		else if(jltemp.getIcon().toString().equals("src/cloudON.gif")) {
+			
 			myModel.turnOffCloud(jltemp);
 			MC.tellViewToRemoveExerciseSelectionPanel();
+			
 		}
 		
 		else if(jltemp.getIcon().toString().equals("src/cloudOFF.png") && db_Model.allowSolutions && !Controller_dbActivity.inExam && MainView.databaseIsActive) {
+			
 			myModel.turnOnCloud(jltemp);
 			MC.tellViewToAddExerciseSelectionPanel(false);
+			
 		}
 		
 		
 		else if(jltemp.getIcon().toString().equals("src/bsCheck.png") && db_Model.allowSolutions == true && !Controller_dbActivity.inExam && MainView.databaseIsActive) {
+			
 			if(jltemp.isEnabled()) {
+				
 				jltemp.setEnabled(false);
 				MC.tellViewToRemoveExerciseSelectionPanel();
+				
 			}
+			
 			else {
+				
 				MC.tellViewToAddExerciseSelectionPanel(true);
 				jltemp.setEnabled(true);
+				
 			}
+			
 		}
 		
 		
@@ -78,13 +92,15 @@ public class ML_Controls implements MouseListener{
 		else if((jltemp.getIcon().toString().equals("src/cloudOFF.png") ||  jltemp.getIcon().toString().equals("src/bsCheck.png")) && (!db_Model.allowSolutions || !Controller_dbActivity.inExam || !MainView.databaseIsActive)) {
 			
 			if(!MainView.databaseIsActive) {
-				MessageBox mb = new MessageBox("Hinweis", "Dies ist eine Testversion von disCount!\n", "In der Testversion wird die Verbindung zur Datenbank noch nicht erlaubt und deshalb ist diese "
-						+ "Funktion deaktiviert...");
-			
+				
+				MessageBox mb = new MessageBox("Hinweis", "disCount wurde ohne Datenbankverbindung gestartet!\n", "Ohne funktionierende Verbindung zur Datenbank"
+						+ "ist diese Funktion nicht funktionsfähig.");
 				mb.setVisible(true);
+				
 			}
 			
 			else if(!db_Model.allowSolutions) {
+				
 				MessageBox mb = new MessageBox("Hinweis", "Diese Funktion muss erst freigeschaltet werden!\n", "Damit die Lösungsvorschläge-Funktion und "
 			    			+ "die Feherkorrektur gut funktionieren, müssen "
 							+ "so viele Buchungssätze wie möglich vom Server abrufbar sein. Hilf deinen MitschülerInnen und veröffentliche deine Lösung!\n\n"
@@ -92,6 +108,7 @@ public class ML_Controls implements MouseListener{
 									+ "Für weitere Informationen besuchen Sie bitte:\n www.discount-solutions.tk/hochladen");
 				
 				mb.setVisible(true);
+				
 			}
 			
 			
@@ -99,34 +116,36 @@ public class ML_Controls implements MouseListener{
 		
 		
 		else if(jltemp.getIcon().toString().equals("src/addPic.png") && jltemp.isEnabled()) {
+			
 			if(Controller_dbActivity.inExam == true && !windowListererIsActive) {
+				
 				MC.execSetWindowListener();
 				windowListererIsActive = true;
+				
 			}
 			
 			myModel.addBS(jltemp, this, MC.execGetWorkPanel());
+			
 		}
 		
 		else if(jltemp.getIcon().toString().equals("src/checkedPic.png")) {
+			
 			putIntoFile(myModel.getStufen(), myModel.getLastStufen());
 			MainView.addPic.setEnabled(true);
+			
 		}
 		
 		else if(jltemp.getIcon().toString().equals("src/checkedPic.png")) {
+			
 			putIntoFile(myModel.getStufen(), myModel.getLastStufen());
 			MainView.addPic.setEnabled(true);
+			
 		}
 		
 		
-		else if(jltemp.getIcon().toString().equals("src/escapeSmall.png")) {
-			System.out.println("HERE");
+		else if(jltemp.getIcon().toString().equals("src/escapeSmall.png"))
 			MC.execRemoveSuchenPanel();
-		}
 		
-		
-		
-		
-	
 }
 	
 	

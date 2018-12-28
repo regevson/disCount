@@ -24,7 +24,7 @@ public class InfoView extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblDiscountEin = new JLabel("disCount - Ein Rechnungswesen-Programm f\u00FCr Sch\u00FClerInnen");
-		lblDiscountEin.setForeground(MainView.disCountBlue);
+		lblDiscountEin.setForeground(new Color(113, 186, 253));
 		lblDiscountEin.setFont(new Font("Roboto", Font.BOLD, 22));
 		lblDiscountEin.setBounds(248, 36, 800, 68);
 		contentPane.add(lblDiscountEin);

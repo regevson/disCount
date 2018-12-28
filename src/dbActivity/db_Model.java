@@ -49,8 +49,8 @@ public class db_Model {
 	private Statement st2;
 	public static boolean allowSolutions = false;
 	public static final int MINIMUMADDED = 5;
-	public static final int MAXSTUDENTS = 5;
-	public static final int MAXBS = 5;
+	public static final int MAXSTUDENTS = 40;
+	public static final int MAXBS = 40;
 	private final int minLikesToBeVerified = 5;
 	
 	private int BScount;
@@ -72,7 +72,7 @@ public class db_Model {
 	private String solution = "";
 	private int myID;
 	private int studentNumber; //tells you which column you are in exam-database
-	private String myTier;
+	public static String myTier;
 	private String uploaderTier;
 	private boolean inputToSuggestionIsIncorrect;
 	private String schoolClass;
@@ -217,12 +217,8 @@ public class db_Model {
            getMyID();
            
        }
-       catch (Exception e)
-       {
-    	   e.printStackTrace();
-    	   System.out.println("ERROR Connection OPENSAVE-CLASS");
-    	   return null;
-       }
+		 
+       catch (Exception e){e.printStackTrace();return null;}
       
        return showPotentialMessages();
 	       
@@ -235,7 +231,7 @@ public class db_Model {
 		email = setupView.getLoginEmail();
 		
 		try {
-			System.out.println(email);
+
 			rs = st.executeQuery("SELECT name, school, class, tier FROM users WHERE email='" + email + "'");
 	
 	        if(rs.next()) {
@@ -250,7 +246,7 @@ public class db_Model {
 	     	   
 	        }
         
-		} catch (SQLException e) {e.printStackTrace();}
+		} catch(SQLException e) {e.printStackTrace();}
 		
 	}
 
@@ -284,9 +280,12 @@ public class db_Model {
 
 
 	private void checkIfBanned() {
+		
 		try {
+			
 			 st =  conn.createStatement();
 			 rs = st.executeQuery("SELECT banned FROM users WHERE email='" + email + "'");
+			 
 	 		 String banned = "";
 	
 	         if(rs.next())
@@ -295,10 +294,7 @@ public class db_Model {
 	         if(banned.equals("yes"))
 	        	 MainView.isBANNED = true;
 	         
-		}catch(Exception ex) {
-			
-		}
- 		   
+		}catch(Exception e) {e.printStackTrace();}
  		   
 	}
 	
@@ -306,10 +302,12 @@ public class db_Model {
 	public void uploadToDB(String jahrgang, String seite, String nummer, ArrayList<JPanel> groupPanelList) {
 		
 		if(checkExerciseAvailability(jahrgang, seite, nummer)) {
+			
 			MessageBox mb = new MessageBox("Fehler beim Hochladen", "Eine Lösung dieser Aufgabe existiert bereits!", "Bitte versuche eine andere Lösung hochzuladen.\n"
 					+ "Du kannst auch oben im Menü unter ,,Verfügbarkeit'' testen, ob eine Lösung noch gebraucht wird.");
 			mb.setVisible(true);
 			return;
+			
 		}
 			
 		
@@ -324,17 +322,14 @@ public class db_Model {
 		String code_str = MainModel.getCodeOnWorkPanel();
 		
 		 try {
+			 
 			st = conn.createStatement();
 			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (uploaderID, code, codeInfo, groupIDs) VALUES ('" + myID + "','" + code_str + "'," + "'" + exercise + "'," + "'" + groupIDs + "'" + ")");
 			
 			increaseCommunityStats(1);
 			checkAdded();
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-         
+		} catch(SQLException e) {e.printStackTrace();}
 		
 	}
 	
@@ -963,6 +958,7 @@ public class db_Model {
 		String storedMAC = null;
 			
 		try {
+			
 			rs = st.executeQuery("SELECT mac FROM users WHERE email='" + email + "'");
 			
 			if(rs.next())
@@ -975,11 +971,11 @@ public class db_Model {
 			byte[] mac = network.getHardwareAddress();
 			
 			StringBuilder currentMAC = new StringBuilder();
+			
 			for (int i = 0; i < mac.length; i++) {
 				currentMAC.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
 			}
 
-			
 			if(!(storedMAC.equals(currentMAC.toString())))
 				Main.execdisCount = false;
 		

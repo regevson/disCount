@@ -50,12 +50,12 @@ import Tabellenkalkulation.ML_TableSelectionTopics;
 import dbActivity.Controller_dbActivity;
 import dbActivity.ML_db;
 import dbActivity.QuestionComment;
+import dbActivity.db_Model;
 import extraViews.ExamSetupView;
 import extraViews.ExerciseAvailabilityChecker_View;
 import extraViews.InfoView;
 import extraViews.InsertExamIDView;
 import extraViews.MessageBox;
-import extraViews.NewGroupView;
 import extraViews.Personalverrechnung_Settings_View;
 import extraViews.TeacherRegistration;
 import extraViews.View_SuperClass;
@@ -182,15 +182,18 @@ public static boolean isBANNED = false;
 	
 	
 	public MainView() {
+		
 		icons.add(Toolkit.getDefaultToolkit().getImage("src/taskbar16black.png"));
 		icons.add(Toolkit.getDefaultToolkit().getImage("src/taskbar32.png"));
 		icons.add(Toolkit.getDefaultToolkit().getImage("src/taskbar64.png"));
 		setIconImages(icons);
+		
 	}
 	
 
 
 	public void setUpBasicStuff() {
+		
 		setTitle("disCount");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -211,8 +214,7 @@ public static boolean isBANNED = false;
 		
 		setupSuchen();
 		
-	
-		
+
 		panelLeft = new JPanel();
 		panelLeft.setVisible(true);
 		panelLeft.setBackground(darkDisCountBlue);
@@ -397,8 +399,10 @@ public static boolean isBANNED = false;
 	
 	
 	private void expandTempPanel(JPanel menuPanel) {
+		
 		if(grammarCheckPanel != null)
 			grammarCheckPanel.setVisible(true);
+		
 		jSP.setVisible(true);
 		menuPanel.setVisible(true);
 		tempPanel.setPreferredSize(new Dimension(workPanel_Width, 0));
@@ -406,11 +410,14 @@ public static boolean isBANNED = false;
 		tempPanel.addMouseListener(null);
 		tempPanel.repaint();
 		contentPane.repaint();
+		
 	}
 	
 	private void collapseTempPanel(JPanel menuPanel) {
+		
 		if(grammarCheckPanel != null)
 			grammarCheckPanel.setVisible(false);
+		
 		tempPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		jSP.setVisible(false);
 		menuPanel.setVisible(false);
@@ -437,6 +444,7 @@ public static boolean isBANNED = false;
 	
 	
 	private void makeExpandLabels(LinkedList<JLabel> visibleLabels, JPanel visiblePanel) {
+		
 		if(turnedOnPanel != null)
 			turnedOnPanel.setVisible(false);
 		
@@ -446,6 +454,7 @@ public static boolean isBANNED = false;
 		int y = 25;
 			
 		for(int x = 0; x < visibleLabels.size(); x++) {
+			
 			visibleLabels.get(x).add(makeDecorationPanels(0, darkDisCountBlue));
 			visibleLabels.get(x).add(makeDecorationPanels(950, Color.CYAN));
 			visibleLabels.get(x).setBorder(new EmptyBorder(0, 30, 0, 0));
@@ -454,14 +463,19 @@ public static boolean isBANNED = false;
 			visibleLabels.get(x).setBounds(20, y, 960, 30);
 			y = y + 45;
 			visibleLabels.get(x).setVisible(true);
+			
 		}
 		
 		repaint();
+		
 	}
 	
 	public LinkedList<JLabel> makeLabels(int count, String[] names, MouseListener ML, JPanel panel) {
+		
 		LinkedList<JLabel> ll = new LinkedList<JLabel>();
+		
 		for (int x = 0; x < count; x++) {
+			
 			JLabel label = new JLabel(names[x]);
 			label.setForeground(Color.WHITE);
 			label.setFont(font_16);
@@ -470,6 +484,7 @@ public static boolean isBANNED = false;
 			label.setVisible(false);
 			panel.add(label);
 			ll.add(label);
+			
 		}
 		
 		return ll;
@@ -497,9 +512,12 @@ public static boolean isBANNED = false;
 		if(!title.equals("Stats") && !title.equals("Gruppen"))
 			makeSearchIcon(panelMiddle);
 		
-		else if(title.equals("Gruppen"))
+		else if(title.equals("Gruppen") && databaseIsActive)
 			addAddGroupIcon(labels);
-			
+		
+		else
+			labels.get(0).removeAll();
+		
 		makeSBLabels(panelMiddle, title, links, ML, panelLeft, sideBarSpacers, labels);
 		
 		return panelMiddle;
@@ -508,7 +526,7 @@ public static boolean isBANNED = false;
 	
 	
 	private void addAddGroupIcon(LinkedList<JLabel> labels) {
-		
+
 		JLabel studentAdd = makeMenuLabels("src/addGroup.png", "Gruppe erstellen", 900, 4, 9, 21, 21);
 		menuPanel.remove(studentAdd);
 		labels.get(0).add(studentAdd);
@@ -600,26 +618,34 @@ public static boolean isBANNED = false;
 			}
 				@Override
 				public void mouseEntered(java.awt.event.MouseEvent e) {
+					
 					JLabel triggeredLabel = ((JLabel) e.getSource());
 					triggeredLabel.setBackground(lightBlack);
 					setYourCursor(handCursor());
 					
 				}
+				
 				@Override
 				public void mouseExited(java.awt.event.MouseEvent e) {
+					
 					JLabel triggeredLabel = ((JLabel) e.getSource());
+					
 					if(activeLabel != triggeredLabel) {
+						
 						if(title.equals("Stats"))
 							entryOnSB.setBackground(MainView.disCountPurple);
 						else
 							triggeredLabel.setBackground(disCountBlue);
+
 					}
 					
 					setYourCursor(normalCursor());
 					
 				}
+				
 				@Override
 				public void mousePressed(java.awt.event.MouseEvent e) {
+					
 					for(int x = 0; x < llSearchNames.size(); x++) {
 						
 						if(llSearchNames.get(x).getText().equals("Stats"))
@@ -628,6 +654,7 @@ public static boolean isBANNED = false;
 							llSearchNames.get(x).setBackground(disCountBlue);
 						
 					}
+					
 					if(activePanel != null)
 						activePanel.setVisible(false);
 					
@@ -650,36 +677,50 @@ public static boolean isBANNED = false;
 					
 					makeExpandLabels(labels, panelMiddle);
 					
+					if((title.equals("Stats") || title.equals("Gruppen")) && !databaseIsActive) {
+						
+						MessageBox mb = new MessageBox("Hinweis", "disCount wurde ohne Datenbankverbindung gestartet!\n", "Ohne funktionierende Verbindung zur Datenbank"
+								+ "ist diese Funktion nicht funktionsfähig.");
+						mb.setVisible(true);
+						return;
+						
+					}
+					
 					if(title.equals("Stats"))
 						((ML_Stats) llML.get(12)).paintGraphs(panelMiddle, labels);
 					
 					else if(title.equals("Gruppen"))
-						paintGroups(((ML_db) llML.get(9)).initGetAllGroups());
-					
+							paintGroups(((ML_db) llML.get(9)).initGetAllGroups(), db_Model.myTier.equals("teacher"));
 					
 				}
+				
 				@Override
 				public void mouseReleased(java.awt.event.MouseEvent e) {
 					// TODO Auto-generated method stub
 					
 				}
+				
 				});
 		
 	}
 	
 	
 	private void de_ac_tivateSuchen(JLabel barLabel, int height, JMenuItem menuItem) {
+		
 		ActionEvent event = new ActionEvent(menuItem, ActionEvent.ACTION_PERFORMED, "Anything", System.currentTimeMillis(), 0);
+		
 		for (ActionListener listener : menuItem.getActionListeners()) {
 		    listener.actionPerformed(event);
 		}
 		
 		barLabel.setBounds(155, height, 664, 32);
 		barLabel.repaint();
+		
 	}
 	
 	
 	public static void warning_CheckCBoxes() {
+		
 		JLabel lblWarning = new JLabel();
 		lblWarning.setBounds(100, 100, 600, 20);
 		
@@ -687,10 +728,12 @@ public static boolean isBANNED = false;
 			    "Bitte haken Sie mind. einen gültigen Buchungssatz an",
 			    "Abschreibungsregeln verletzt",
 			    JOptionPane.WARNING_MESSAGE);
+		
 	}
 	
 	
 	private void makeMenu(String[] namesEKVK, String[] namesRechnungsausgleich, String[] namesSteuer, String[] namesTourismus, String[] namesPersonalverrechnung, String[] namesAusland, String[] namesAnlagenbwertung, String[] namesKalkulationen) {
+		
 		JMenu menu;
 		JMenuItem menuItem;
 		JMenuItem menuItem2;
@@ -1020,7 +1063,6 @@ public static boolean isBANNED = false;
 
 		menu.add(menuItemInfo);
 		
-
 	}
 	
 	public void removeSuchenPanel() {
@@ -1117,6 +1159,7 @@ public static boolean isBANNED = false;
 		    		}
 		    		
 		    	}
+		    	
 		    }
 
 			@Override
@@ -1212,18 +1255,22 @@ public static boolean isBANNED = false;
 	}
 	
 	private void addXImage() {
+		
 		JLabel escape = makeMenuLabels("src/escapeSmall.png", "Schließen", screenWidth - 60, 14, 8, 14, 14);
 		menuPanel.remove(escape);
 		innerSuchenPanel.add(escape);
+		
 	}
 	
 	
 	
 	private JPanel makeDecorationPanels(int x, Color color) {
+		
 		JPanel decPanel = new JPanel();
 		decPanel.setBounds(x, 0, 20, 30);
 		decPanel.setBackground(color);
 		return decPanel;
+		
 	}
 	
 	public static Cursor handCursor() {
@@ -1239,6 +1286,7 @@ public static boolean isBANNED = false;
 	}
 	
 	public void makeMenuBarWP() {
+		
 		menuPanel = new JPanel();
 		menuPanel.setPreferredSize(new Dimension(workPanel_Width-3, 60));
 		menuPanel.setBackground(new Color(45,45,48));
@@ -1269,10 +1317,12 @@ public static boolean isBANNED = false;
 			}
 			
 			@Override public void mouseExited(java.awt.event.MouseEvent e) {}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {	}});
+		
 	}
 	
 	
 	public static JLabel makeMenuLabels(String source, String toolTipText, int x, int y, int mouseListener, int width, int height) {
+		
 		ImageIcon icon = new ImageIcon(source);
 		JLabel picLabel = new JLabel(icon);
 		picLabel.setBounds(x, y, width, height);
@@ -1281,6 +1331,7 @@ public static boolean isBANNED = false;
 		picLabel.addMouseListener(llML.get(mouseListener));
 		picLabel.setToolTipText(toolTipText);
 		return picLabel;
+		
 	}
 	
 	
@@ -1305,10 +1356,14 @@ public static boolean isBANNED = false;
 		selectionPanel.setLayout(null);
 		
 		if(MainView.workPanel.getComponentCount() >= 1) {
+			
 			for(int x = 0; x < MainView.workPanel.getComponentCount(); x++) {
+				
 				Component comp = MainView.workPanel.getComponent(x);
 				comp.setVisible(false);
+				
 			}
+			
 		}
 		
 		workPanel.add(selectionPanel);
@@ -1320,6 +1375,7 @@ public static boolean isBANNED = false;
 		int y = 20;
 		
 		for(int x = 0; x < tableLabelList.size(); x++) {
+			
 			JLabel label = tableLabelList.get(x);
 			label.setForeground(Color.WHITE);
 			label.setBackground(MainView.darkBlack);
@@ -1330,21 +1386,18 @@ public static boolean isBANNED = false;
 			label.setFont(font_17);
 			selectionPanel.add(label);
 			y = y + 80;
+			
 		}
-		
-		
-		
-		
-		
 		
 		workPanel.repaint();
 
-		
 	}
 	
 	public void disableSelection() {
+		
 		workPanel.remove(selectionPanel);
 		workPanel.repaint();
+		
 	}
 	
 	public void shutDownFrame() {
@@ -1358,8 +1411,10 @@ public static boolean isBANNED = false;
 	
 	
 	public void addExerciseSelectionPanel(boolean check) {
+		
 		if(grammarCheckPanel != null)
 			removeExerciseSelectionPanel();
+		
 		grammarCheckPanel = new JPanel();
 		grammarCheckPanel.setPreferredSize(new Dimension(MainView.workPanel_Width, 55));
 		grammarCheckPanel.setBackground(new Color(51, 51, 51));
@@ -1368,12 +1423,9 @@ public static boolean isBANNED = false;
 		tempPanel.add(grammarCheckPanel);
 		
 		jSP.setPreferredSize(new Dimension(workPanel_Width + 1, screenHeight - 250));
-		
-		
 
 		tempPanel.revalidate();
 		tempPanel.repaint();
-		
 		
 		JTextField txtClass = new JTextField("Jahrgang");
 		View_SuperClass.txtFieldDesign_THIN(txtClass);
@@ -1410,10 +1462,12 @@ public static boolean isBANNED = false;
 		JLabel checkTHEMPic = makeMenuLabels("src/checkTHEM.png", "Los", workPanel_Width-90, 2, 8, 88, 55);
 		checkTHEMPic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
+				
 				if(check)
 					((ML_db) llML.get(9)).initCheckBS(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
 				else
 					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
+				
 			}
 
 			@Override public void mouseEntered(java.awt.event.MouseEvent e) {}@Override public void mouseExited(java.awt.event.MouseEvent e) {}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {	}});
@@ -1423,14 +1477,17 @@ public static boolean isBANNED = false;
 	}
 	
 	public void removeExerciseSelectionPanel() {
+		
 		tempPanel.remove(grammarCheckPanel);
 		jSP.setPreferredSize(new Dimension(workPanel_Width-3, screenHeight));
 		tempPanel.revalidate();
 		tempPanel.repaint();
+		
 	}
 	
 	
 	public static void addNoteToCheckPanel(String msg) {
+		
 		grammarCheckPanel.remove(onlyTeacherSolutions);
 		JLabel label = new JLabel(msg);
 		label.setBounds(265, 2, 270, 50);
@@ -1438,13 +1495,10 @@ public static boolean isBANNED = false;
 		label.setForeground(Color.WHITE);
 		grammarCheckPanel.add(label);
 		grammarCheckPanel.repaint();
+		
 	}
 	
 	
-
-
-
-
 
 	public void openCommentsView(String heading, LinkedList<String> commentsList) {
 		
@@ -1490,6 +1544,7 @@ public static boolean isBANNED = false;
 		
 		tempPanel.revalidate();
 		tempPanel.repaint();
+		
 	}
 	
 	private LinkedList<QuestionComment> setUpComments(LinkedList<String> list) {
@@ -1500,14 +1555,15 @@ public static boolean isBANNED = false;
 		for(int x = 0; x < list.size(); x++) {
 			
 			if(list.get(x).equals("?")) {
+				
 				QuestionComment question = new QuestionComment();
 				question.setContent(list.get(x + 1));
 				questionList.addFirst(question);
+				
 			}
 			
 			else
 				questionList.getFirst().addAnswer(list.get(x + 1));
-			
 			
 			x = x + 1;
 
@@ -1604,6 +1660,7 @@ public static boolean isBANNED = false;
 		
 		
 		return questionPanel;
+		
 	}
 	
 	
@@ -1619,18 +1676,23 @@ public static boolean isBANNED = false;
 			JScrollPane answerScrollPane = createAnswer(answerList.get(x));
 			
 			if(left) {
+				
 				answerScrollPane.setBounds(0, currentMargin, 549, 144);
 				left = false;
+				
 			}
 			
 			else {
+				
 				answerScrollPane.setBackground(disCountBlue);
 				answerScrollPane.setBounds(marginRight, currentMargin, 549, 144);
 				left = true;
+				
 			}
 			
 			commentPanel.add(answerScrollPane);
 			currentMargin = currentMargin + heightAnswer;
+			
 		}
 		
 		return currentMargin;
@@ -1764,12 +1826,14 @@ public static boolean isBANNED = false;
 		
 		tempPanel.revalidate();
 		tempPanel.repaint();
+		
 	}
 
 
 
 
 	public void closeCommentsView() {
+		
 		tempPanel.remove(newQuestionPanel);
 		
 		jSP.remove(commentPanel);
@@ -1779,15 +1843,18 @@ public static boolean isBANNED = false;
 		
 		tempPanel.revalidate();
 		tempPanel.repaint();
+		
 	}
 	
 	public void closeAnswerPanel() {
+		
 		tempPanel.remove(qnaPanel);
 		
 		addNewQuestionPanel();
 		
 		tempPanel.revalidate();
 		tempPanel.repaint();
+		
 	}
 	
 	
@@ -1808,12 +1875,12 @@ public static boolean isBANNED = false;
 	}
 
 	public void removeLeftPanelAndMenu() {
+		
 		tempMenuBar = new JMenuBar();
 		tempMenuBar = menuBar;
 		menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
 		menuBar.add(Box.createRigidArea(new Dimension(20, 35)));
-		
 		
 		
 		JMenu menu = new JMenu("PRÜFUNG");
@@ -1823,15 +1890,15 @@ public static boolean isBANNED = false;
 		menuBar.add(menu);
 
 		
-		
-		
 		JMenuItem menuItemExam = new JMenuItem("Prüfung abgeben", KeyEvent.VK_T);
 		
 		menuItemExam.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItemExam.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	
 		    	((ML_db) llML.get(9)).initHandInExam();
 		    	setJMenuBar(tempMenuBar);
+
 		    }
 		});
 
@@ -1842,8 +1909,10 @@ public static boolean isBANNED = false;
 	}
 	
 	public void showLeftPanel() {
+		
 		menuBar.setVisible(true);
 		this.panelLeft.setVisible(true);
+		
 	}
 
 	public void setWindowListener() {
@@ -1857,16 +1926,20 @@ public static boolean isBANNED = false;
 
 	         @Override
 	         public void windowDeactivated(WindowEvent wEvt) {
+	        	 
 	        	 if(!legalWindowChange && Controller_dbActivity.inExam) {
+	        		 
 		            MessageBox msgBox = new MessageBox("Achtung!", "Du hast die Prüfungsumgebung verlassen", "Dein Lehrer wurde verständigt");
 		            msgBox.setVisible(true);
 		            ((ML_db) llML.get(9)).initNotifyTeacherOfLeave();
 		            removeMe();
 		            setJMenuBar(tempMenuBar);
+		            
 		         }
 	        	 
 	        	 else if(!legalWindowChange && !Controller_dbActivity.inExam)
 	        		 removeMe();
+	        	 
 	         }
 	         
 	         private void removeMe() {
@@ -1874,6 +1947,7 @@ public static boolean isBANNED = false;
 	         }
 
 	      });
+		
 	}
 	
 	public static void grantWindowChange() {
@@ -1882,7 +1956,6 @@ public static boolean isBANNED = false;
 	
 	public static void forbidWindowChange() {
 		legalWindowChange = false;
-		System.out.println("isFORBIDDEN!!");
 	}
 	
 	
@@ -1892,7 +1965,15 @@ public static boolean isBANNED = false;
 //----------------------------------GROUPS----------------------
 
 	
-	public void paintGroups(ArrayList<String> groupList) {
+	public void paintGroups(ArrayList<String> groupList, boolean isTeacher) {
+		
+		if(!isTeacher) {
+			
+			((JLabel) turnedOnPanel.getComponent(0)).setText("Gruppen können nur von Lehrern erstellt werden!");
+			((JLabel) turnedOnPanel.getComponent(0)).remove(((JLabel) turnedOnPanel.getComponent(0)).getComponent(0));
+			return;
+			
+		}
 		
 		if(groupPanelList == null)
 			groupPanelList = new ArrayList<JPanel>();

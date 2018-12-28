@@ -88,7 +88,7 @@ public class MainController{
 	}
 	
 	private void executeErrorRoutine() {
-		MessageBox mb = new MessageBox("Programmstart fehlgeschlagen", "Fehler 000x001", "Kontaktieren Sie j.regev@ferrari.tsn.at");
+		MessageBox mb = new MessageBox("Programmstart fehlgeschlagen", "Fehler 000x001", "Kontaktieren Sie juwal.regev@hotmail.com");
 		mb.setVisible(true);
 	}
 
@@ -302,7 +302,7 @@ public class MainController{
 	}
 
 	public void execPaintGroups(ArrayList<String> groupList) {
-		mainView.paintGroups(groupList);
+		mainView.paintGroups(groupList, true);
 	}
 
 	public void execRemoveGroupFromMiddlePanel(JPanel parent) {

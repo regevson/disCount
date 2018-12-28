@@ -1,7 +1,9 @@
 package Kalkulationen;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 
@@ -76,11 +78,20 @@ public class Absatzkalkulation_View extends JFrame{
 			setContentPane(contentPane);
 			contentPane.setLayout(null);
 			
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+			
 			JLabel lblHeading = new JLabel("Absatzkalkulation");
 			lblHeading.setFont(MainView.font_30);
 			lblHeading.setForeground(Color.WHITE);
 			lblHeading.setBounds(136, 35, 280, 42);
 			contentPane.add(lblHeading);
+			
+			JLabel infoLabel = new JLabel("Unbenutzte Felder 0-setzen!");
+			infoLabel.setBounds(20, 880, 200, 30);
+			infoLabel.setFont(MainView.font_16);
+			infoLabel.setForeground(Color.WHITE);
+			contentPane.add(infoLabel);
 			
 			int x = 71;
 			int y = 130;
@@ -187,7 +198,7 @@ public class Absatzkalkulation_View extends JFrame{
 					setUpStuff();
 					dispose();
 					++(MainView.kalkulationsOpen);
-					MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + MainView.kalkulationsOpen);
+					MainView.llSearchNames.get(MainView.llSearchNames.size() - 3).setText("Kalkulationen" + "   " + MainView.kalkulationsOpen);
 				}
 	
 			});
@@ -438,7 +449,7 @@ public class Absatzkalkulation_View extends JFrame{
 				tempPanel.setVisible(true);
 				mainPane.setVisible(false);
 				mainPane = null;
-				MainView.llSearchNames.get(MainView.llSearchNames.size() - 2).setText("Kalkulationen" + "   " + --MainView.kalkulationsOpen);
+				MainView.llSearchNames.get(MainView.llSearchNames.size() - 3).setText("Kalkulationen" + "   " + --MainView.kalkulationsOpen);
 			}
 
 		});
@@ -455,7 +466,6 @@ public class Absatzkalkulation_View extends JFrame{
 	
 	
 	public static void labelDesign(JLabel jl) {
-		jl.setForeground(Color.WHITE);
 		jl.setBounds(xLeft, yLeft, 190, 22);
 		jl.setFont(MainView.font_16);
 		jl.setForeground(new Color(113, 186, 253));
