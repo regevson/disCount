@@ -48,7 +48,7 @@ public class db_Model {
 	private String schoolType;
 	private Statement st2;
 	public static boolean allowSolutions = false;
-	public static final int MINIMUMADDED = 5;
+	public static int MINIMUMADDED = 99;
 	public static final int MAXSTUDENTS = 40;
 	public static final int MAXBS = 40;
 	private final int minLikesToBeVerified = 5;
@@ -94,80 +94,6 @@ public class db_Model {
 
 
 
-	public boolean changeRatio(int value, String solutionID) {
-		
-		 try {
-			 
-			 rs = st.executeQuery("SELECT evaluated FROM users WHERE email='" + email + "'");
-			
-			 String evaluated = null;
-			    
-		     if(rs.next())
-		        evaluated = rs.getString("evaluated");
-		        
-		    
-		     if(!evaluated.contains("|" + solutionID + "|")) {
-		    	 
-		    	 evaluated = evaluated + "|" + solutionID + "|";
-		    	 st.executeUpdate("UPDATE users SET evaluated='" + evaluated + "' WHERE email='" + email + "'");
-		    	 
-		    	 String votes_str = "upVotes";
-		    	 
-		    	 if(value == -1)
-		    		 votes_str = "downVotes";
-		    	 
-		    	 rs = st.executeQuery("SELECT " + votes_str + " FROM usersolutions" + schoolType.toLowerCase() + " WHERE id='" + solutionID + "'");
-		    	 
-	    		 int votes = 0;
-	    		 
-	    		 if(rs.next())
-	    			 votes = rs.getInt(votes_str);
-	    		 
-	    		 votes += 1;
-	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + solutionID + "'");
-	    		 
-	    		 increase_decreaseUploaderLikes(value);
-	    		 
-	    		 return true;
-		    	
-		     }
-		        
-		        
-		} catch (SQLException e) {System.out.println("dbModel - changeRatio - didnt work");e.printStackTrace();}
-	        
-	    return false;
-		
-	}
-	
-	
-	private void increase_decreaseUploaderLikes(int value) {
-		
-		try {
-
-			rs = st.executeQuery("SELECT totalLikes, tier FROM users WHERE id='" + uploaderID + "'");
-
-			int totalLikes = 0;
-			String uploaderTier = "";
-
-			if(rs.next()) {
-				totalLikes = rs.getInt("totalLikes");
-				uploaderTier = rs.getString("tier");
-			}
-			
-			if(totalLikes + value == minLikesToBeVerified && uploaderTier.equals("student"))
-				uploaderTier = "verified";
-			
-			else if(totalLikes + value < minLikesToBeVerified && uploaderTier.equals("verified"))
-				uploaderTier = "student";
-			
-			st.executeUpdate("UPDATE users SET totalLikes ='" + (totalLikes += value) + "', tier='" + uploaderTier + "' WHERE id='" + uploaderID + "'");
-			
-		} catch(SQLException e) {System.out.println("dbModel - increase_decreaseUploaderLikes - didnt work");e.printStackTrace();}
-
-	}
-	
-	
-	
 	
 	
 	public ArrayList<MessageBox> connect(Setup_View setupView) {
@@ -195,12 +121,10 @@ public class db_Model {
 				if(!Main.alreadyDone) {
 					
 					st.executeUpdate(
-							"INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, mac, skill, dependence, community) VALUES ('"
+							"INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, skill, dependence, community) VALUES ('"
 									+ name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','"
-									+ schoolClass + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," + "'" + ""
-									+ "'," + "'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");
-					
-					setUpMACAddress();
+									+ schoolClass + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," +
+									"'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");
 					
 				}
 
@@ -209,8 +133,10 @@ public class db_Model {
    		   
       
            checkIfBanned();
-	           
-           compareMACAddress();
+           
+           setLoggedIn();
+           
+           getMinimumAdded();
    		
            getStats();
            
@@ -224,8 +150,87 @@ public class db_Model {
 	       
 	}
 	
+
+
+	private void setLoggedIn() {
+		
+		try {
+
+			int loggedIn = 0;
+			
+			rs = st.executeQuery("SELECT loggedIn FROM users WHERE email='" + email + "'");
+	
+	        if(rs.next())
+	     	   loggedIn = rs.getInt("loggedIn");
+	        
+	        if(loggedIn == 0) {
+	        	
+	        	st.executeUpdate("UPDATE users SET loggedIn='1' WHERE email='" + email + "'");
+	        	return;
+	        	
+	        }
+	    
+		} catch(SQLException e) {e.printStackTrace();}
+		
+		JOptionPane.showMessageDialog(null, "Sie melden sich mit einem Account an, welcher bereits in Verwendung ist.\nBitte laden Sie sich disCount selbst herunter und registrieren Sie sich wie"
+				+ " gewöhnlich.\nEin anderer Weg bringt nur Probleme mit sich und führt zu unvorhersehbarem Verhalten!",
+				"Nachricht", JOptionPane.PLAIN_MESSAGE);
+		MainView.databaseIsActive = false;
+		
+	}
+	
+	private void getMinimumAdded() {
+		
+		try {
+			
+			rs = st.executeQuery("SELECT minAdded FROM settings");
+	
+	        if(rs.next())
+	     	   MINIMUMADDED = rs.getInt("minAdded");
+	    
+		} catch(SQLException e) {e.printStackTrace();}
+		
+	}
 	
 	
+	
+	public void setLoggedOut() {
+		
+		try {
+			
+        	st.executeUpdate("UPDATE users SET loggedIn='0' WHERE email='" + email + "'");
+        	return;
+	    
+		} catch(SQLException e) {e.printStackTrace();}
+		
+	}
+	
+	
+	//------------------------------------sendStats------------------------------------
+	
+	public void setUseTime(long minutes) {
+		
+		try {
+			
+			double useTime = 0;
+			
+			rs = st.executeQuery("SELECT useTime FROM stats");
+			
+	        if(rs.next())
+	     	   useTime = rs.getDouble("useTime") + minutes;
+	        
+        	st.executeUpdate("UPDATE stats SET useTime='" + useTime + "'");
+	    
+		} catch(SQLException e) {e.printStackTrace();}
+		
+	}
+	
+	
+	
+
+
+
+
 	private void retireveLocalInfo(Setup_View setupView) {
 
 		email = setupView.getLoginEmail();
@@ -355,6 +360,81 @@ public class db_Model {
 
 
 
+	public boolean changeRatio(int value, String solutionID) {
+		
+		 try {
+			 
+			 rs = st.executeQuery("SELECT evaluated FROM users WHERE email='" + email + "'");
+			
+			 String evaluated = null;
+			    
+		     if(rs.next())
+		        evaluated = rs.getString("evaluated");
+		        
+		    
+		     if(!evaluated.contains("|" + solutionID + "|")) {
+		    	 
+		    	 evaluated = evaluated + "|" + solutionID + "|";
+		    	 st.executeUpdate("UPDATE users SET evaluated='" + evaluated + "' WHERE email='" + email + "'");
+		    	 
+		    	 String votes_str = "upVotes";
+		    	 
+		    	 if(value == -1)
+		    		 votes_str = "downVotes";
+		    	 
+		    	 rs = st.executeQuery("SELECT " + votes_str + " FROM usersolutions" + schoolType.toLowerCase() + " WHERE id='" + solutionID + "'");
+		    	 
+	    		 int votes = 0;
+	    		 
+	    		 if(rs.next())
+	    			 votes = rs.getInt(votes_str);
+	    		 
+	    		 votes += 1;
+	    		 st.executeUpdate("UPDATE usersolutions" + schoolType.toLowerCase() + " SET " + votes_str + "='" + votes + "' WHERE id='" + solutionID + "'");
+	    		 
+	    		 increase_decreaseUploaderLikes(value);
+	    		 
+	    		 return true;
+		    	
+		     }
+		        
+		        
+		} catch (SQLException e) {System.out.println("dbModel - changeRatio - didnt work");e.printStackTrace();}
+	        
+	    return false;
+		
+	}
+	
+	
+	
+	
+	private void increase_decreaseUploaderLikes(int value) {
+		
+		try {
+
+			rs = st.executeQuery("SELECT totalLikes, tier FROM users WHERE id='" + uploaderID + "'");
+
+			int totalLikes = 0;
+			String uploaderTier = "";
+
+			if(rs.next()) {
+				totalLikes = rs.getInt("totalLikes");
+				uploaderTier = rs.getString("tier");
+			}
+			
+			if(totalLikes + value == minLikesToBeVerified && uploaderTier.equals("student"))
+				uploaderTier = "verified";
+			
+			else if(totalLikes + value < minLikesToBeVerified && uploaderTier.equals("verified"))
+				uploaderTier = "student";
+			
+			st.executeUpdate("UPDATE users SET totalLikes ='" + (totalLikes += value) + "', tier='" + uploaderTier + "' WHERE id='" + uploaderID + "'");
+			
+		} catch(SQLException e) {System.out.println("dbModel - increase_decreaseUploaderLikes - didnt work");e.printStackTrace();}
+
+	}
+	
+	
 
 	private void increaseSkillStats() throws SQLException {
 		st = conn.createStatement();
@@ -598,6 +678,9 @@ public class db_Model {
 		
 		
 	private boolean checkIfStudentInAllowedGroup(String groupIDs) {
+		
+		if(groupIDs.equals(""))
+			return true;
 		
 		int groupID = getGroupIDByEmail(email);
 		
@@ -920,79 +1003,7 @@ public class db_Model {
 	}
 	
 	
-	
-	
-	
-//--------------------------------------------MAC-Address + InternetConnection---------------------------------------
-	
-	private void setUpMACAddress() {
 
-		 try {
-			 
-			 InetAddress ip;
-			 ip = InetAddress.getLocalHost();
-			 NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-			
-			 byte[] mac = network.getHardwareAddress();
-	
-	
-			 StringBuilder sb = new StringBuilder();
-			 for (int i = 0; i < mac.length; i++) {
-				 sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-			 }
-				
-				
-			 st = conn.createStatement();
-			 st.executeUpdate("UPDATE users SET mac='" + sb + "' WHERE email='" + email + "'");
-		         
-		         
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		
-	
-	}
-	
-	private void compareMACAddress() {
-		
-		String storedMAC = null;
-			
-		try {
-			
-			rs = st.executeQuery("SELECT mac FROM users WHERE email='" + email + "'");
-			
-			if(rs.next())
-				storedMAC = rs.getString("mac");
-			
-			InetAddress ip;
-			ip = InetAddress.getLocalHost();
-			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-			
-			byte[] mac = network.getHardwareAddress();
-			
-			StringBuilder currentMAC = new StringBuilder();
-			
-			for (int i = 0; i < mac.length; i++) {
-				currentMAC.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-			}
-
-			if(!(storedMAC.equals(currentMAC.toString())))
-				Main.execdisCount = false;
-		
-		
-		} catch (Exception e) {
-			String msg = "Du bist wahrscheinlich nicht mit dem Internet verbunden!\n"
-			+ "Ohne Internetverbindung kann das Programm nicht gestartet werden.\n";
-		
-			JOptionPane.showMessageDialog(null, msg, "disCount konnte nicht gestartet werden", JOptionPane.ERROR_MESSAGE);
-			Main.execdisCount = false;
-			e.printStackTrace();
-		}
-		
-	}
-	
-	
-	
 	
 	
 	//--------------------------------------Comments------------------------------------------------------------------------------------------------
@@ -1812,6 +1823,11 @@ public class db_Model {
 	public ArrayList<Integer> getExamBSList() {
 		return examBSList;
 	}
+
+
+
+
+	
 
 
 

@@ -558,6 +558,14 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	public void initMakeAllStudentsWorkSpace(ArrayList<String> studentList) {
 		MC.execMakeAllStudentsWorkSpace(studentList);
 	}
+	
+	public void execLogOut() {
+		myModel.setLoggedOut();
+	}
+
+	public void execSetUseTime(long minutes) {
+		myModel.setUseTime(minutes);
+	}
 
 
 

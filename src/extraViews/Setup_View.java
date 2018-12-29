@@ -65,6 +65,7 @@ public class Setup_View extends JFrame {
 	private ResultSet rs;
 
 	private String loginEmail;
+	private ML_db MLdb;
 
 	public Setup_View() {
 
@@ -303,7 +304,8 @@ public class Setup_View extends JFrame {
 		llML.addLast(new ML_Anlagenbewertung(mainController));
 		llML.addLast(new ML_Kalkulationen(mainController));
 		llML.addLast(new ML_Controls(mainController)); // is not in controllerList!!!
-		llML.addLast(new ML_db(mainController, this));
+		MLdb = new ML_db(mainController, this);
+		llML.addLast(MLdb);
 		
 		ML_Tabellenkalkulation ML_TABKALK = new ML_Tabellenkalkulation();
 		llML.addLast(ML_TABKALK);
@@ -377,6 +379,10 @@ public class Setup_View extends JFrame {
 
 	public String getLoginEmail() {
 		return loginEmail;
+	}
+
+	public ML_db getML_db() {
+		return MLdb;
 	}
 
 }

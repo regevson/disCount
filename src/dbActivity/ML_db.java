@@ -311,6 +311,14 @@ public class ML_db implements MouseListener{
 		
 	}
 	
+	public void initLogOut() {
+		myController.execLogOut();
+	}
+	
+	public void initSetUseTime(long minutes) {
+		myController.execSetUseTime(minutes);
+	}
+	
 	
 	
 	
@@ -346,6 +354,12 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
+
+
+	
 
 
 
