@@ -8,6 +8,7 @@ import java.time.Instant;
 import extraViews.RegistrationQuestion;
 import extraViews.Setup_View;
 import extraViews.SplashScreen_View;
+import extraViews.UpdateView;
 
 public class Main {
 	
@@ -38,6 +39,9 @@ public class Main {
 			}
 			
 			shutDownRoutine();
+			
+			UpdateView uv = new UpdateView();
+			uv.setVisible(true);
 
 		} catch(IOException e) {e.printStackTrace();}
 

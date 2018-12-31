@@ -70,18 +70,18 @@ public class ExerciseAvailabilityChecker_View extends JFrame {
 		lblUmWelcheAufgabe.setBounds(22, 82, 280, 46);
 		contentPane.add(lblUmWelcheAufgabe);
 		
-		JLabel lblVorhanden = new JLabel("Eine L\u00F6sung zu dieser Aufgabe ist bereits vorhanden!");
+		JLabel lblVorhanden = new JLabel("Eine L\u00F6sung zu dieser Aufgabe mit guter Bewertung ist bereits vorhanden!");
 		lblVorhanden.setForeground(Color.ORANGE);
 		lblVorhanden.setFont(new Font("Roboto", Font.BOLD, 17));
-		lblVorhanden.setBounds(22, 234, 501, 46);
+		lblVorhanden.setBounds(22, 234, 700, 46);
 		contentPane.add(lblVorhanden);
 		lblVorhanden.setVisible(false);
 		
 		
-		JLabel lblNichtVorhanden = new JLabel("Es ist noch keine Lösung vorhanden! Hilf deinen MitschülerInnen und lade du eine hoch!");
+		JLabel lblNichtVorhanden = new JLabel("Es ist noch keine zufriedenstellende Lösung vorhanden. Lade doch du eine hoch!");
 		lblNichtVorhanden.setForeground(Color.ORANGE);
 		lblNichtVorhanden.setFont(new Font("Roboto", Font.BOLD, 17));
-		lblNichtVorhanden.setBounds(22, 234, 782, 46);
+		lblNichtVorhanden.setBounds(22, 234, 800, 46);
 		contentPane.add(lblNichtVorhanden);
 		lblNichtVorhanden.setVisible(false);
 		
@@ -102,8 +102,8 @@ public class ExerciseAvailabilityChecker_View extends JFrame {
 		});
 		btnAllesKlar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				boolean alreadyExists = MLdb.initCheckExerciseAvailability((String) comboBox.getSelectedItem(), txtSeite.getText(), txtNummer.getText());
-				if(alreadyExists)
+				boolean isNeeded = MLdb.initCheckExerciseAvailability((String) comboBox.getSelectedItem(), txtSeite.getText(), txtNummer.getText());
+				if(!isNeeded)
 					lblVorhanden.setVisible(true);
 				else
 					lblNichtVorhanden.setVisible(true);

@@ -49,6 +49,7 @@ public class db_Model {
 	private Statement st2;
 	public static boolean allowSolutions = false;
 	public static int MINIMUMADDED = 99;
+	public static int MINIMUMRATIO = 99;
 	public static final int MAXSTUDENTS = 40;
 	public static final int MAXBS = 40;
 	private final int minLikesToBeVerified = 5;
@@ -136,7 +137,7 @@ public class db_Model {
            
            setLoggedIn();
            
-           getMinimumAdded();
+           getMinimumConstants();
    		
            getStats();
            
@@ -179,14 +180,18 @@ public class db_Model {
 		
 	}
 	
-	private void getMinimumAdded() {
+	private void getMinimumConstants() {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT minAdded FROM settings");
+			rs = st.executeQuery("SELECT minAdded, minRatio FROM settings");
 	
-	        if(rs.next())
-	     	   MINIMUMADDED = rs.getInt("minAdded");
+	        if(rs.next()) {
+	     	   
+	        	MINIMUMADDED = rs.getInt("minAdded");
+	        	MINIMUMRATIO = rs.getInt("minRatio");
+	        	
+	        }
 	    
 		} catch(SQLException e) {e.printStackTrace();}
 		
@@ -306,9 +311,10 @@ public class db_Model {
 	
 	public void uploadToDB(String jahrgang, String seite, String nummer, ArrayList<JPanel> groupPanelList) {
 		
-		if(checkExerciseAvailability(jahrgang, seite, nummer)) {
+		if(!checkExerciseAvailability(jahrgang, seite, nummer)) {
 			
-			MessageBox mb = new MessageBox("Fehler beim Hochladen", "Eine Lösung dieser Aufgabe existiert bereits!", "Bitte versuche eine andere Lösung hochzuladen.\n"
+			MessageBox mb = new MessageBox("Upload abgelehnt", "Eine Lösung dieser Aufgabe mit einer guten Bewertung existiert bereits!", "Eine andere Version wird deshalb nicht mehr benötigt.\n"
+					+ "Bitte versuche eine andere Lösung hochzuladen.\n"
 					+ "Du kannst auch oben im Menü unter ,,Verfügbarkeit'' testen, ob eine Lösung noch gebraucht wird.");
 			mb.setVisible(true);
 			return;
@@ -617,36 +623,38 @@ public class db_Model {
 			String highestSolutionID = "";
 			int highestCommentCount = -1;
 			String highestUploaderTier = "";
+			int bestRatio = -99;
+			boolean abortOnTeacher = false;
 
 
-			while(rs.next()) {
+			while(rs.next() && !abortOnTeacher) {
 				
 				uploaderID = rs.getString("uploaderID");
 				String info[] = getUsernameAndUploaderTier(rs.getString("uploaderID"));
-				highestUsername = info[0];
-				highestUploaderTier = info[1];
+				String userName = info[0];
+				String uploaderTier = info[1];
 				
-				if(rs.getInt("upVotes") > highestUpvotes || highestUploaderTier.equals("teacher")) {
+				int ratio = rs.getInt("upVotes") - rs.getInt("downVotes");
+				
+				if(ratio > bestRatio || uploaderTier.equals("teacher")) {
+
+					if(uploaderTier.equals("teacher")) {
+						
+						if(!checkIfStudentInAllowedGroup(rs.getString("groupIDs")))
+							continue;
+						
+						abortOnTeacher = true;
+						
+					}
 					
 					highestCode = rs.getString("code");
 					highestUpvotes = rs.getInt("upVotes");
 					highestDownvotes = rs.getInt("downVotes");
 					highestCommentCount = rs.getInt("commentCount");
 					highestSolutionID = rs.getString("id");
-
-					if(highestUploaderTier.equals("teacher")) {
-						
-						if(checkIfStudentInAllowedGroup(rs.getString("groupIDs")))
-							break;
-							
-						else {
-
-							highestCode = "";
-							highestUpvotes = -1;
-							
-						}
-						
-					}
+					highestUsername = userName;
+					highestUploaderTier = uploaderTier;
+					bestRatio = ratio;
 					
 				}
 
@@ -693,8 +701,6 @@ public class db_Model {
 			if(groupID == Integer.parseInt(allowedGroup))
 				return true;
 			
-			System.out.println(groupID + " diesnt equal " + allowedGroup);
-			
 			groupIDs = groupIDs.substring(groupIDs.indexOf("#") + 1);
 		
 		}
@@ -718,7 +724,7 @@ public class db_Model {
 			
 			rs.close();
 			
-		} catch (SQLException e) {System.out.println("dbModel - getUsernameAndUploaderTier - doesnt work");e.printStackTrace();}
+		} catch (SQLException e) {e.printStackTrace();}
 		
 		return null;
 		
@@ -983,23 +989,35 @@ public class db_Model {
 	public boolean checkExerciseAvailability(String jahrgang, String seite, String nummer) {
 		
 		try {
-			
-		rs = st.executeQuery("SELECT codeInfo FROM usersolutions" + schoolType.toLowerCase());
-         
-  	   	jahrgang = jahrgang.substring(0,1);
-  	   	String info = jahrgang + "/" + seite + "/" + nummer;
-         
-         while(rs.next()) {
-      	   if(rs.getString("codeInfo").equals(info))
-      		   return true;
-      	  
-         }
 
-         
-		}catch(Exception ex) {ex.printStackTrace();System.out.println("dbModel - checkExerciseAvailability - didnt work");}
+			jahrgang = jahrgang.substring(0, 1);
+			String info = jahrgang + "/" + seite + "/" + nummer;
+
+			rs = st.executeQuery("SELECT upVotes, downVotes FROM usersolutions" + schoolType.toLowerCase()
+					+ " WHERE codeInfo=" + info);
+
+			while(rs.next()) {
+
+				if(!checkLikeDislikeRatio(rs.getInt("upVotes"), rs.getInt("downVotes")))
+					return false;
+
+			}
+
+		} catch(Exception ex) {ex.printStackTrace(); return false;}
+
+		return true;
+
+	}
+	
+	private boolean checkLikeDislikeRatio(int likes, int dislikes) {
 		
-		return false;
-         
+		int ratio = likes - dislikes;
+		
+		if(ratio >= MINIMUMRATIO)
+			return false;
+		
+		return true;
+		
 	}
 	
 	
@@ -1658,7 +1676,8 @@ public class db_Model {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT groupID FROM users WHERE email='" + email + "'");
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT groupID FROM users WHERE email='" + email + "'");
 			
 			if(rs.next())
 				return rs.getInt("groupID");
