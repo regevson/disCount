@@ -1,16 +1,15 @@
 package extraViews;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Connection;
@@ -21,6 +20,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -49,17 +49,20 @@ import View.MainController;
 import View.MainModel;
 import View.MainView;
 import dbActivity.ML_db;
-import disCount.Main;
 import stats.ML_Stats;
 
-public class Setup_View extends JFrame {
+public class Setup_View extends JFrame{
 
 	private JPanel contentPane;
 	private JTextField txtName;
+	private JTextField txtJahrgangzahl;
+	private JTextField txtEmail;
+	private JTextField txtPasswortfrDiscount;
+	private Color purple = new Color(128, 0, 128);
+	private BufferedImage myPicture;
 
 	private JTextField txtJahrgang;
 	private JComboBox cbSchule;
-	private JTextField txtEmail;
 	private Connection conn;
 	private Statement st;
 	private ResultSet rs;
@@ -67,162 +70,120 @@ public class Setup_View extends JFrame {
 	private String loginEmail;
 	private ML_db MLdb;
 
+
 	public Setup_View() {
-
+		
 		connect();
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Already there
-		setBounds(0, 0, 1200, 600);
-		setLocationRelativeTo(null);
-		setUndecorated(true);
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 951, 609);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
-		contentPane.setBackground(new Color(51, 51, 51));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
-		BufferedImage myPicture;
+		
 		try {
-			myPicture = ImageIO.read(new File("src/logo.jpg"));
+			
+			myPicture = ImageIO.read(new File("src/introLogo.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-			picLabel.setBounds(50, 0, 500, 600);
+			picLabel.setBounds(100, 230, 285, 81);
 			getContentPane().add(picLabel);
+			
+		} catch (IOException e1) {e1.printStackTrace();}
+		
+		
+		txtName = new JTextField();
+		txtName.setForeground(new Color(128, 128, 128));
+		txtName.setBackground(Color.WHITE);
+		txtName.setFont(MainView.font_15);
+		txtName.setBounds(565, 63, 233, 55);
+		txtName.setBorder(new LineBorder(purple, 2, true));
+		txtName.setBorder(BorderFactory.createCompoundBorder(txtName.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
+		contentPane.add(txtName);
+		txtName.setText("Name (Vor + Nach)");
+		txtName.setColumns(10);
+		
+		UIManager.put("ComboBox.background", Color.WHITE);
+		UIManager.put("ComboBox.foreground", new Color(128, 128, 128));
+		UIManager.put("ComboBox.selectionBackground", purple);
+		UIManager.put("ComboBox.selectionForeground", new Color(128, 128, 128));
 
-			txtName = new JTextField();
-			txtName.setText("");
-			contentPane.add(txtName);
-			txtName.setBounds(701, 210, 371, 45);
-			View_SuperClass.txtFieldDesign(txtName);
-			txtName.setColumns(10);
+		String arryaSchoolTypes[] = { "HBLA", "HAK" };
+		JComboBox cbSchule = new JComboBox(arryaSchoolTypes);
+		cbSchule.setBorder(new LineBorder(purple, 2, true));
+		cbSchule.setBorder(BorderFactory.createCompoundBorder(cbSchule.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
+		cbSchule.setEditable(true);
+		cbSchule.setFont(MainView.font_15);
+		cbSchule.setBounds(565, 143, 233, 55);
+		contentPane.add(cbSchule);
+		
+		txtJahrgangzahl = new JTextField();
+		txtJahrgangzahl.setForeground(new Color(128, 128, 128));
+		txtJahrgangzahl.setText("Jahrgang (Zahl)");
+		txtJahrgangzahl.setColumns(10);
+		txtJahrgangzahl.setBorder(new LineBorder(purple, 2, true));
+		txtJahrgangzahl.setBorder(BorderFactory.createCompoundBorder(txtJahrgangzahl.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
+		txtJahrgangzahl.setBackground(Color.WHITE);
+		txtJahrgangzahl.setBounds(565, 221, 233, 55);
+		txtJahrgangzahl.setFont(MainView.font_15);
+		contentPane.add(txtJahrgangzahl);
+		
+		txtEmail = new JTextField();
+		txtEmail.setForeground(new Color(128, 128, 128));
+		txtEmail.setText("Email");
+		txtEmail.setColumns(10);
+		txtEmail.setBorder(new LineBorder(purple, 2, true));
+		txtEmail.setBorder(BorderFactory.createCompoundBorder(txtEmail.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
+		txtEmail.setBackground(Color.WHITE);
+		txtEmail.setBounds(565, 299, 233, 55);
+		txtEmail.setFont(MainView.font_15);
+		contentPane.add(txtEmail);
+		
+		txtPasswortfrDiscount = new JTextField();
+		txtPasswortfrDiscount.setForeground(new Color(128, 128, 128));
+		txtPasswortfrDiscount.setText("Neues Passwort (f\u00FCr disCount)");
+		txtPasswortfrDiscount.setColumns(10);
+		txtPasswortfrDiscount.setBorder(new LineBorder(purple, 2, true));
+		txtPasswortfrDiscount.setBorder(BorderFactory.createCompoundBorder(txtPasswortfrDiscount.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
+		txtPasswortfrDiscount.setBackground(Color.WHITE);
+		txtPasswortfrDiscount.setBounds(565, 377, 233, 55);
+		txtPasswortfrDiscount.setFont(MainView.font_15);
+		contentPane.add(txtPasswortfrDiscount);
+		
+		
+		JButton btnLos = new JButton("Los geht's!");
+		btnLos.setBackground(purple);
+		btnLos.setForeground(Color.WHITE);
+		btnLos.setContentAreaFilled(false);
+		btnLos.setOpaque(true);
+		btnLos.setFont(new Font("Roboto", Font.BOLD, 20));
+		btnLos.setBorder(new LineBorder(purple, 2, true));
+		btnLos.setBounds(565, 460, 233, 48);
+		btnLos.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
 
-			UIManager.put("ComboBox.background", Color.WHITE);
-			UIManager.put("ComboBox.foreground", Color.BLACK);
-			UIManager.put("ComboBox.selectionBackground", new Color(0, 117, 211));
-			UIManager.put("ComboBox.selectionForeground", Color.WHITE);
-
-			String arryaSchoolTypes[] = { "HBLA", "HAK" };
-			cbSchule = new JComboBox(arryaSchoolTypes);
-			cbSchule.setBorder(new LineBorder(new Color(37, 37, 38), 2));
-			cbSchule.setEditable(true);
-			cbSchule.setFont(new Font("Roboto", Font.BOLD, 20));
-			cbSchule.setBounds(701, 300, 371, 45);
-			contentPane.add(cbSchule);
-
-			txtJahrgang = new JTextField();
-			txtJahrgang.setText("");
-			txtJahrgang.setColumns(10);
-			View_SuperClass.txtFieldDesign(txtJahrgang);
-			txtJahrgang.setBounds(701, 390, 371, 45);
-			contentPane.add(txtJahrgang);
-
-			txtEmail = new JTextField();
-			txtEmail.setText("");
-			txtEmail.setColumns(10);
-			View_SuperClass.txtFieldDesign(txtEmail);
-			txtEmail.setBounds(701, 475, 371, 45);
-			contentPane.add(txtEmail);
-
-			JLabel lblName = new JLabel("Name");
-			labelDesign(lblName);
-			lblName.setBounds(701, 185, 100, 16);
-			contentPane.add(lblName);
-
-			JLabel lblSchule = new JLabel("Schultyp");
-			labelDesign(lblSchule);
-			lblSchule.setBounds(701, 278, 100, 16);
-			contentPane.add(lblSchule);
-
-			JLabel lblJahrgang = new JLabel("Jahrgang");
-			labelDesign(lblJahrgang);
-			lblJahrgang.setBounds(701, 364, 100, 16);
-			contentPane.add(lblJahrgang);
-
-			JLabel lblEmail = new JLabel("Email:");
-			labelDesign(lblEmail);
-			lblEmail.setBounds(701, 450, 100, 16);
-			contentPane.add(lblEmail);
-
-			JLabel lblDis = new JLabel("dis");
-			lblDis.setBounds(715, 41, 300, 38);
-			lblDis.setForeground(Color.WHITE);
-			lblDis.setFont(new Font("Roboto", Font.BOLD, 45));
-			lblDis.setForeground(Color.WHITE);
-			contentPane.add(lblDis);
-
-			JLabel lblCount = new JLabel("Count - Setup");
-			lblCount.setBounds(776, 41, 300, 40);
-			lblCount.setForeground(Color.WHITE);
-			lblCount.setFont(new Font("Roboto", Font.BOLD, 45));
-			lblCount.setForeground(MainView.disCountBlue);
-			contentPane.add(lblCount);
-
-			JButton btnLos = new JButton("Los geht's!");
-			btnLos.setBackground(new Color(37, 37, 38));
-			btnLos.setForeground(Color.WHITE);
-			btnLos.setContentAreaFilled(false);
-			btnLos.setOpaque(true);
-			btnLos.setFont(new Font("Roboto", Font.BOLD, 20));
-			btnLos.setBorder(new LineBorder(new Color(104, 33, 122), 2));
-			btnLos.setBounds(701, 540, 371, 48);
-			btnLos.addActionListener(new ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-
-					if(checkIFEmailOK() == -1) {
-						JOptionPane.showMessageDialog(null, "Diese Email-Addresse wurde bereits verwendet!",
-								"Nachricht", JOptionPane.PLAIN_MESSAGE);
-						return;
-					}
-
-					writeInfoIntoFile(txtName.getText(), (String) cbSchule.getSelectedItem(), txtEmail.getText(),
-							txtJahrgang.getText(), "student");
-					dispose();
-					startApp();
-
+				if(!checkIFEmail_PasswordOK(txtEmail.getText(), "email")) {
+					JOptionPane.showMessageDialog(null, "Diese Email-Addresse wird bereits verwendet!",
+							"Nachricht", JOptionPane.PLAIN_MESSAGE);
+					return;
 				}
 
-			});
-			contentPane.add(btnLos);
+				writeInfoIntoFile(txtName.getText(), (String) cbSchule.getSelectedItem(), txtEmail.getText(), txtPasswortfrDiscount.getText(),
+						txtJahrgangzahl.getText(), "student");
+				dispose();
+				startApp();
 
-			myPicture = ImageIO.read(new File("src/escape.png"));
-			JLabel picLabelw = new JLabel(new ImageIcon(myPicture));
-			picLabelw.setBounds(1165, 8, 23, 23);
-			picLabelw.addMouseListener((new MouseListener() {
-				public void mousePressed(java.awt.event.MouseEvent e) {
-					dispose();
-				}
+			}
 
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					// TODO Auto-generated method stub
-
-				}
-
-			}));
-			contentPane.add(picLabelw);
-
-		} catch (IOException e) {e.printStackTrace();}
-
+		});
+		contentPane.add(btnLos);
+		
 	}
-
-	public void writeInfoIntoFile(String name, String school, String email, String schoolClass, String tier) {
+	
+	
+	public void writeInfoIntoFile(String name, String school, String email, String password, String schoolClass, String tier) {
 
 		PrintStream fileStream;
 
@@ -234,6 +195,7 @@ public class Setup_View extends JFrame {
 			fileStream.println(name);
 			fileStream.println(school);
 			fileStream.println(email);
+			fileStream.println(password);
 			fileStream.println(schoolClass);
 			fileStream.println(tier);
 			fileStream.close();
@@ -250,27 +212,24 @@ public class Setup_View extends JFrame {
 		jl.setForeground(Color.WHITE);
 	}
 
-	private int checkIFEmailOK() {
+	public boolean checkIFEmail_PasswordOK(String email_pass, String column) {
 
 		if(!MainView.databaseIsActive)
-			return 0;
+			return false;
 
 		try {
+			
 			st = conn.createStatement();
-			rs = st.executeQuery("SELECT email FROM users");
+			rs = st.executeQuery("SELECT " + column + " FROM users WHERE " + column + " ='" + email_pass +"'");
 
-			while (rs.next()) {
-				if(rs.getString(1).equals(txtEmail.getText()))
-					return -1;
-			}
+			if(rs.next())
+				return false;
 
-			return 1;
+			return true;
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return false;
 
 	}
 

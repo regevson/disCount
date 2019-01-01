@@ -35,13 +35,14 @@ public class Main {
 
 				RegistrationQuestion regq = new RegistrationQuestion();
 				regq.setVisible(true);
+				setupView = regq.getSetupView();
 
 			}
 			
 			shutDownRoutine();
 			
 			UpdateView uv = new UpdateView();
-			uv.setVisible(true);
+			uv.setVisible(false);
 
 		} catch(IOException e) {e.printStackTrace();}
 
@@ -63,6 +64,7 @@ public class Main {
 		} catch(InterruptedException ex) {ex.printStackTrace();}
 
 		splash_View.setVisible(false);
+		
 		setupView = new Setup_View();
 		setupView.startApp();
 		

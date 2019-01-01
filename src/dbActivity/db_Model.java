@@ -116,14 +116,15 @@ public class db_Model {
 				name = br.readLine();
 				schoolType = br.readLine();
 				email = br.readLine();
+				String password = br.readLine();
 				schoolClass = br.readLine();
 				myTier = br.readLine();
 
 				if(!Main.alreadyDone) {
 					
 					st.executeUpdate(
-							"INSERT INTO users (name, school, email, tier, class, banned, added, evaluated, skill, dependence, community) VALUES ('"
-									+ name + "'," + "'" + schoolType + "'," + "'" + email + "','" + "student" + "','"
+							"INSERT INTO users (name, school, email, password, tier, class, banned, added, evaluated, skill, dependence, community) VALUES ('"
+									+ name + "'," + "'" + schoolType + "'," + "'" + email + "','" + password + "','" + "student" + "','"
 									+ schoolClass + "'," + "'" + "" + "'," + "'" + 0 + "'," + "'" + "" + "'," +
 									"'" + 0 + "'," + "'" + 0 + "'," + "'" + 0 + "'" + ")");
 					
@@ -242,7 +243,7 @@ public class db_Model {
 		
 		try {
 
-			rs = st.executeQuery("SELECT name, school, class, tier FROM users WHERE email='" + email + "'");
+			rs = st.executeQuery("SELECT name, school, class, password, tier FROM users WHERE email='" + email + "'");
 	
 	        if(rs.next()) {
 	        	
@@ -250,8 +251,9 @@ public class db_Model {
 	     	   schoolType = rs.getString("school");
 	     	   schoolClass = rs.getString("class");
 	     	   myTier = rs.getString("tier");
+	     	   String password = rs.getString("password");
 	     	   
-	     	   setupView.writeInfoIntoFile(name, schoolType, email, schoolClass, myTier);
+	     	   setupView.writeInfoIntoFile(name, schoolType, email, password, schoolClass, myTier);
 	     	   Main.retireveLocalInfo = false;
 	     	   
 	        }
