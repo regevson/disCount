@@ -72,23 +72,27 @@ public class MainController{
 	}
 	
 	private void displayMessages(ArrayList<MessageBox> messageBoxList) {
+		
 		if(messageBoxList != null) {
+			
 			for(int x = 0; x < messageBoxList.size(); x++) {
 				messageBoxList.get(x).setVisible(true);
 			}
+			
 		}
+		
 	}
 	
 	
 	private void executeBannedRoutine() {
 		MessageBox mb = new MessageBox("Programmstart verweigert", "Sie wurden verbannt!", "Bei Fragen bezüglich dem Grund des Banns, kontaktieren Sie bitte:\n"
-				+ "discount-software@hotmail.com", true);
+				+ "discount-software@hotmail.com", "badMessage");
 		
 		mb.setVisible(true);
 	}
 	
 	private void executeErrorRoutine() {
-		MessageBox mb = new MessageBox("Programmstart fehlgeschlagen", "Fehler 000x001", "Kontaktieren Sie juwal.regev@hotmail.com");
+		MessageBox mb = new MessageBox("Programmstart fehlgeschlagen", "Fehler 000x001", "Kontaktieren Sie juwal.regev@hotmail.com", "smallMessage");
 		mb.setVisible(true);
 	}
 

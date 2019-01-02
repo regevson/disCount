@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -317,7 +315,7 @@ public class db_Model {
 			
 			MessageBox mb = new MessageBox("Upload abgelehnt", "Eine Lösung dieser Aufgabe mit einer guten Bewertung existiert bereits!", "Eine andere Version wird deshalb nicht mehr benötigt.\n"
 					+ "Bitte versuche eine andere Lösung hochzuladen.\n"
-					+ "Du kannst auch oben im Menü unter ,,Verfügbarkeit'' testen, ob eine Lösung noch gebraucht wird.");
+					+ "Du kannst auch oben im Menü unter ,,Verfügbarkeit'' testen, ob eine Lösung noch gebraucht wird.", "smallMessage");
 			mb.setVisible(true);
 			return;
 			
@@ -484,7 +482,7 @@ public class db_Model {
 				if(addedOLD < MINIMUMADDED) {
 					MessageBox mb = new MessageBox("Bereit zum Aktivieren", "Gratulation! Sie haben eben neue Funktionen freigeschaltet!\n", "Sie können jetzt "
 							+ "Lösungsvorschläge und automatische Korrektur aktivieren! \n\nKlicken Sie dazu auf die Wolke oder das vorletzte Symbol rechts oben!" + "\n\n"
-							+ "Für weitere Informationen besuchen Sie bitte: www.discount-solutions.tk/loesungsvorschlaege oder \nwww.discount-solutions.tk/fehlerkorrektur");
+							+ "Für weitere Informationen besuchen Sie bitte: www.discount-solutions.tk/loesungsvorschlaege oder \nwww.discount-solutions.tk/fehlerkorrektur", "smallMessage");
 					
 					mb.setVisible(true);
 				}
@@ -552,55 +550,52 @@ public class db_Model {
 	
 	
 	public ArrayList<MessageBox> showPotentialMessages() {
+		
 		try {
-		    st = conn.createStatement();
-		    st2 = conn.createStatement();
-	        rs = st.executeQuery("SELECT * FROM messages");
-	        
-	        String receiver = null;
-		    String heading1 = null;
-		    String heading2 = null;
-		    String content = null;
-		    String msgType = null;
-		    
-		    ArrayList<MessageBox> list = new ArrayList<MessageBox>();
-		    
-	        while(rs.next()) {
-	        	receiver = rs.getString("receiver");
-	        	heading1 = rs.getString("heading1");
-	        	heading2 = rs.getString("heading2");
-	        	content = rs.getString("msgcontent");
-	        	msgType = rs.getString("msgType");
+			
+			ArrayList<MessageBox> list = new ArrayList<MessageBox>();
+
+			st = conn.createStatement();
+			rs = st.executeQuery("SELECT * FROM messages");
+
+			while (rs.next()) {
+	        	
+	        	String receiver = rs.getString("receiver");
+	        	String heading1 = rs.getString("heading1");
+	        	String heading2 = rs.getString("heading2");
+	        	String content = rs.getString("msgcontent");
+	        	String msgType = rs.getString("msgType");
 		        
 		        if(receiver.equals("allusers") || receiver.equals(email)) {
+		        	
 		        	MessageBox mb = null;
-		        	if(msgType.equals("1heading")) {
-		        		mb = new MessageBox("Nachricht vom Admin", heading1, content);
-		        	}
 		        	
-		        	else if(msgType.equals("2headings")) {
+		        	if(msgType.equals("1heading"))
+		        		mb = new MessageBox("Nachricht von regevson", heading1, content, "smallMessage");
+		        	
+		        	else if(msgType.equals("2headings"))
 		        		mb = new MessageBox("Nachricht vom Admin", heading1, heading2, content);
-		        	}
 		        	
-		        	else if(msgType.equals("warning")) {
-		        		mb = new MessageBox("Nachricht vom Admin", heading1, content, true);
-		        	}
+		        	else if(msgType.equals("warning"))
+		        		mb = new MessageBox("Nachricht vom Admin", heading1, content, "badMessage");
 					
-		        	st2.executeUpdate("UPDATE messages SET received='yes' WHERE id=" + rs.getString("id"));
+		        	else if(msgType.equals("update"))
+		        		mb = new MessageBox("Nachricht von regevson", heading1, content, "bigMessage");
+					
+		        	st = conn.createStatement();
+		        	st.executeUpdate("UPDATE messages SET received='yes' WHERE id=" + rs.getString("id"));
 		        	
 		        	list.add(mb);
+		        	
 		        }
 	        
 	        }
 	        
 	        return list;
-	    }
-		catch(Exception ex) {
-		    	ex.printStackTrace();
-		    }
+	        
+	    } catch(Exception ex) {ex.printStackTrace();}
+		
 		return null;
-		
-		
 		
 	}
 	

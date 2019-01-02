@@ -154,7 +154,7 @@ public class ML_db implements MouseListener{
 	public void initHandInExam() {
 		
 		double percentage = myController.execHandInExam(myController.initGetWorkPanel());
-		MessageBox msg = new MessageBox("Resultat", "Du hast " + percentage + "% erreicht!", "Gratulation!");
+		MessageBox msg = new MessageBox("Resultat", "Du hast " + percentage + "% erreicht!", "Gratulation!", "smallMessage");
 		msg.setVisible(true);
 		
 	}

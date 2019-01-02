@@ -238,9 +238,10 @@ public class Setup_View extends JFrame{
 		if(!netIsAvailable()) {
 			
 			JOptionPane.showMessageDialog(null,
-					"Sie brauchen eine Internetverbindung um das Programm zu starten!", "Nachricht",
+					"Sie brauchen eine Internetverbindung um das Programm zu starten! Weiter ohne Verbindung...", "Nachricht",
 					JOptionPane.PLAIN_MESSAGE);
-			return;
+			
+			MainView.databaseIsActive = false;
 			
 		}
 

@@ -349,7 +349,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
     
     private void examWarning(String string1, String string2) {
 		waitView.setVisible(false);
-		MessageBox msgB = new MessageBox(string1, string2, "");
+		MessageBox msgB = new MessageBox(string1, string2, "", "smallMessage");
 		msgB.setVisible(true);
     }
     
@@ -477,8 +477,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			llSuggestion = myModel.cutSuggestion(suggestionInfo[0], currentContentOnWP, suggestionInfo[5], MainModel.countOccurencesOfChar(currentContentOnWP, "#"));
 			
 			if(llSuggestion == null) {
+				
 				displayWarningMessage();
 				return;
+
 			}
 			
 			ArrayList<Buchungssatz> bsList = MC.execOpenProject(llSuggestion);
@@ -493,10 +495,12 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			String uploaderTier = suggestionInfo[6];
 				
 			for(int x = 0; x < bsList.size(); x++) {
+				
 				bsList.get(x).addInfoToPanel(name, codeInfo, upvotes, downvotes, commentCount, uploaderTier, solutionID, ML);
 				
 				if(uploaderTier.equals("teacher"))
 					bsList.get(x).addStar();
+				
 				else if(uploaderTier.equals("verified"))
 					bsList.get(x).addVerified();
 				
@@ -507,7 +511,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 	
 	private void displayWarningMessage() {
-		MessageBox msg = new MessageBox("Warnung", "Keine Übereinstimmung", "Deine bisherigen Buchungssätze weisen Fehler auf!");
+		MessageBox msg = new MessageBox("Warnung", "Keine Übereinstimmung", "Deine bisherigen Buchungssätze weisen Fehler auf!", "smallMessage");
 		msg.setVisible(true);
 	}
 

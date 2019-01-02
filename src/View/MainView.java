@@ -680,7 +680,7 @@ public static boolean isBANNED = false;
 					if((title.equals("Stats") || title.equals("Gruppen")) && !databaseIsActive) {
 						
 						MessageBox mb = new MessageBox("Hinweis", "disCount wurde ohne Datenbankverbindung gestartet!\n", "Ohne funktionierende Verbindung zur Datenbank"
-								+ "ist diese Funktion nicht funktionsfähig.");
+								+ "ist diese Funktion nicht funktionsfähig.", "smallMessage");
 						mb.setVisible(true);
 						return;
 						
@@ -1929,7 +1929,7 @@ public static boolean isBANNED = false;
 	        	 
 	        	 if(!legalWindowChange && Controller_dbActivity.inExam) {
 	        		 
-		            MessageBox msgBox = new MessageBox("Achtung!", "Du hast die Prüfungsumgebung verlassen", "Dein Lehrer wurde verständigt");
+		            MessageBox msgBox = new MessageBox("Achtung!", "Du hast die Prüfungsumgebung verlassen", "Dein Lehrer wurde verständigt", "smallMessage");
 		            msgBox.setVisible(true);
 		            ((ML_db) llML.get(9)).initNotifyTeacherOfLeave();
 		            removeMe();

@@ -94,7 +94,7 @@ public class ML_Controls implements MouseListener{
 			if(!MainView.databaseIsActive) {
 				
 				MessageBox mb = new MessageBox("Hinweis", "disCount wurde ohne Datenbankverbindung gestartet!\n", "Ohne funktionierende Verbindung zur Datenbank"
-						+ "ist diese Funktion nicht funktionsfähig.");
+						+ "ist diese Funktion nicht funktionsfähig.", "smallMessage");
 				mb.setVisible(true);
 				
 			}
@@ -105,7 +105,7 @@ public class ML_Controls implements MouseListener{
 			    			+ "die Feherkorrektur gut funktionieren, müssen "
 							+ "so viele Buchungssätze wie möglich vom Server abrufbar sein. Hilf deinen MitschülerInnen und veröffentliche deine Lösung!\n\n"
 							+ "Erst wenn du " + db_Model.MINIMUMADDED + " Lösungen hochgeladen hast, werden die Funktionen aktiviert.\n\n"
-									+ "Für weitere Informationen besuchen Sie bitte:\n www.discount-solutions.tk/hochladen");
+									+ "Für weitere Informationen besuchen Sie bitte:\n www.discount-solutions.tk/hochladen", "smallMessage");
 				
 				mb.setVisible(true);
 				
