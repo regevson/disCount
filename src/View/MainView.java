@@ -43,6 +43,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import Anlagenbewertung.ML_Anlagenbewertung;
+import Controls.ML_Controls;
 import Kalkulationen.Absatzkalkulation_View;
 import Kalkulationen.Bezugskalkulation_View;
 import Kalkulationen.Personalverrechnung_View;
@@ -1053,7 +1054,7 @@ public static boolean isBANNED = false;
 		
 		menuItemInfo = new JMenuItem("Entwicklung", KeyEvent.VK_T);
 		
-		menuItemInfo.setAccelerator(KeyStroke.getKeyStroke('I', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItemInfo.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItemInfo.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	InfoView infView = new InfoView();
@@ -1417,7 +1418,7 @@ public static boolean isBANNED = false;
 		
 		grammarCheckPanel = new JPanel();
 		grammarCheckPanel.setPreferredSize(new Dimension(MainView.workPanel_Width, 55));
-		grammarCheckPanel.setBackground(new Color(51, 51, 51));
+		grammarCheckPanel.setBackground(Color.BLACK);
 		grammarCheckPanel.setLayout(null);
 		grammarCheckPanel.setBorder(new MatteBorder(3,0,0,0, MainView.disCountBlue));
 		tempPanel.add(grammarCheckPanel);
@@ -1428,27 +1429,20 @@ public static boolean isBANNED = false;
 		tempPanel.repaint();
 		
 		JTextField txtClass = new JTextField("Jahrgang");
-		View_SuperClass.txtFieldDesign_THIN(txtClass);
+		tfDesignDBPanel(txtClass);
 		txtClass.setBounds(10, 10, 70, 40);
-		txtClass.setFont(font_15);
-		txtClass.setBorder(new LineBorder(MainView.disCountBlue, 1));
-		txtClass.setBorder(BorderFactory.createCompoundBorder(txtClass.getBorder(), BorderFactory.createEmptyBorder(0, 3, 0, 0)));
 		grammarCheckPanel.add(txtClass);
+		txtClass.addMouseListener(((ML_Controls) llML.get(8)));
+
 		
 		JTextField txtPage = new JTextField("Seite");
-		View_SuperClass.txtFieldDesign_THIN(txtPage);
+		tfDesignDBPanel(txtPage);
 		txtPage.setBounds(100, 10, 70, 40);
-		txtPage.setFont(font_15);
-		txtPage.setBorder(new LineBorder(MainView.disCountBlue, 1));
-		txtPage.setBorder(BorderFactory.createCompoundBorder(txtPage.getBorder(), BorderFactory.createEmptyBorder(0, 3, 0, 0)));
 		grammarCheckPanel.add(txtPage);
 		
 		JTextField txtNumber = new JTextField("Nummer");
-		View_SuperClass.txtFieldDesign_THIN(txtNumber);
+		tfDesignDBPanel(txtNumber);
 		txtNumber.setBounds(190, 10, 70, 40);
-		txtNumber.setFont(font_15);
-		txtNumber.setBorder(new LineBorder(MainView.disCountBlue, 1));
-		txtNumber.setBorder(BorderFactory.createCompoundBorder(txtNumber.getBorder(), BorderFactory.createEmptyBorder(0, 3, 0, 0)));
 		grammarCheckPanel.add(txtNumber);
 		
 		onlyTeacherSolutions = new JRadioButton();
@@ -1473,6 +1467,22 @@ public static boolean isBANNED = false;
 			@Override public void mouseEntered(java.awt.event.MouseEvent e) {}@Override public void mouseExited(java.awt.event.MouseEvent e) {}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {	}});
 	
 		grammarCheckPanel.add(checkTHEMPic);
+		
+	}
+	
+	private JTextField tfDesignDBPanel(JTextField tf) {
+		
+		tf.setBounds(10, 10, 70, 40);
+		tf.setBackground(Color.BLACK);
+		tf.setForeground(Color.WHITE);
+		tf.setCaretColor(Color.WHITE);
+		tf.setFont(font_15);
+		View_SuperClass.highlightContent(tf);
+		tf.setBorder(new MatteBorder(2,2,2,2, MainView.disCountBlue));
+		tf.setBorder(BorderFactory.createCompoundBorder(tf.getBorder(), BorderFactory.createEmptyBorder(0, 3, 0, 0)));
+		tf.addMouseListener(((ML_Controls) llML.get(8)));
+		
+		return tf;
 		
 	}
 	

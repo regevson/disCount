@@ -6,63 +6,76 @@ import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import View.MainView;
 
 public class InfoView extends JFrame {
 
 	private JPanel contentPane;
+	
+	private Color purple = new Color(128, 0, 128);
 
 	public InfoView() {
+		
+		setTitle("Entwicklung");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1107, 686);
+		setBounds(100, 100, 741, 457);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setBackground(MainView.darkBlack);
+		contentPane.setBackground(Color.WHITE);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblDiscountEin = new JLabel("disCount - Ein Rechnungswesen-Programm f\u00FCr Sch\u00FClerInnen");
-		lblDiscountEin.setForeground(new Color(113, 186, 253));
+		lblDiscountEin.setForeground(purple);
 		lblDiscountEin.setFont(new Font("Roboto", Font.BOLD, 22));
-		lblDiscountEin.setBounds(248, 36, 800, 68);
+		lblDiscountEin.setBounds(56, 36, 655, 68);
 		contentPane.add(lblDiscountEin);
 		
 		JLabel lblEntwickler = new JLabel("Entwickler:");
 		lblEntwickler.setFont(new Font("Roboto", Font.BOLD, 18));
-		lblEntwickler.setForeground(Color.WHITE);
-		lblEntwickler.setBounds(46, 192, 119, 30);
+		lblEntwickler.setForeground(Color.DARK_GRAY);
+		lblEntwickler.setBounds(46, 192, 180, 30);
 		contentPane.add(lblEntwickler);
 		
 		JLabel lblEmailaddresse = new JLabel("E-Mail-Addresse:");
 		lblEmailaddresse.setFont(new Font("Roboto", Font.BOLD, 18));
-		lblEmailaddresse.setForeground(Color.WHITE);
-		lblEmailaddresse.setBounds(46, 239, 157, 35);
+		lblEmailaddresse.setForeground(Color.DARK_GRAY);
+		lblEmailaddresse.setBounds(46, 239, 187, 35);
 		contentPane.add(lblEmailaddresse);
 		
 		JLabel lblTel = new JLabel("Tel:");
 		lblTel.setFont(new Font("Roboto", Font.BOLD, 18));
-		lblTel.setForeground(Color.WHITE);
-		lblTel.setBounds(48, 287, 104, 35);
+		lblTel.setForeground(Color.DARK_GRAY);
+		lblTel.setBounds(48, 287, 149, 35);
 		contentPane.add(lblTel);
 		
-		JLabel lblJuwalRegev = new JLabel("Juwal Regev");
+		JTextField lblJuwalRegev = new JTextField("Juwal Regev");
+		lblJuwalRegev.setEditable(false);
+		lblJuwalRegev.setBorder(new MatteBorder(0,0,2,0, purple));
 		lblJuwalRegev.setFont(new Font("Roboto", Font.BOLD, 18));
-		lblJuwalRegev.setForeground(Color.WHITE);
-		lblJuwalRegev.setBounds(244, 192, 800, 35);
+		lblJuwalRegev.setForeground(Color.DARK_GRAY);
+		lblJuwalRegev.setBounds(244, 192, 299, 35);
 		contentPane.add(lblJuwalRegev);
 		
-		JLabel lblJuwalregevhotmailcom = new JLabel("juwal.regev@hotmail.com");
+		JTextField lblJuwalregevhotmailcom = new JTextField("juwal.regev@hotmail.com");
+		lblJuwalregevhotmailcom.setEditable(false);
+		lblJuwalregevhotmailcom.setBorder(new MatteBorder(0,0,2,0, purple));
 		lblJuwalregevhotmailcom.setFont(new Font("Roboto", Font.BOLD, 18));
-		lblJuwalregevhotmailcom.setForeground(Color.WHITE);
-		lblJuwalregevhotmailcom.setBounds(245, 239, 800, 35);
+		lblJuwalregevhotmailcom.setForeground(Color.DARK_GRAY);
+		lblJuwalregevhotmailcom.setBounds(245, 239, 298, 35);
 		contentPane.add(lblJuwalregevhotmailcom);
 		
-		JLabel label = new JLabel("066910983630");
-		label.setFont(new Font("Roboto", Font.BOLD, 18));
-		label.setForeground(Color.WHITE);
-		label.setBounds(244, 287, 800, 35);
-		contentPane.add(label);
+		JTextField telTF = new JTextField("069910983630");
+		telTF.setEditable(false);
+		telTF.setBorder(new MatteBorder(0,0,2,0, purple));
+		telTF.setFont(new Font("Roboto", Font.BOLD, 18));
+		telTF.setForeground(Color.DARK_GRAY);
+		telTF.setBounds(244, 287, 299, 35);
+		contentPane.add(telTF);
+		
 	}
 }
