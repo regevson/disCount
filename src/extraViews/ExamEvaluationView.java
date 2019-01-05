@@ -78,20 +78,24 @@ public class ExamEvaluationView extends JFrame {
 	}
 
 	public void displayEvaluation(ArrayList<String> percentList) {
+		
 		for(int x = 0; x < percentList.size(); x++) {
+			
 			JLabel bs = new JLabel();
 			JLabel bsPercentage = new JLabel();
 			
 			bs.setBounds(bsX, bsY, 148, 26);
 			bsPercentage.setBounds(bsX + marginLeftBSPercentage, bsY, 63, 26);
 			
-			createStudentLabels(bs, bsPercentage, "Buchungssatz " + (x + 1), percentList.get(x));
+			createBSLabels(bs, bsPercentage, "Buchungssatz " + (x + 1), percentList.get(x));
 			
 			bsY += marginY;
 			
 			if(bsY > maxY) {
+				
 				bsY = bsYStandard;
 				bsX += marginLeftColumns;
+
 			}
 			
 			contentPane.repaint();
@@ -101,19 +105,23 @@ public class ExamEvaluationView extends JFrame {
 	}
 	
 	
-	private void createStudentLabels(JLabel student, JLabel studentStatus, String name, String percent) {
-		student.setText(name);
-		student.setFont(MainView.font_16);
-		student.setForeground(Color.WHITE);
-		contentPane.add(student);
+	private void createBSLabels(JLabel bs, JLabel bsPercentage, String bsNumber, String percent) {
 		
-		studentStatus.setText(percent + "%");
+		bs.setText(bsNumber);
+		bs.setFont(MainView.font_16);
+		bs.setForeground(Color.WHITE);
+		contentPane.add(bs);
+		
+		bsPercentage.setText(percent + "%");
+		
 		if(MainModel.parseDouble(percent) <= 60)
-			studentStatus.setForeground(Color.RED);
+			bsPercentage.setForeground(Color.RED);
 		else
-			studentStatus.setForeground(Color.GREEN);
-		studentStatus.setFont(new Font("Roboto", Font.PLAIN, 16));
-		contentPane.add(studentStatus);
+			bsPercentage.setForeground(Color.GREEN);
+		
+		bsPercentage.setFont(new Font("Roboto", Font.PLAIN, 16));
+		contentPane.add(bsPercentage);
+		
 	}
 
 

@@ -52,7 +52,7 @@ public class db_Model {
 	public static final int MAXBS = 40;
 	private final int minLikesToBeVerified = 5;
 	
-	private int BScount;
+	private int bsCount;
 	private int commentCount;
 	private String comments;
 	private String uploaderInfo;
@@ -76,7 +76,7 @@ public class db_Model {
 	private boolean inputToSuggestionIsIncorrect;
 	private String schoolClass;
 	private String uploaderID;
-	private ArrayList<Integer> examBSList;
+	private ArrayList<Integer> examBSList = null;
 	private Color bsColor = MainView.disCountPurple;
 	
 	
@@ -134,7 +134,7 @@ public class db_Model {
       
            checkIfBanned();
            
-           setLoggedIn();
+           //setLoggedIn();
            
            getMinimumConstants();
    		
@@ -745,10 +745,11 @@ public class db_Model {
         	   
         	   else {
         		   
-        		   int tempY = checkIfBSmissing(newBSList, y, unsureBSList, correctBSList, null);
+        		   int[] missingArray = checkIfBSmissing(newBSList, y, unsureBSList, correctBSList);
+        		   int tempY = missingArray[0];
         		   
         		   if(tempY == y)
-        			   checkIfBSOverload(newBSList, y, unsureBSList, correctBSList, null);
+        			   checkIfBSOverload(newBSList, y, unsureBSList, correctBSList);
 
         		   else
         			   y = tempY;
@@ -773,13 +774,14 @@ public class db_Model {
 
 		LinkedList<Buchungssatz> newBSList = new LinkedList<Buchungssatz>();
 		int overloadSize = 0;
+		int missingSize = 0;
 		String temp = solution;
 
-		int bsNumber = temp.length() - temp.replace("#", "").length();
+		bsCount = temp.length() - temp.replace("#", "").length();
 
 		examBSList = new ArrayList<Integer>();
-		for(int x = 0; x < bsNumber; x++) {
-			examBSList.add(0);
+		for(int x = 0; x < bsCount; x++) {
+			examBSList.add(-1);
 		}
 
 		try {
@@ -794,13 +796,17 @@ public class db_Model {
 
 				else {
 
-					int tempY = checkIfBSmissing(newBSList, y, unsureBSList, correctBSList, null);
+					int[] missingArray = checkIfBSmissing(newBSList, y, unsureBSList, correctBSList);
+					int tempY = missingArray[0];
+					missingSize += missingArray[1];
 
 					if(tempY == y)
-						checkIfBSOverload(newBSList, y, unsureBSList, correctBSList, null);
+						overloadSize += checkIfBSOverload(newBSList, y, unsureBSList, correctBSList);
 					
 					else
 						y = tempY;
+					
+					
 
 				}
 
@@ -810,7 +816,7 @@ public class db_Model {
 
 		} catch(Exception e) {e.printStackTrace(); System.out.println("db_Model - checkBSExam - didint work!");}
 
-		examBSList.add(-overloadSize);
+		examBSList.add(-(overloadSize + missingSize));
 
 		return newBSList;
 		
@@ -820,7 +826,7 @@ public class db_Model {
 	
 	
 	
-	private int checkIfBSmissing(LinkedList<Buchungssatz> newBSList, int index, LinkedList<Buchungssatz> unsureBSList,  LinkedList<Buchungssatz> correctBSList, ArrayList<Integer> examBSList) {
+	private int[] checkIfBSmissing(LinkedList<Buchungssatz> newBSList, int index, LinkedList<Buchungssatz> unsureBSList,  LinkedList<Buchungssatz> correctBSList) {
 
 		 ArrayList<Buchungssatz> missingPanel = new ArrayList<Buchungssatz>();
 		
@@ -836,7 +842,7 @@ public class db_Model {
    				   }
    				   
    				   sortNewBSList(newBSList, correctBSList.get(i), unsureBSList.get(index + missingPanel.size()), true, examBSList, i);
-   				   return i;
+   				   return new int[] {i, missingPanel.size()};
    				   
    			   }
    			   
@@ -845,14 +851,13 @@ public class db_Model {
 
    		   }
 		
-   		   return index;
+   		   return new int[] {index, 0};
    		   
 	}
 	
 	
-	private int checkIfBSOverload(LinkedList<Buchungssatz> newBSList, int index, LinkedList<Buchungssatz> unsureBSList, LinkedList<Buchungssatz> correctBSList, ArrayList<Integer> examBSList) {
+	private int checkIfBSOverload(LinkedList<Buchungssatz> newBSList, int index, LinkedList<Buchungssatz> unsureBSList, LinkedList<Buchungssatz> correctBSList) {
 		
-		int overloadSize = 0;
 		ArrayList<Buchungssatz> overloadList = new ArrayList<Buchungssatz>(); 
 		
 		   for(int l = index; l < unsureBSList.size(); l++) {
@@ -867,14 +872,12 @@ public class db_Model {
    				   }
 				   
 				   sortNewBSList(newBSList, correctBSList.get(index), unsureBSList.get(l - overloadList.size()), true, examBSList, index);
-				   return overloadSize;
+				   return overloadList.size();
 				   
 			   }
 			   
-			   else {
+			   else
 				   overloadList.add(unsureBSList.get(l));
-				   overloadSize++;
-			   }
 
 		   }
 		   
@@ -1147,7 +1150,9 @@ public class db_Model {
 	
 	//---------------------------------------Exam----------------------------------------
 	
-	public int setUpExamOnDB(String solution, int studentCount, boolean enableBSHelp) {
+	public int setUpExamOnDB(String solution, int studentCount, int bsCount, boolean enableBSHelp) {
+		
+		this.bsCount = bsCount;
 		setUpResults(solution);
 		setUpExam(solution);
 		setUpBSHelp(enableBSHelp);
@@ -1442,20 +1447,24 @@ public class db_Model {
 
 	
 	public void handInEvaluation(ArrayList<Integer> outcomeList) {
+
 		for(int x = 1; x <= outcomeList.size(); x++) {
 			
 			int currentBSEval = getCurrentBSFaults(x);
 			adjustBSFaults(x, (currentBSEval + outcomeList.get(x - 1)));
 			
 		}
+		
 	}
 	
 	public int getCurrentBSFaults(int x) {
 		
 		int bsEval = -1;
+		
 		try {
 			
 			rs = st.executeQuery("SELECT bs" + x + " FROM exams WHERE id='" + resultID + "'");
+			
 			if(rs.next())
 				bsEval = rs.getInt("bs" + x);
 		
@@ -1466,11 +1475,16 @@ public class db_Model {
 	}
 	
 	public void adjustBSFaults(int x, int newValue) {
+		
+		if(newValue < 0)
+			newValue = 0;
+		
 		try {
 			
 			st.executeUpdate("UPDATE exams SET bs" + x + "='" + newValue + "' WHERE id='" + resultID + "'");
 		
-		} catch (SQLException e) {System.out.println("adjustBSFaults didnt work -- db_Model");e.printStackTrace();}
+		} catch (SQLException e) {e.printStackTrace();}
+		
 	}
 	
 	public ArrayList<Integer> getEvaluationFromDB() {
@@ -1483,9 +1497,9 @@ public class db_Model {
 			
 			currentBSEval = getCurrentBSFaults(nextBS);
 			evalList.add(currentBSEval);
-			nextBS++;
+			++nextBS;
 			
-		}while(nextBS <= MAXBS && currentBSEval != -1);
+		}while(nextBS <= bsCount);
 		
 		return evalList;
 		
@@ -1590,7 +1604,7 @@ public class db_Model {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT groupName FROM groups WHERE groupAdmin='" + myID + "'");
+			rs = st.executeQuery("SELECT groupName FROM `groups` WHERE groupAdmin='" + myID + "'");
 			
 			while(rs.next())
 				groupList.add(rs.getString("groupName"));
@@ -1606,7 +1620,7 @@ public class db_Model {
 		
 		try {
 			
-			st.executeUpdate("DELETE FROM groups WHERE groupName='" + groupName + "' AND groupAdmin='" + myID + "'");
+			st.executeUpdate("DELETE FROM `groups` WHERE groupName='" + groupName + "' AND groupAdmin='" + myID + "'");
 		
 		} catch (SQLException e) {e.printStackTrace();}
 		
@@ -1656,7 +1670,7 @@ public class db_Model {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT id FROM groups WHERE groupName='" + groupName + "' AND groupAdmin='" + myID + "'");
+			rs = st.executeQuery("SELECT id FROM `groups` WHERE groupName='" + groupName + "' AND groupAdmin='" + myID + "'");
 			
 			if(rs.next())
 				return rs.getInt("id");
@@ -1703,7 +1717,7 @@ public class db_Model {
 			if(groupID == 0)
 				return "ist in keiner Gruppe";
 			
-			rs = st.executeQuery("SELECT groupName FROM groups WHERE id='" + groupID + "'");
+			rs = st.executeQuery("SELECT groupName FROM `groups` WHERE id='" + groupID + "'");
 			
 			if(rs.next())
 				groupName = rs.getString("groupName");
@@ -1722,7 +1736,7 @@ public class db_Model {
 		
 		try {
 			
-			st.executeUpdate("INSERT INTO groups (groupName, groupAdmin) VALUES ('" + groupName + "', '" + myID + "')");
+			st.executeUpdate("INSERT INTO `groups` (groupName, groupAdmin) VALUES ('" + groupName + "', '" + myID + "')");
 		
 		} catch(SQLException e) {e.printStackTrace();}
 		
@@ -1772,7 +1786,7 @@ public class db_Model {
 	}
 	
 	public int getBScount() {
-		return BScount;
+		return bsCount;
 	}
 	
 	public String getUploaderTier() {

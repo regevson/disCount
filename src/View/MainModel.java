@@ -668,7 +668,8 @@ public class MainModel {
 	
 	public static void printErrorMessage() {
 		if(printErrorMessages) {
-			JOptionPane.showMessageDialog(null, "Die eingegebenen Werte verursachen Fehler! \n\nHäufige Fehlerquellen: \n- Kein Punkt als Komma \n- Prozentzeichen nicht entfernt", "Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Die eingegebenen Werte verursachen Fehler! \n\nHäufige Fehlerquellen: \n- Kein Punkt als Komma \n- Prozentzeichen nicht entfernt"
+					+ "  \n- Unbenutzte Felder nicht 0 gesetzt", "Warning", JOptionPane.WARNING_MESSAGE);
 			printErrorMessages = false;
 		}
 	}

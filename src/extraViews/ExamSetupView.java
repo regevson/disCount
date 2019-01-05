@@ -17,6 +17,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import View.MainModel;
 import View.MainView;
 import dbActivity.ML_db;
 import dbActivity.db_Model;
@@ -63,11 +64,13 @@ public class ExamSetupView extends JFrame {
 		btnLsungAnhngen.setBounds(194, 164, 153, 45);
 		btnLsungAnhngen.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
+				
 				ML.initOpenSolution();
 				btnLsungAnhngen.setVisible(false);
 				lblLsungAngehngt.setVisible(true);
 				
 				ML.setStudentCount((int) spinner.getValue());
+				
 			}
 
 				});
@@ -90,6 +93,7 @@ public class ExamSetupView extends JFrame {
 		btnPrfungStarten.setBounds(382, 283, 147, 45);
 		btnPrfungStarten.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
+				ML.setBSCount(MainModel.countOccurencesOfChar(MainModel.getCodeOnWorkPanel(), "#"));
 				ML.continueWithStudentLogin(bsVorlagen.isSelected());
 				dispose();
 			}

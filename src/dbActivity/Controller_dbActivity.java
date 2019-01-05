@@ -201,8 +201,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		
 	}
 
-	public int execSetUpExamOnDB(String solution, int studentCount, boolean enableBSHelp) {
-		return myModel.setUpExamOnDB(solution, studentCount, enableBSHelp);
+	public int execSetUpExamOnDB(String solution, int studentCount, int bsCount, boolean enableBSHelp) {
+		return myModel.setUpExamOnDB(solution, studentCount, bsCount, enableBSHelp);
 	}
 	
 	public void setStudentCount(int studentCount) {
@@ -413,7 +413,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		if(points < 0)
 			points = 0;
 
-		return MainModel.roundDouble_giveBack_Double((double) ((100 / outcomeList.size()) * points));
+		return MainModel.roundDouble_giveBack_Double((double) ((100 / myModel.getBScount()) * points));
 		
 	}
 

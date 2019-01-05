@@ -202,7 +202,7 @@ public class Buchungssatz implements MouseListener{
 		JLabel verifyLabel = new JLabel(verifyIcon);
 		verifyLabel.setBounds(528, 9, 42, 42);
 		bsPanel.add(verifyLabel);
-		
+
 		db_Model.skill++;
 		
 		if(examBSList != null)

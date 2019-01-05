@@ -291,15 +291,15 @@ public class Setup_View extends JFrame{
 			conn = DriverManager.getConnection(url, "root", "");
 			System.out.println("Database connection established");
 
-			/*
-			 * String url =
-			 * "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-			 * Class.forName ("com.mysql.jdbc.Driver"); conn = DriverManager.getConnection
-			 * (url,"root","juwalRegev1"); System.out.println
-			 * ("Database connection established");
-			 * 
-			 * System.out.println("AFTER");
-			 */
+			
+			 /*String url =
+			 "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+			 Class.forName ("com.mysql.jdbc.Driver"); conn = DriverManager.getConnection
+			 (url,"root","juwalRegev1"); System.out.println
+			 ("Database connection established");
+			 
+			 System.out.println("AFTER");*/
+			 
 
 		} catch (Exception e) {
 			
@@ -307,7 +307,9 @@ public class Setup_View extends JFrame{
 					+ "Einige Funktionen werden deshalb deaktiviert.",
 					"Nachricht", JOptionPane.PLAIN_MESSAGE);
 			e.printStackTrace();
+			
 			MainView.databaseIsActive = false;
+			
 			return;
 
 		}

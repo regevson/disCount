@@ -32,6 +32,7 @@ public class ML_db implements MouseListener{
 	private int studentCount;
 	private String solution;
 	private Setup_View setupView;
+	private int bsCount;
 	
 	
 	
@@ -108,9 +109,13 @@ public class ML_db implements MouseListener{
 		this.studentCount = studentCount;
 	}
 	
+	public void setBSCount(int bsCount) {
+		this.bsCount = bsCount;
+	}
+	
 	public void continueWithStudentLogin(boolean enableBSHelp) {
 		
-		int pid = myController.execSetUpExamOnDB(solution, studentCount, enableBSHelp);
+		int pid = myController.execSetUpExamOnDB(solution, studentCount, bsCount, enableBSHelp);
 		ExamLobby lobby = new ExamLobby(this, pid);
 		lobby.setVisible(true);
 		myController.setExamLobby(lobby);
