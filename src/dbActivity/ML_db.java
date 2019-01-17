@@ -1,6 +1,5 @@
 package dbActivity;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import View.MainController;
 import View.MainModel;
@@ -33,6 +31,7 @@ public class ML_db implements MouseListener{
 	private String solution;
 	private Setup_View setupView;
 	private int bsCount;
+	private ExamLobby lobby;
 	
 	
 	
@@ -66,8 +65,8 @@ public class ML_db implements MouseListener{
 		myController.execCheckBS(codeInfo, onlyTS);
 	}
 	
-	public void initShowSuggestions(String codeInfo, boolean onlyTS) {
-		myController.execShowSuggestions(codeInfo, onlyTS, this);
+	public void initShowSuggestions(String codeInfo, boolean onlyTS, String solutionCount) {
+		myController.execShowSuggestions(codeInfo, onlyTS, this, solutionCount);
 	}
 	
 	public void initUploadToDB(String jahrgang, String seite, String nummer) {
@@ -116,7 +115,7 @@ public class ML_db implements MouseListener{
 	public void continueWithStudentLogin(boolean enableBSHelp) {
 		
 		int pid = myController.execSetUpExamOnDB(solution, studentCount, bsCount, enableBSHelp);
-		ExamLobby lobby = new ExamLobby(this, pid);
+		lobby = new ExamLobby(this, pid);
 		lobby.setVisible(true);
 		myController.setExamLobby(lobby);
 		myController.setStudentCount(this.studentCount);
@@ -270,6 +269,22 @@ public class ML_db implements MouseListener{
 				
 				NewGroupView ngv = new NewGroupView("Geben Sie einen Gruppennamen ein", "Gruppenname", "Erstellen", this);
 				ngv.setVisible(true);
+				
+			}
+			
+			else if(jltemp.getIcon().toString().equals("src/happyFace.png")) {
+				
+				myController.execChangeResultValue(-1);
+				
+				lobby.removeSmileys(lobby.changeStudentStatus("arbeitet", ((JLabel) jltemp.getParent().getComponent(0)).getText()));
+				
+			}
+			
+			else if(jltemp.getIcon().toString().equals("src/sadFace.png")) {
+				
+				myController.execChangeResultValue(-2);
+				
+				lobby.removeSmileys((JPanel) jltemp.getParent());
 				
 			}
 			

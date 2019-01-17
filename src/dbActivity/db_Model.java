@@ -146,7 +146,7 @@ public class db_Model {
 		 
        catch (Exception e){e.printStackTrace();return null;}
       
-       return showPotentialMessages();
+       return null;//showPotentialMessages();
 	       
 	}
 	
@@ -517,7 +517,7 @@ public class db_Model {
 
 
 	
-	public LinkedList<Character> cutSuggestion(String suggestionCode, String currentContentOnWP, String solutionID, int currentBSCount) {
+	public LinkedList<Character> cutSuggestion(String suggestionCode, String currentContentOnWP, String solutionID, int currentBSCount, String solutionCount) {
 		
 		int fromIndex = 0;
 		LinkedList<Character> llSolution = null;
@@ -529,6 +529,8 @@ public class db_Model {
 		if(suggestionCode.substring(0, fromIndex - 1).equals(currentContentOnWP)) {
 
 			String suggestion = suggestionCode.substring(fromIndex - 1);
+			
+			suggestion = extendCut(suggestion, solutionCount);
 
 			llSolution = new LinkedList<Character>();
 
@@ -549,6 +551,31 @@ public class db_Model {
 	
 	
 	
+	private String extendCut(String suggestion, String solutionCount) {
+		
+		if(solutionCount.equals("alle") || MainModel.countOccurencesOfChar(suggestion, "#") <= Integer.parseInt(solutionCount))
+			return suggestion;
+		
+		int count = Integer.parseInt(solutionCount);
+		int fromIndex = -1;
+		
+		for(int x = 0; x < count; x++) {
+			
+			fromIndex = suggestion.indexOf("#", fromIndex + 1);
+		
+		}
+		
+		suggestion = suggestion.substring(0, suggestion.indexOf("#", fromIndex + 1));
+		
+		return suggestion;
+		
+	}
+
+
+
+
+
+
 	public ArrayList<MessageBox> showPotentialMessages() {
 		
 		try {
@@ -1242,7 +1269,7 @@ public class db_Model {
 	    	
     }
 	
-	public ArrayList<Double> scanForFinishedStudents(int studentCount) {
+	public ArrayList<Double> scanForFinishedStudents(int studentCount, ArrayList<Integer> cheaterList) {
 		scanList = new ArrayList<Integer>();
 		ArrayList<Double> alResults = new ArrayList<Double>();
 		double result = -1;
@@ -1256,15 +1283,24 @@ public class db_Model {
 				if(rs.next())
 					result = rs.getDouble("student" + x);
 				
-				if(result != -1) {
-					if(result == -99)
-						result = MainModel.parseDouble("-99");
+				if(result != -1 && result != -99 && result != -2) { // -1 -> student not finished yet; -99 -> student cheated, now waiting for teacher decision; -2 -> student evicted due to cheating
+					
 					alResults.add(result);
 					scanList.add(x);
-					setResultBackToMinusOne(x);
+					
+					if(result == -31) {
+						
+						changeResultValue(x, -99);
+						cheaterList.add(x);
+						
+					}
+					
+					else
+						changeResultValue(x, -1);
+					
 				}
 					
-			}catch(SQLException e) {System.out.println("scanForFinishedStudents didnt work -- db_Model");e.printStackTrace();}
+			}catch(SQLException e) {e.printStackTrace();}
 			
 		}
 
@@ -1272,16 +1308,35 @@ public class db_Model {
 	    	
     }
 	
-	private void setResultBackToMinusOne(int studentCount) {
+	
+	public void changeResultValue(int student, int value) {
+		
 		try {
 			
-			st.executeUpdate("UPDATE exams SET student" + studentCount + "='" + -1 + "' WHERE id='" + resultID + "'");
+			st.executeUpdate("UPDATE exams SET student" + student + "='" + value + "' WHERE id='" + resultID + "'");
 			
-		}catch(SQLException e) {System.out.println("setResultBackToMinusOne didnt work -- db_Model");e.printStackTrace();}
+		}catch(SQLException e) {e.printStackTrace();}
+		
+	}
+
+	public void changeResultValue(ArrayList<Integer> cheaterList, int value) {
+		
+		try {
+			
+			for(int x = 0; x < cheaterList.size(); x++) {
+			
+				st.executeUpdate("UPDATE exams SET student" + cheaterList.get(x) + "='" + value + "' WHERE id='" + resultID + "'");
+				st.executeUpdate("UPDATE exams SET student" + cheaterList.get(x) + "='" + value + "' WHERE id='" + pid + "'");
+			
+			}
+			
+		}catch(SQLException e) {e.printStackTrace();}
+		
 	}
 	
 	
 	public ArrayList<String> retrieveStudentNamesBasedOnID(ArrayList<Double> alStudentID) {
+		
 		int studentIDIndex = 0;
 		ArrayList<String> alStudentNames = new ArrayList<String>();
 		
@@ -1290,6 +1345,7 @@ public class db_Model {
     		while(studentIDIndex < alStudentID.size() && alStudentID.get(studentIDIndex) >= 0) {
     			
 				rs = st.executeQuery("SELECT name FROM users WHERE id='" + alStudentID.get(studentIDIndex) + "'");
+				
 				if(rs.next())
 					alStudentNames.add(rs.getString("name"));
 				
@@ -1305,6 +1361,7 @@ public class db_Model {
 	
 	
 	public ArrayList<String> getStudentsNamesBasedOnScanList() {
+		
 		ArrayList<Double> finishedStudentsIDs = new ArrayList<Double>();
 		
 		for(int x = 0; x < scanList.size(); x++) {
@@ -1312,6 +1369,7 @@ public class db_Model {
 			try {
 				
 				rs = st.executeQuery("SELECT student" + scanList.get(x) + " FROM exams WHERE id='" + pid + "'");
+				
 				if(rs.next())
 					finishedStudentsIDs.add(rs.getDouble("student" + scanList.get(x)));
 	
@@ -1327,14 +1385,17 @@ public class db_Model {
 	
 	
 	public void provideStartSignal() {
+		
 		try {
 			
 			st.executeUpdate("UPDATE exams SET pStart='" + 1 + "' WHERE id='" + pid + "'");
 		
 		} catch (SQLException e) {System.out.println("provideStartSignal didnt work -- db_Model");e.printStackTrace();}
+		
 	}
 	
 	public int checkStartSignal(int pid) {
+		
 		this.pid = pid;
 		int signal = -1;
 		
@@ -1365,6 +1426,7 @@ public class db_Model {
 	}
 	
 	public int signInStudent() {
+		
 		int examIsFull = 0;
 		int nextIn = getNextIn();
 		
@@ -1382,12 +1444,14 @@ public class db_Model {
 	}
 	
 	private int getNextIn() {
+		
 		int nextIn = -1;
 		System.out.println("PID: " + pid);
 		
 		try {
 			
 			rs = st.executeQuery("SELECT nextIn FROM exams WHERE id='" + pid + "'");
+			
 			if(rs.next())
 				nextIn = rs.getInt("nextIn");
 			
@@ -1400,6 +1464,7 @@ public class db_Model {
 	}
 	
 	private void insertStudentIDIntoExam(int nextIn) {
+		
 		try {
 			
 			st.executeUpdate("UPDATE exams SET student" + nextIn + "='" + myID + "' WHERE id='" + pid + "'");
@@ -1407,10 +1472,12 @@ public class db_Model {
 			studentNumber = nextIn;
 		
 		} catch (SQLException e) {System.out.println("insertStudentIDIntoExam didnt work -- db_Model");e.printStackTrace();}
+		
 	}
 	
 	
 	public void getResultIDFromDB() {
+		
 		try {
 			
 			rs = st.executeQuery("SELECT resultID FROM exams WHERE id='" + pid + "'");
@@ -1418,31 +1485,37 @@ public class db_Model {
 				resultID = rs.getInt("resultID");
 			
 		}catch(SQLException e) {System.out.println("getResultIDFromDB didnt work -- db_Model");e.printStackTrace();}
+		
 	}
 	
 	
 	public int getBSHelpPermission() {
+		
 		int allow = 0;
 		
 		try {
 			
 			rs = st.executeQuery("SELECT BShelp FROM exams WHERE id='" + pid + "'");
+			
 			if(rs.next())
 				allow = rs.getInt("BShelp");
 			
 		}catch(SQLException e) {System.out.println("getBSHelpPermission didnt work -- db_Model");e.printStackTrace();}
 		
 		return allow;
+		
 	}
 
 	
 	
 	public void handInResult(double av) {
+		
 		try {
 			
 			st.executeUpdate("UPDATE exams SET student" + studentNumber + "='" + av + "' WHERE id='" + resultID + "'");
 		
 		} catch (SQLException e) {System.out.println("handInResult didnt work -- db_Model");e.printStackTrace();}
+		
 	}
 
 	
@@ -1506,21 +1579,48 @@ public class db_Model {
 	}
 	
 	public void deleteExamFromDB() {
+		
 		try {
 			
 			st.executeUpdate("DELETE FROM exams WHERE id='" + pid + "'");
 			st.executeUpdate("DELETE FROM exams WHERE id='" + resultID + "'");
 		
 		} catch (SQLException e) {System.out.println("deleteExamFromDB didnt work -- db_Model");e.printStackTrace();}
+		
 	}
 	
 	public void notifyTeacherOfLeave() {
+		
 		try {
 			
-			st.executeUpdate("UPDATE exams SET student" + studentNumber + "='" + -99 + "' WHERE id='" + resultID + "'");
+			st.executeUpdate("UPDATE exams SET student" + studentNumber + "='" + -31 + "' WHERE id='" + resultID + "'");
 		
 		} catch(SQLException e) {System.out.println("notifyTeacherOfLeave didnt work -- db_Model");e.printStackTrace();}
 
+	}
+	
+	public int retrieveCheatingDecision() {
+		
+		try {
+			
+			rs = st.executeQuery("SELECT student" + studentNumber + " FROM exams WHERE id='" + resultID + "'");
+			
+			if(rs.next()) {
+				
+				int decision = rs.getInt("student" + studentNumber);
+				
+				if(decision == -1) // cheater is allowed to continue
+					return 1;
+				
+				else if(decision == -2) // cheater is not allowed to continue
+					return -1;
+				
+			}
+		
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		return 0; // decision not ready yet
+		
 	}
 	
 	
@@ -1852,6 +1952,10 @@ public class db_Model {
 	
 	public ArrayList<Integer> getExamBSList() {
 		return examBSList;
+	}
+	
+	public int getStudentNumber() {
+		return studentNumber;
 	}
 
 

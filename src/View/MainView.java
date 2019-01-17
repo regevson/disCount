@@ -23,8 +23,10 @@ import java.util.LinkedList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -529,7 +531,6 @@ public static boolean isBANNED = false;
 	private void addAddGroupIcon(LinkedList<JLabel> labels) {
 
 		JLabel studentAdd = makeMenuLabels("src/addGroup.png", "Gruppe erstellen", 900, 4, 9, 21, 21);
-		menuPanel.remove(studentAdd);
 		labels.get(0).add(studentAdd);
 		
 	}
@@ -1258,7 +1259,6 @@ public static boolean isBANNED = false;
 	private void addXImage() {
 		
 		JLabel escape = makeMenuLabels("src/escapeSmall.png", "Schließen", screenWidth - 60, 14, 8, 14, 14);
-		menuPanel.remove(escape);
 		innerSuchenPanel.add(escape);
 		
 	}
@@ -1297,17 +1297,23 @@ public static boolean isBANNED = false;
 		tempPanel.add(menuPanel);
 		
 		addPic = makeMenuLabels("src/addPic.png", "Buchungssatz erstellen", 20, -1, 8, 60, 60);
+		menuPanel.add(addPic);
 		
 		checkedPic = makeMenuLabels("src/checkedPic.png", "Buchungssatz fertig", 90, -4, 8, 60, 60);
+		menuPanel.add(checkedPic);
 		
 		tableViewPic = makeMenuLabels("src/table_icon.png", "Tabellenansicht", 195, -4, 10, 60, 60);
+		menuPanel.add(tableViewPic);
 		
 		cloudPic = makeMenuLabels("src/cloudOFF.png", "Lösungsvorschläge", 310, 1, 8, 52, 51);
+		menuPanel.add(cloudPic);
 		
 		bsCheck = makeMenuLabels("src/bsCheck.png", "Fehlerkorrektur", 410, 1, 8, 76, 68);
+		menuPanel.add(bsCheck);
 		bsCheck.setEnabled(false);
 		
 		JLabel collapsePic = makeMenuLabels("src/collapse.png", "Panel minimieren", 540, -5, 8, 60, 60);
+		menuPanel.add(collapsePic);
 		collapsePic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 			}
@@ -1328,7 +1334,6 @@ public static boolean isBANNED = false;
 		JLabel picLabel = new JLabel(icon);
 		picLabel.setBounds(x, y, width, height);
 		picLabel.setFont(font_17);
-		menuPanel.add(picLabel);
 		picLabel.addMouseListener(llML.get(mouseListener));
 		picLabel.setToolTipText(toolTipText);
 		return picLabel;
@@ -1453,14 +1458,36 @@ public static boolean isBANNED = false;
 		onlyTeacherSolutions.setText("nur Lehrerlösungen");
 		grammarCheckPanel.add(onlyTeacherSolutions);
 		
+		JComboBox solutionCount = new JComboBox();
+		
+		if(!check) {
+			
+			onlyTeacherSolutions.setBounds(workPanel_Width - 350, 20, 160, 20);
+			
+			UIManager.put("ComboBox.background", new Color(37, 37, 38));
+			UIManager.put("ComboBox.foreground", Color.WHITE);
+			UIManager.put("ComboBox.selectionBackground", new Color(0, 117, 211));
+			UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+			String count[] = {"1", "2", "3", "alle"};
+			
+			solutionCount.setModel(new DefaultComboBoxModel(count));
+			solutionCount.setBorder(new LineBorder(new Color(37, 37, 38), 2));
+			solutionCount.setEditable(true);
+			solutionCount.setFont(new Font("Roboto", Font.BOLD, 20));
+			solutionCount.setBounds(workPanel_Width - 180, 12, 70, 30);
+			grammarCheckPanel.add(solutionCount);
+			
+		}
+		
 		JLabel checkTHEMPic = makeMenuLabels("src/checkTHEM.png", "Los", workPanel_Width-90, 2, 8, 88, 55);
+		menuPanel.add(checkTHEMPic);
 		checkTHEMPic.addMouseListener(new MouseListener() {
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				
 				if(check)
 					((ML_db) llML.get(9)).initCheckBS(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
 				else
-					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
+					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected(), (String) solutionCount.getSelectedItem());
 				
 			}
 
@@ -1993,13 +2020,10 @@ public static boolean isBANNED = false;
 		for(int x = 0; x < groupList.size(); x++) {
 
 			JLabel groupAdd = makeMenuLabels("src/addStudents.png", "Schüler hinzufügen", 665, 8, 9, 24, 14);
-			menuPanel.remove(groupAdd);
 			
 			JLabel allStudents = makeMenuLabels("src/allStudentsInGroup.png", "Alle Mitglieder dieser Gruppe anzeigen", 700, 3, 9, 24, 24);
-			menuPanel.remove(allStudents);
 			
 			JLabel trashCan = makeMenuLabels("src/trashCan.png", "Gruppe löschen", 735, 6, 9, 17, 20);
-			menuPanel.remove(trashCan);
 			
 			JRadioButton jrb = new JRadioButton();
 			jrb.setBackground(MainView.lightBlack);
@@ -2035,7 +2059,6 @@ public static boolean isBANNED = false;
 	private void addIconsToStudentLabel(JLabel studentLabel) {
 		
 		JLabel studentAdd = makeMenuLabels("src/studentAdd.png", "Diesen Schüler hinzufügen", 900, 5, 9, 24, 18);
-		menuPanel.remove(studentAdd);
 		
 		studentLabel.add(studentAdd);
 		

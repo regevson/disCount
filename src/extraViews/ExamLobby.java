@@ -2,11 +2,12 @@ package extraViews;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ public class ExamLobby extends JFrame {
 	
 	private ArrayList<String> alStudentNames;
 	private HashMap<String, JLabel> hmStringToJLabel; //studentName to studentStatusLabel
+	private HashMap<String, JPanel> hmStringToJPanel; //studentName to studentStatusLabel
 	private JPanel notificationPanel;
 	private int counter = 1;
 	private JLabel notificationText;
@@ -43,6 +45,7 @@ public class ExamLobby extends JFrame {
 	//-----------------MAX 40 Students!!!!!!!!!!!-----------------------------
 	
 	public ExamLobby(ML_db ML, int pid) {
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 1231, 734);
@@ -58,6 +61,7 @@ public class ExamLobby extends JFrame {
 		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
 		
 		hmStringToJLabel = new HashMap<String, JLabel>();
+		hmStringToJPanel = new HashMap<String, JPanel>();
 		alStudentNames = new ArrayList<String>();
 		
 		JLabel lblBeigetreteneSchler = new JLabel("Beigetretene Sch\u00FCler:");
@@ -131,7 +135,9 @@ public class ExamLobby extends JFrame {
 	
 
 	public void displayJoinedStudents(ArrayList<String> alStudentNames) {
+		
 		for(int x = 0; x < alStudentNames.size(); x++) {
+			
 			JPanel student = new JPanel();
 			JLabel studentStatus = new JLabel();
 			
@@ -140,23 +146,26 @@ public class ExamLobby extends JFrame {
 			student.setBounds(studentX, studentY, 271, 31);
 			
 			hmStringToJLabel.put(alStudentNames.get(x), createStudentLabels(student, studentStatus, alStudentNames.get(x), x));
+			hmStringToJPanel.put(alStudentNames.get(x), student);
 
 			studentY += marginY;
 			
 			if(studentY > maxY) {
+				
 				studentY = studentYStandard;
 				studentX += marginLeftColumns;
+				
 			}
 			
 			contentPane.repaint();
 				
 		}
 		
-		
 	}
 	
 	
 	private JLabel createStudentLabels(JPanel student, JLabel studentStatus, String name, int x) {
+		
 		student.setBorder(new LineBorder(new Color(0, 122, 204), 2));
 		student.setBackground(MainView.darkBlack);
 		contentPane.add(student);
@@ -192,10 +201,12 @@ public class ExamLobby extends JFrame {
 		counterLabel.setFont(MainView.font_18);
 		
 		return studentStatus;
+		
 	}
 	
 
 	public void notifyAllStudentsJoined() {
+		
 		notificationPanel = new JPanel();
 		notificationPanel.setBounds(411, 655, 408, 48);
 		notificationPanel.setBackground(MainView.disCountBlue);
@@ -209,34 +220,44 @@ public class ExamLobby extends JFrame {
 		notificationPanel.add(notificationText);
 		
 		btnStartExam.setVisible(true);
+		
 	}
 	
 	
 	public void notifyAllStudentsFinished() {
+		
 		notificationPanel.setVisible(true);
 		notificationText.setText("Alle Schüler sind fertig!");
 		
 		btnStartExam.setText("zur Auswertung");
 		btnStartExam.setVisible(true);
+		
 	}
 	
 	
 	
 	private void setStudentStatusToRunning() {
+		
 		notificationPanel.setVisible(false);
 		
 		for(int x = 0; x < this.alStudentNames.size(); x++) {
 			hmStringToJLabel.get(this.alStudentNames.get(x)).setText("arbeitet");
 		}
+		
 	}
 	
 
 	public void updateFinishedStudents(ArrayList<String> finishedStudentsNames, ArrayList<Double> alStudentResults) {
+		
 		for(int x = 0; x < finishedStudentsNames.size(); x++) {
 			
-			if(alStudentResults.get(x) == -99) {
+			if(alStudentResults.get(x) == -31) {
+				
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setText("ungültig");
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setForeground(Color.RED);
+				
+				paintEvictDecisionIcons(hmStringToJPanel.get(finishedStudentsNames.get(x)));
+				
 			}
 			
 			else
@@ -244,5 +265,44 @@ public class ExamLobby extends JFrame {
 		}
 
 		contentPane.repaint();
+		
 	}
+
+
+
+	private void paintEvictDecisionIcons(JPanel cheaterPanel) {
+		
+		Rectangle cheaterRec = cheaterPanel.getBounds();
+		cheaterPanel.setBounds((int) cheaterRec.getX(), (int) cheaterRec.getY(), (int) cheaterRec.getWidth() + 60, (int) cheaterRec.getHeight());
+
+		JLabel evictLabel = MainView.makeMenuLabels("src/sadFace.png", "Schüler entfernen", (int) cheaterRec.getWidth() + 5, 3, 9, 23, 23);
+		cheaterPanel.add(evictLabel);
+		
+		JLabel continueLabel = MainView.makeMenuLabels("src/happyFace.png", "Schüler darf weitermachen", (int) cheaterRec.getWidth() + 25, 3, 9, 23, 23);
+		cheaterPanel.add(continueLabel);
+		
+	}
+	
+	public JPanel changeStudentStatus(String status, String studentName) {
+		
+		JLabel cheaterLabel = hmStringToJLabel.get(studentName);
+		cheaterLabel.setText(status);
+		cheaterLabel.setForeground(Color.ORANGE);
+		
+		return hmStringToJPanel.get(studentName);
+		
+	}
+	
+	public void removeSmileys(JPanel cheaterPanel) {
+		
+		cheaterPanel.remove(cheaterPanel.getComponent(cheaterPanel.getComponentCount() - 1));
+		cheaterPanel.remove(cheaterPanel.getComponent(cheaterPanel.getComponentCount() - 1));
+		
+		Rectangle cheaterRec = cheaterPanel.getBounds();
+		cheaterPanel.setBounds((int) cheaterRec.getX(), (int) cheaterRec.getY(), (int) cheaterRec.getWidth() - 60, (int) cheaterRec.getHeight());
+		
+	}
+	
+	
+	
 }

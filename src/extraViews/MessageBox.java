@@ -113,7 +113,7 @@ public class MessageBox extends JFrame {
 		
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 898, 660);
+		setBounds(100, 100, 898, 690);
 		setUndecorated(true);
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -127,7 +127,7 @@ public class MessageBox extends JFrame {
 		
 		JLabel lblHeading = new JLabel(heading1);
 		lblHeading.setFont(new Font("Roboto", Font.BOLD, 19));
-		lblHeading.setBounds(22, 13, 782, 46);
+		lblHeading.setBounds(22, 13, 880, 46);
 		lblHeading.setForeground(Color.GRAY);
 		contentPane.add(lblHeading);
 		
@@ -142,7 +142,7 @@ public class MessageBox extends JFrame {
 		textArea.setBackground(Color.WHITE);
 		textArea.setFont(new Font("Roboto", Font.PLAIN, 16));
 		textArea.setForeground(Color.DARK_GRAY);
-		textArea.setBounds(22, 72, 833, 484);
+		textArea.setBounds(22, 72, 833, 514);
 		contentPane.add(textArea);
 		
 		JButton btnAllesKlar = new JButton("Alles klar!");
@@ -162,7 +162,7 @@ public class MessageBox extends JFrame {
 				dispose();
 			}
 		});
-		btnAllesKlar.setBounds(736, 584, 123, 40);
+		btnAllesKlar.setBounds(736, 614, 123, 40);
 		btnAllesKlar.setFont(new Font("Roboto", Font.BOLD, 16));
 		btnAllesKlar.setFocusable(false);
 		btnAllesKlar.setContentAreaFilled(false);

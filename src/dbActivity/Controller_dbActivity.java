@@ -30,6 +30,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	private WaitForStartSignalView waitView;
 	private Timer timer;
 	public static boolean inExam = false;
+	public ArrayList<Integer> cheaterList;
 	
 	
 	
@@ -202,6 +203,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public int execSetUpExamOnDB(String solution, int studentCount, int bsCount, boolean enableBSHelp) {
+		cheaterList = new ArrayList<Integer>();
 		return myModel.setUpExamOnDB(solution, studentCount, bsCount, enableBSHelp);
 	}
 	
@@ -279,7 +281,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
         	timer.scheduleAtFixedRate(new TimerTask() {
         		  @Override
         		  public void run() {
-        			  ArrayList<Double> alStudentResults = myModel.scanForFinishedStudents(studentCount);
+        			  ArrayList<Double> alStudentResults = myModel.scanForFinishedStudents(studentCount, cheaterList);
         			  seenResults += alStudentResults.size();
         			  
         			  if(alStudentResults.size() >= 1) {
@@ -449,15 +451,62 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public void execNotifyTeacherOfLeave() {
+		
 		myModel.getResultIDFromDB();
 		myModel.notifyTeacherOfLeave();
 		inExam = false;
-		MC.execShowLeftPanel();
+		setTimer(new Timer());
+		new Thread(scanForCheatingDecision).start();
+		
 	}
 	
+	public final Runnable scanForCheatingDecision = new Runnable() {
+
+        public void run() {
+        	timer.scheduleAtFixedRate(new TimerTask() {
+
+				@Override
+				public void run() {
+					
+					int decision = myModel.retrieveCheatingDecision();
+					
+					if(decision == 1) {
+						
+						cancelTimer();
+						inExam = true;
+						paintDecisionInfo("Du darfst weitermachen!");
+						
+					}
+					
+					else if(decision == -1) {
+
+						cancelTimer();
+						paintDecisionInfo("Die Prüfung ist leider ungültig!");
+						MC.execShowLeftPanel();
+						
+					}
+					
+					
+				}
+        		
+        		  
+        		 
+        		}, 5*1000, 5*1000);
+        		 
+        }
+    };
+    
+    
+    private void paintDecisionInfo(String decision) {
+    	
+    	 MessageBox msgBox = new MessageBox("Achtung!", "Dein Lehrer hat eine Entscheidung gefällt!", decision, "smallMessage");
+         msgBox.setVisible(true);
+    	
+    }
 	
 	
-	public void execShowSuggestions(String codeInfo, boolean onlyTS, MouseListener ML) {
+	
+	public void execShowSuggestions(String codeInfo, boolean onlyTS, MouseListener ML, String solutionCount) {
 		
 		String currentContentOnWP = "";
 		LinkedList<Character> llSuggestion = null;
@@ -474,7 +523,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 			if(suggestionInfo == null)
 				return;
 			
-			llSuggestion = myModel.cutSuggestion(suggestionInfo[0], currentContentOnWP, suggestionInfo[5], MainModel.countOccurencesOfChar(currentContentOnWP, "#"));
+			llSuggestion = myModel.cutSuggestion(suggestionInfo[0], currentContentOnWP, suggestionInfo[5], MainModel.countOccurencesOfChar(currentContentOnWP, "#"), solutionCount);
 			
 			if(llSuggestion == null) {
 				
@@ -569,6 +618,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public void execSetUseTime(long minutes) {
 		myModel.setUseTime(minutes);
+	}
+
+	public void execChangeResultValue(int value) {
+		myModel.changeResultValue(cheaterList, value);
 	}
 
 
