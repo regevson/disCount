@@ -46,7 +46,7 @@ public class WaitForStartSignalView extends JFrame {
 		
 		lblLosGehts = new JLabel("Los geht's!");
 		lblLosGehts.setForeground(new Color(0, 122, 204));
-		lblLosGehts.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblLosGehts.setFont(MainView.font_20);
 		lblLosGehts.setVisible(false);
 		lblLosGehts.setBounds(250, 146, 200, 55);
 		contentPane.add(lblLosGehts);

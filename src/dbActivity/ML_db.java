@@ -70,6 +70,7 @@ public class ML_db implements MouseListener{
 	}
 	
 	public void initUploadToDB(String jahrgang, String seite, String nummer) {
+		myController.initRefreshLists();
 		myController.execUploadToDB(jahrgang, seite, nummer);
 	}
 
@@ -134,7 +135,7 @@ public class ML_db implements MouseListener{
 	}
 	
 	public InsertExamIDView joinExam() {
-		InsertExamIDView ieiv = new InsertExamIDView(this);
+		InsertExamIDView ieiv = new InsertExamIDView(this, "Prüfungs-ID eingeben!", "ID", "Beitreten");
 		return ieiv;
 	}
 	
@@ -267,7 +268,7 @@ public class ML_db implements MouseListener{
 			
 			else if(jltemp.getIcon().toString().equals("src/addGroup.png")) {
 				
-				NewGroupView ngv = new NewGroupView("Geben Sie einen Gruppennamen ein", "Gruppenname", "Erstellen", this);
+				NewGroupView ngv = new NewGroupView(this, "Geben Sie einen Gruppennamen ein", "Gruppenname", "Erstellen");
 				ngv.setVisible(true);
 				
 			}
@@ -286,6 +287,11 @@ public class ML_db implements MouseListener{
 				
 				lobby.removeSmileys((JPanel) jltemp.getParent());
 				
+			}
+			
+			else if(jltemp.getIcon().toString().equals("src/sendSessionComment.png")) {
+				System.out.println("inchat");
+				myController.execSendSessionComment(((JTextArea) ((JScrollPane) jltemp.getParent().getComponent(0)).getViewport().getView()).getText());
 			}
 			
 		}
@@ -339,6 +345,37 @@ public class ML_db implements MouseListener{
 		myController.execSetUseTime(minutes);
 	}
 	
+	public int initContactPartner(String partnerEmail) {
+		return myController.execContactPartner(partnerEmail);
+	}
+	
+	public int initSearchForSessions(String partnerEmail) {
+		return myController.execSearchForSession(partnerEmail);
+	}
+	
+	public void initBuildSessionEnvironment() {
+		myController.initBuildSessionEnvironment();
+	}
+	
+	public void initScanForSessionComments() {
+		
+		myController.setTimer(new Timer());
+		new Thread(myController.scanForSessionComments).start();
+		
+	}
+	
+	public void initScanForSessionCodeChanges() {
+		
+		myController.setTimer(new Timer());
+		new Thread(myController.scanForSessionCodeChanges).start();
+		
+	}
+	
+	public void initUpdateSessionContent(String code) {
+		myController.execUpdateSessionContent(code);
+	}
+
+	
 	
 	
 	
@@ -374,6 +411,20 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+
+
+	
+
+
+	
+
+
+	
+
+
+	
 
 
 	

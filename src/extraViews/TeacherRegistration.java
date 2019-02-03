@@ -56,7 +56,7 @@ public class TeacherRegistration extends JFrame {
 		JLabel lblCode = new JLabel("Code:");
 		lblCode.setBounds(210, 139, 109, 43);
 		lblCode.setForeground(purple);
-		lblCode.setFont(new Font("Roboto", Font.BOLD, 17));
+		lblCode.setFont(MainView.font_17_bold);
 		contentPane.add(lblCode);
 		
 		JLabel lblValid = new JLabel("Sie sind nun als Lehrer angemeldet!");

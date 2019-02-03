@@ -97,7 +97,7 @@ public class View_SuperClass extends JFrame{
 		btnFertig.setForeground(Color.WHITE);
 		btnFertig.setContentAreaFilled(false);
 		btnFertig.setOpaque(true);
-		btnFertig.setFont(new Font("Roboto", Font.BOLD, 20));
+		btnFertig.setFont(MainView.font_20);
 		btnFertig.setBorder(new LineBorder(new Color(0, 117, 211), 2));
 		btnFertig.setBounds(667, 356, 142, 48);
 		btnFertig.addActionListener(new ActionListener() {
@@ -131,7 +131,7 @@ public class View_SuperClass extends JFrame{
 	
 	public void makeKonto1(String konto1) {
 		lblKonto1 = new JLabel(konto1);
-		lblKonto1.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblKonto1.setFont(MainView.font_20);
 		lblKonto1.setForeground(Color.WHITE);
 		lblKonto1.setBounds(xLeft, yFirst, 71, 26);
 		contentPane.add(lblKonto1);
@@ -140,7 +140,7 @@ public class View_SuperClass extends JFrame{
 	public void makeKonto2Fixed(String konto2) {
 		lblKonto2Fixed = new JLabel(konto2);
 		lblKonto2Fixed.setForeground(Color.WHITE);
-		lblKonto2Fixed.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblKonto2Fixed.setFont(MainView.font_20);
 		lblKonto2Fixed.setBounds(xRight, yFirst, 248, 31);
 		contentPane.add(lblKonto2Fixed);
 	}
@@ -154,7 +154,7 @@ public class View_SuperClass extends JFrame{
 		lblKonto2Variable = new JComboBox(konto2);
 		lblKonto2Variable.setBorder(new LineBorder(new Color(37, 37, 38), 2));
 		lblKonto2Variable.setEditable(true);
-		lblKonto2Variable.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblKonto2Variable.setFont(MainView.font_20);
 		lblKonto2Variable.setBounds(xRight, yFirst, 248, 31);
 		contentPane.add(lblKonto2Variable);
 	}
@@ -171,7 +171,7 @@ public class View_SuperClass extends JFrame{
 		variableTax = new JComboBox(tax);
 		variableTax.setBorder(new LineBorder(new Color(37, 37, 38), 2));
 		variableTax.setEditable(true);
-		variableTax.setFont(new Font("Roboto", Font.BOLD, 20));
+		variableTax.setFont(MainView.font_20);
 		variableTax.setBounds(757, 189, 90, 42);
 		contentPane.add(variableTax);
 	}
@@ -180,7 +180,7 @@ public class View_SuperClass extends JFrame{
 	
 	public void makeKonto3(String konto3) {
 		lblKonto3 = new JLabel(konto3);
-		lblKonto3.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblKonto3.setFont(MainView.font_20);
 		lblKonto3.setForeground(Color.WHITE);
 		lblKonto3.setBounds(xLeft, ySecond, 56, 16);
 		contentPane.add(lblKonto3);
@@ -304,7 +304,7 @@ public class View_SuperClass extends JFrame{
 			btnFertig.setForeground(Color.WHITE);
 			btnFertig.setContentAreaFilled(false);
 			btnFertig.setOpaque(true);
-			btnFertig.setFont(new Font("Roboto", Font.BOLD, 20));
+			btnFertig.setFont(MainView.font_20);
 			btnFertig.setBorder(new LineBorder(new Color(0, 117, 211), 2));
 			btnFertig.setBounds(width/2-(142/2), height-200, 142, 48);
 			btnFertig.addActionListener(new ActionListener() {

@@ -311,6 +311,9 @@ public class MainModel {
 	
 	
 	public static String getCodeOnWorkPanel() {
+		
+		refreshAllBSLists();
+		
 		String code = "";
 		
 		for(int x = 0; x < MainView.bsList.size(); x++) {
@@ -364,6 +367,8 @@ public class MainModel {
 		bsList.removeAll(bsList);
 		
 		MainView.bsPanelMargin = 20;
+		
+		workPanel.repaint();
 		
 	}
 	
@@ -490,6 +495,7 @@ public class MainModel {
 	private void saveEncodedContent(String fileName) {
 
 		PrintWriter writer;
+		
 		try {
 			
 			writer = new PrintWriter(fileName + ".dc", "UTF-8");
@@ -505,6 +511,7 @@ public class MainModel {
 	public void saveTxtFile(String fileName) {
 		
 		PrintWriter writer;
+		
 		try {
 			
 			writer = new PrintWriter(fileName + ".txt", "UTF-8");
@@ -519,7 +526,7 @@ public class MainModel {
 	
 	
 	public ArrayList<Buchungssatz> prepareCollection(int index, JPanel workPanel, ArrayList<Buchungssatz> bsList) {
-
+		
 		boolean leftMore = false;
 		
 		if(index != -1) {
@@ -719,6 +726,66 @@ public class MainModel {
 		
 		MainView.workPanel.revalidate();
 		MainView.workPanel.repaint();
+		
+	}
+	
+	
+	public static void refreshAllBSLists() {
+		
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			
+			MainView.bsList.get(x).refreshLists();
+			
+		}
+		
+	}
+
+
+	public ArrayList<String> decodeHashTag(String content, int oldCount, int newCount) {
+		
+		ArrayList<String> contentList = new ArrayList<String>();
+		int index = -1;
+		
+		for(int x = 0; x <= oldCount; x++) {	
+			index = content.indexOf("#", index + 1);
+		}
+		
+		content = content.substring(index + 1);
+		
+		for(int x = 0; x < newCount; x++) {
+			
+			if(content.indexOf("#") == -1) {
+				
+				contentList.add(content);
+				break;
+				
+			}
+
+			contentList.add(content.substring(0, content.indexOf("#")));
+			content = content.substring(content.indexOf("#") + 1);
+			
+		}
+		
+		return contentList;
+		
+	}
+
+
+	public void changeBSColorDueToCodeCommitHistory(ArrayList<String> codeCommitList, String myEmail) {
+		
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			
+			if(codeCommitList.get(x).equals(myEmail))
+				MainView.bsList.get(x).getBSNumberPanel().setBackground(MainView.disCountBlue);
+
+			else {
+				
+				MainView.bsList.get(x).getBSNumberPanel().setBackground(MainView.disCountBrown);
+				MainView.bsList.get(x).paintBorder(MainView.disCountBrown);
+				
+			}
+			
+		}
 		
 	}
 	

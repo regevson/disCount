@@ -33,9 +33,12 @@ public class Abschreibung_View extends View_SuperClass{
 	
 	@Override
 	public void build(String Konto1, String[] Konten2, String Konto3, boolean fixed) {
+		
 		if(getSelectedCB() == 0) {
+			
 			warningActivated = true;
 			return;
+			
 		}
 
 		makeKonto1(Konto1);
@@ -44,6 +47,7 @@ public class Abschreibung_View extends View_SuperClass{
 		make_Monat_IBN();
 		make_Year_IBN();
 		makeCheckBoxes();
+		
 	}
 	
 	private void makeAnlKonto() {
@@ -138,14 +142,20 @@ public class Abschreibung_View extends View_SuperClass{
 	
 	private int getSelectedCB() {
 		
+		MainModel.refreshAllBSLists();
+		
 		for(int x = 0; x < MainView.bsList.size(); x++) {
+			
 			if(MainView.bsList.get(x).getRadioButtonStatus())
 				AW += MainModel.parseDouble(MainView.bsList.get(x).getNettoPrice());
+			
 		}
 		
 		if(AW == 0) {
+			
 			MainView.warning_CheckCBoxes();
 			return 0;
+			
 		}
 		
 		return 1;

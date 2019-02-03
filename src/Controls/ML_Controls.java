@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
 
+import View.Buchungssatz;
 import View.MainController;
 import View.MainModel;
 import View.MainView;
@@ -135,18 +136,23 @@ public class ML_Controls implements MouseListener{
 				putIntoFile(myModel.getStufen(), myModel.getLastStufen());
 				MainView.addPic.setEnabled(true);
 				
-			}
-			
-			else if(label.getIcon().toString().equals("src/checkedPic.png")) {
-				
-				putIntoFile(myModel.getStufen(), myModel.getLastStufen());
-				MainView.addPic.setEnabled(true);
+				if(MainView.inSession)
+					MC.initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
 				
 			}
 			
 			
 			else if(label.getIcon().toString().equals("src/escapeSmall.png"))
 				MC.execRemoveSuchenPanel();
+			
+			else if(label.getIcon().toString().equals("src/refresh.png"))
+				MC.initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
+		
+			else if(label.getIcon().toString().equals("src/exitTable.png")) {
+				
+				MC.tell_View_To_setUpBasicStuff(null);
+				MC.initRemoveSessionFromDB();
+			}
 		
 		}
 }
@@ -167,7 +173,6 @@ public class ML_Controls implements MouseListener{
 		MC.execpaintUpTo7(kontos, prices, lastStufen.getSide());
 		
 		MainModel.deleteChecked(MC.execGetWorkPanel());
-		
 	}
 	
 	

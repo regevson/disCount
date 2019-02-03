@@ -288,6 +288,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
         				  ArrayList<String> finishedStudentsNames = myModel.getStudentsNamesBasedOnScanList();
         				  lobby.updateFinishedStudents(finishedStudentsNames, alStudentResults);
         				  
+        				  System.out.println(studentCount +"  studntcount");
 	        			  if(seenResults == studentCount) {
 	        				  cancelTimer();
 	        				  
@@ -497,6 +498,74 @@ public class Controller_dbActivity extends Controller_AbstractClass{
     };
     
     
+    
+    public final Runnable scanForSessionComments = new Runnable() {
+    	
+    	int oldCommentCount = 0;
+
+        public void run() {
+        	timer.scheduleAtFixedRate(new TimerTask() {
+
+				@Override
+				public void run() {
+					
+					String comments = myModel.getColumnFromSession("chat");
+					int newCommentCount = MainModel.countOccurencesOfChar(comments, "#");
+					
+					if(newCommentCount == oldCommentCount)
+						return;
+			
+					String chatCommitHistory = myModel.getColumnFromSession("chatCommitHistory");
+					
+					MC.execPrintSessionComments(comments, oldCommentCount, newCommentCount - oldCommentCount, chatCommitHistory, myModel.getEmail());
+					oldCommentCount = newCommentCount;
+					
+				}
+        		
+        		  
+        		 
+        		}, 1*1000, 1*1000);
+        		 
+        }
+    };
+    
+    
+    
+    public final Runnable scanForSessionCodeChanges = new Runnable() {
+    	
+    	String oldCode = "-1";
+
+        public void run() {
+        	timer.scheduleAtFixedRate(new TimerTask() {
+
+				@Override
+				public void run() {
+					
+					String newCode = myModel.getColumnFromSession("code");
+					
+					if(oldCode.equals(newCode))
+						return;
+					
+					MainModel.deleteAll(MC.execGetWorkPanel());
+					oldCode = newCode;
+					
+					if(newCode.equals(""))
+						return;
+					
+					String codeCommitHistory = myModel.getColumnFromSession("codeCommitHistory");
+					
+					MC.execPrintSessionCode(newCode, codeCommitHistory, myModel.getEmail());
+					
+				}
+        		
+        		  
+        		 
+        		}, 1*1000, 1*1000);
+        		 
+        }
+    };
+    
+    
     private void paintDecisionInfo(String decision) {
     	
     	 MessageBox msgBox = new MessageBox("Achtung!", "Dein Lehrer hat eine Entscheidung gefällt!", decision, "smallMessage");
@@ -560,8 +629,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 	
 	private void displayWarningMessage() {
+		
 		MessageBox msg = new MessageBox("Warnung", "Keine Übereinstimmung", "Deine bisherigen Buchungssätze weisen Fehler auf!", "smallMessage");
 		msg.setVisible(true);
+		
 	}
 
 	public boolean execCheckTeacherCode(String enteredCode) {
@@ -622,6 +693,39 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public void execChangeResultValue(int value) {
 		myModel.changeResultValue(cheaterList, value);
+	}
+
+	public void initRefreshLists() {
+		MC.execRefreshLists();
+	}
+
+	public int execContactPartner(String partnerEmail) {
+		return myModel.createSession(partnerEmail);
+	}
+
+	public int execSearchForSession(String partnerEmail) {
+		
+		int sessionID = myModel.searchForSession(partnerEmail);
+		myModel.sendSessionComment("Ich bin online!!");
+		
+		return sessionID;
+		
+	}
+
+	public void initBuildSessionEnvironment() {
+		MC.execBuildSessionEnvironment();
+	}
+
+	public void execSendSessionComment(String comment) {
+		myModel.sendSessionComment(comment);
+	}
+
+	public void execUpdateSessionContent(String code) {
+		myModel.updateSessionContent(code);
+	}
+	
+	public void initRemoveSessionFromDB() {
+		myModel.removeSessionFromDB();
 	}
 
 

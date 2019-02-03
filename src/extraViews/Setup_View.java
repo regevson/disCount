@@ -158,7 +158,7 @@ public class Setup_View extends JFrame{
 		btnLos.setForeground(Color.WHITE);
 		btnLos.setContentAreaFilled(false);
 		btnLos.setOpaque(true);
-		btnLos.setFont(new Font("Roboto", Font.BOLD, 20));
+		btnLos.setFont(MainView.font_20);
 		btnLos.setBorder(new LineBorder(purple, 2, true));
 		btnLos.setBounds(565, 460, 233, 48);
 		btnLos.addActionListener(new ActionListener() {
@@ -208,7 +208,7 @@ public class Setup_View extends JFrame{
 
 	public static void labelDesign(JLabel jl) {
 		jl.setForeground(Color.WHITE);
-		jl.setFont(new Font("Roboto", Font.BOLD, 18));
+		jl.setFont(MainView.font_18);
 		jl.setForeground(Color.WHITE);
 	}
 
@@ -286,19 +286,19 @@ public class Setup_View extends JFrame{
 
 		try {
 
-			String url = "jdbc:mysql://localhost/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+			/*String url = "jdbc:mysql://localhost/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(url, "root", "");
 			System.out.println("Database connection established");
-
+*/
 			
-			 /*String url =
+			 String url =
 			 "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 			 Class.forName ("com.mysql.jdbc.Driver"); conn = DriverManager.getConnection
 			 (url,"root","juwalRegev1"); System.out.println
 			 ("Database connection established");
 			 
-			 System.out.println("AFTER");*/
+			 System.out.println("AFTER");
 			 
 
 		} catch (Exception e) {

@@ -62,7 +62,7 @@ public class MessageBox extends JFrame {
 		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, purple));
 		
 		JLabel lblHeading = new JLabel(heading1);
-		lblHeading.setFont(new Font("Roboto", Font.BOLD, 19));
+		lblHeading.setFont(MainView.font_19_bold);
 		lblHeading.setBounds(22, 13, 782, 46);
 		lblHeading.setForeground(Color.GRAY);
 		contentPane.add(lblHeading);
@@ -75,7 +75,7 @@ public class MessageBox extends JFrame {
 		textArea.setBorder(BorderFactory.createCompoundBorder(textArea.getBorder(), BorderFactory.createEmptyBorder(12, 12, 12, 12)));
 		textArea.setWrapStyleWord(true);
 		textArea.setBackground(Color.WHITE);
-		textArea.setFont(new Font("Roboto", Font.PLAIN, 16));
+		textArea.setFont(MainView.font_16);
 		textArea.setForeground(Color.DARK_GRAY);
 		textArea.setBounds(22, 72, 833, 114);
 		contentPane.add(textArea);
@@ -98,7 +98,7 @@ public class MessageBox extends JFrame {
 			}
 		});
 		btnAllesKlar.setBounds(732, 227, 123, 40);
-		btnAllesKlar.setFont(new Font("Roboto", Font.BOLD, 16));
+		btnAllesKlar.setFont(MainView.font_16_bold);
 		btnAllesKlar.setFocusable(false);
 		btnAllesKlar.setContentAreaFilled(false);
 		btnAllesKlar.setBackground(purple);
@@ -126,7 +126,7 @@ public class MessageBox extends JFrame {
 		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, purple));
 		
 		JLabel lblHeading = new JLabel(heading1);
-		lblHeading.setFont(new Font("Roboto", Font.BOLD, 19));
+		lblHeading.setFont(MainView.font_19_bold);
 		lblHeading.setBounds(22, 13, 880, 46);
 		lblHeading.setForeground(Color.GRAY);
 		contentPane.add(lblHeading);
@@ -140,7 +140,7 @@ public class MessageBox extends JFrame {
 		textArea.setBorder(BorderFactory.createCompoundBorder(textArea.getBorder(), BorderFactory.createEmptyBorder(12, 12, 12, 12)));
 		textArea.setWrapStyleWord(true);
 		textArea.setBackground(Color.WHITE);
-		textArea.setFont(new Font("Roboto", Font.PLAIN, 16));
+		textArea.setFont(MainView.font_16);
 		textArea.setForeground(Color.DARK_GRAY);
 		textArea.setBounds(22, 72, 833, 514);
 		contentPane.add(textArea);
@@ -163,7 +163,7 @@ public class MessageBox extends JFrame {
 			}
 		});
 		btnAllesKlar.setBounds(736, 614, 123, 40);
-		btnAllesKlar.setFont(new Font("Roboto", Font.BOLD, 16));
+		btnAllesKlar.setFont(MainView.font_16_bold);
 		btnAllesKlar.setFocusable(false);
 		btnAllesKlar.setContentAreaFilled(false);
 		btnAllesKlar.setBackground(purple);
@@ -203,14 +203,14 @@ public class MessageBox extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblHeading1 = new JLabel(heading1);
-		lblHeading1.setFont(new Font("Roboto", Font.BOLD, 19));
+		lblHeading1.setFont(MainView.font_19_bold);
 		lblHeading1.setBounds(22, 13, 782, 46);
 		lblHeading1.setForeground(Color.WHITE);
 		contentPane.add(lblHeading1);
 		
 		JLabel lblHeading2 = new JLabel(heading2);
 		lblHeading2.setForeground(Color.WHITE);
-		lblHeading2.setFont(new Font("Roboto", Font.BOLD, 17));
+		lblHeading2.setFont(MainView.font_17_bold);
 		lblHeading2.setBounds(32, 54, 782, 46);
 		contentPane.add(lblHeading2);
 		
@@ -219,7 +219,7 @@ public class MessageBox extends JFrame {
 		textArea.setWrapStyleWord(true);
 		textArea.setBounds(58, 100, 737, 131);
 		textArea.setBackground(purple);
-		textArea.setFont(new Font("Roboto", Font.PLAIN, 16));
+		textArea.setFont(MainView.font_16);
 		textArea.setForeground(Color.WHITE);
 		contentPane.add(textArea);
 		
@@ -242,7 +242,7 @@ public class MessageBox extends JFrame {
 			}
 		});
 		btnAllesKlar.setBounds(674, 237, 123, 40);
-		btnAllesKlar.setFont(new Font("Roboto", Font.BOLD, 16));
+		btnAllesKlar.setFont(MainView.font_16_bold);
 		btnAllesKlar.setContentAreaFilled(false);
 		btnAllesKlar.setOpaque(true);
 		btnAllesKlar.setForeground(Color.WHITE);
@@ -270,7 +270,7 @@ public class MessageBox extends JFrame {
 
 		
 		JLabel lblHeading1 = new JLabel(heading1);
-		lblHeading1.setFont(new Font("Roboto", Font.BOLD, 19));
+		lblHeading1.setFont(MainView.font_19_bold);
 		lblHeading1.setBounds(22, 23, 782, 46);
 		lblHeading1.setForeground(Color.DARK_GRAY);
 		contentPane.add(lblHeading1);
@@ -283,7 +283,7 @@ public class MessageBox extends JFrame {
 		textArea.setBorder(BorderFactory.createCompoundBorder(textArea.getBorder(), BorderFactory.createEmptyBorder(12, 12, 12, 12)));
 		textArea.setWrapStyleWord(true);
 		textArea.setBackground(Color.WHITE);
-		textArea.setFont(new Font("Roboto", Font.BOLD, 16));
+		textArea.setFont(MainView.font_16_bold);
 		textArea.setForeground(purple);
 		textArea.setBounds(22, 82, 782, 83);
 		contentPane.add(textArea);
@@ -297,17 +297,17 @@ public class MessageBox extends JFrame {
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1. Rechnungswesen-Buch", "2. Rechnungswesen-Buch", "3. Rechnungswesen-Buch", "4. Rechnungswesen-Buch", "5. Rechnungswesen-Buch"}));
-		comboBox.setFont(new Font("Roboto", Font.BOLD, 16));
+		comboBox.setFont(MainView.font_16_bold);
 		comboBox.setBounds(284, 191, 219, 40);
 		comboBox.setBorder(new LineBorder(purple, 1, true));
 		comboBox.setBorder(BorderFactory.createCompoundBorder(comboBox.getBorder(), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 		comboBox.setForeground(Color.BLACK);
 		contentPane.add(comboBox);
 		
-		txtSeite.setFont(new Font("Roboto", Font.BOLD, 16));
+		txtSeite.setFont(MainView.font_16_bold);
 		txtSeite.setForeground(new Color(128, 128, 128));
 		txtSeite.setBackground(Color.WHITE);
-		txtSeite.setFont(new Font("Roboto", Font.PLAIN, 17));
+		txtSeite.setFont(MainView.font_17);
 		txtSeite.setBorder(new LineBorder(new Color(128, 0, 128), 1, true));
 		txtSeite.setBorder(BorderFactory.createCompoundBorder(txtSeite.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
 		txtSeite.setText("Seite");
@@ -317,7 +317,7 @@ public class MessageBox extends JFrame {
 		
 		txtNummer.setForeground(new Color(128, 128, 128));
 		txtNummer.setBackground(Color.WHITE);
-		txtNummer.setFont(new Font("Roboto", Font.PLAIN, 17));
+		txtNummer.setFont(MainView.font_17);
 		txtNummer.setBorder(new LineBorder(new Color(128, 0, 128), 1, true));
 		txtNummer.setBorder(BorderFactory.createCompoundBorder(txtNummer.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
 		txtNummer.setText("Nummer");
@@ -354,7 +354,7 @@ public class MessageBox extends JFrame {
 		btnAllesKlar.setForeground(Color.WHITE);
 		btnAllesKlar.setContentAreaFilled(false);
 		btnAllesKlar.setOpaque(true);
-		btnAllesKlar.setFont(new Font("Roboto", Font.BOLD, 18));
+		btnAllesKlar.setFont(MainView.font_18);
 		btnAllesKlar.setBorder(new LineBorder(purple, 2, true));
 		contentPane.add(btnAllesKlar);
 		
@@ -364,7 +364,7 @@ public class MessageBox extends JFrame {
 		btnLieberNicht.setForeground(purple);
 		btnLieberNicht.setContentAreaFilled(false);
 		btnLieberNicht.setOpaque(true);
-		btnLieberNicht.setFont(new Font("Roboto", Font.PLAIN, 14));
+		btnLieberNicht.setFont(MainView.font_14);
 		btnLieberNicht.setBorder(new LineBorder(new Color(128, 128, 128), 1, true));
 		contentPane.add(btnLieberNicht);
 		btnLieberNicht.addActionListener(new ActionListener() {
@@ -397,7 +397,7 @@ public class MessageBox extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblHeading = new JLabel(heading1);
-		lblHeading.setFont(new Font("Roboto", Font.BOLD, 19));
+		lblHeading.setFont(MainView.font_19_bold);
 		lblHeading.setBounds(22, 13, 782, 46);
 		lblHeading.setForeground(Color.RED);
 		contentPane.add(lblHeading);
@@ -407,7 +407,7 @@ public class MessageBox extends JFrame {
 		textArea.setWrapStyleWord(true);
 		textArea.setBounds(175, 72, 448, 157);
 		textArea.setBackground(MainView.darkBlack);
-		textArea.setFont(new Font("Roboto", Font.PLAIN, 16));
+		textArea.setFont(MainView.font_16);
 		textArea.setForeground(Color.RED);
 		contentPane.add(textArea);
 		
@@ -429,7 +429,7 @@ public class MessageBox extends JFrame {
 			}
 		});
 		btnAllesKlar.setBounds(674, 237, 123, 40);
-		btnAllesKlar.setFont(new Font("Roboto", Font.BOLD, 16));
+		btnAllesKlar.setFont(MainView.font_16_bold);
 		btnAllesKlar.setContentAreaFilled(false);
 		btnAllesKlar.setOpaque(true);
 		btnAllesKlar.setForeground(Color.BLACK);

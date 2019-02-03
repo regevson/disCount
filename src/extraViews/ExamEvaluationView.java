@@ -119,7 +119,7 @@ public class ExamEvaluationView extends JFrame {
 		else
 			bsPercentage.setForeground(Color.GREEN);
 		
-		bsPercentage.setFont(new Font("Roboto", Font.PLAIN, 16));
+		bsPercentage.setFont(MainView.font_16);
 		contentPane.add(bsPercentage);
 		
 	}

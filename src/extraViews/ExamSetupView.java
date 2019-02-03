@@ -54,7 +54,7 @@ public class ExamSetupView extends JFrame {
 		
 		JLabel lblLsungAngehngt = new JLabel("L\u00F6sung angeh\u00E4ngt!");
 		lblLsungAngehngt.setForeground(Color.GREEN);
-		lblLsungAngehngt.setFont(new Font("Roboto", Font.BOLD, 16));
+		lblLsungAngehngt.setFont(MainView.font_16_bold);
 		lblLsungAngehngt.setBounds(194, 169, 153, 33);
 		lblLsungAngehngt.setVisible(false);
 		contentPane.add(lblLsungAngehngt);

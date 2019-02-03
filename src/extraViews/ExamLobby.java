@@ -114,16 +114,23 @@ public class ExamLobby extends JFrame {
 		
 		
 		
-	
-		/*
-		String st = "student";
-		int c = 1;
-		ArrayList<String> temp = new ArrayList<String>();
-		for(int x = 0; x < 40; x++) {
-			temp.add(st + c);
-			c++;
-		}
-		displayJoinedStudents(temp);
+
+		/*ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> finishedNames = new ArrayList<String>();
+		ArrayList<Double> results = new ArrayList<Double>();
+		
+		names.add("Marco Wagner");
+		names.add("Jennifer Koenig");
+		names.add("Tom Goldschmidt");
+		names.add("regevson");
+		names.add("Anna-Maria Boehm");
+		
+		finishedNames.add("regevson");
+		results.add(-31.00);
+		
+		
+		displayJoinedStudents(names);
+		updateFinishedStudents(finishedNames, results);
 		*/
 		
 		 

@@ -6,9 +6,7 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +14,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
-import Controls.ML_Controls;
 import dbActivity.ML_db;
 import dbActivity.db_Model;
 
@@ -40,7 +37,7 @@ public class Buchungssatz implements MouseListener{
 	
 	//margins//
 	
-	private int marginTop = 10;
+	private int marginTop = 50;
 
 	private int marginLeft_KontenLeft1;
 	private int marginLeft_KontenOther;
@@ -57,11 +54,11 @@ public class Buchungssatz implements MouseListener{
 	
 	private String[] kontoList;
 	private String[] priceList;
-	private ArrayList<JLabel> llKontos;
-	private ArrayList<JLabel> llPrices;
+	private ArrayList<JTextField> llKontos;
+	private ArrayList<JTextField> llPrices;
 	private String nettoPrice;
 	
-	private ArrayList<JLabel> fieldList = new ArrayList<JLabel>();
+	private ArrayList<JTextField> fieldList = new ArrayList<JTextField>();
 	
 	private String solutionID;
 	
@@ -98,12 +95,11 @@ public class Buchungssatz implements MouseListener{
 		
 		workPanel.add(bsPanel);
 		
-		if(MainView.isUploading) {
+		if(MainView.isUploading)
 			bsPanel.setBackground(MainView.disCountGreen);
-		}
-		else {
+		else
 			bsPanel.setBackground(MainView.middleBlack);
-		}
+
 		bsPanel.setLayout(null);
 		
 		workPanel.add(bsPanel);
@@ -125,7 +121,7 @@ public class Buchungssatz implements MouseListener{
 		bsNumberLabel = new JLabel();
 		bsNumberLabel.setForeground(Color.LIGHT_GRAY);
 		bsNumberLabel.setBounds(20, bsPanelHeight - 115, 60, 50);
-		bsNumberLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+		bsNumberLabel.setFont(MainView.font_20);
 		bsNumberPanel.add(bsNumberLabel);
 		
 		makeRadioButton();
@@ -150,6 +146,7 @@ public class Buchungssatz implements MouseListener{
 	}
 
 	public void makePink() {
+		
 		Color bg = bsPanel.getBackground();
 		bsPanel.setBackground(MainView.disCountPurple);
 		radioButton.setBackground(MainView.disCountPurple);
@@ -162,14 +159,17 @@ public class Buchungssatz implements MouseListener{
 						bsPanel.setBackground(bg);
 						radioButton.setBackground(bg);
 						bsPanel.repaint();}}, 1000);
+		
 	}
 	
 	
 	private void makeRadioButton() {
+		
 		radioButton = new JRadioButton();
 		radioButton.setText("");
 		bsPanel.add(radioButton);
 		radioButton.setBounds(550, 69, 30, 30);
+		
 		if(MainView.isUploading)
 			radioButton.setBackground(MainView.disCountGreen);
 		else
@@ -177,27 +177,35 @@ public class Buchungssatz implements MouseListener{
 		
 		if(MainView.isUploading)
 			radioButton.setSelected(true);
+		
 	}
 	
 	
 	private void resizeWorkPanel(JPanel workPanel) {
+		
 		int height = (int) workPanel.getSize().getHeight();
 		workPanel.setPreferredSize(new Dimension(workPanel_Width - 20, height + 1000));
+		
 	}
 	
 	public void modifyJPanel() {
+		
 		bsPanel.setBounds(5, bsPanelMargin, bsPanelWidth, bsPanelHeight_MAX);
 		bsNumberPanel.setBounds(5, 5, 60, bsPanelHeight_MAX - 15);
+		
 	}
 	
 	public void reModifyJPanel() {
+		
 		bsPanel.setBounds(5, bsPanelMargin, bsPanelWidth, bsPanelHeight);
 		bsNumberPanel.setBounds(5, 5, 60, bsPanelHeight - 15);
+		
 	}
 	
 	
 	
 	public void addCheckMark(ArrayList<Integer> examBSList, int bsNumber) {
+		
 		ImageIcon verifyIcon = new ImageIcon("src/checkIt.png");
 		JLabel verifyLabel = new JLabel(verifyIcon);
 		verifyLabel.setBounds(528, 9, 42, 42);
@@ -207,18 +215,22 @@ public class Buchungssatz implements MouseListener{
 		
 		if(examBSList != null)
 			examBSList.set(bsNumber, 1);
+		
 	}
 	
 	public void addErrorIcon() {
+		
 		ImageIcon errorIcon = new ImageIcon("src/errorIcon.png");
 		JLabel errorLabel = new JLabel(errorIcon);
 		errorLabel.setBounds(533, 9, 42, 42);
 		bsPanel.add(errorLabel);
 		
 		db_Model.skill--;
+		
 	}
 	
-	private void addThumbs(JPanel infoPanel, MouseListener ML) {
+	private void addThumbs(JPanel infoPanel) {
+		
 		ImageIcon thumbsUpIcon = new ImageIcon("src/thumbsup.png");
 		thumbsUpLabel = new JLabel(thumbsUpIcon);
 		thumbsUpLabel.setBounds(310, 12, 18, 18);
@@ -232,19 +244,22 @@ public class Buchungssatz implements MouseListener{
 		
 		infoPanel.add(thumbsUpLabel);
 		infoPanel.add(thumbsDownLabel);
+		
 	}
 	
-	private void addCommentIcon(JPanel infoPanel, MouseListener ML) {
+	private void addCommentIcon(JPanel infoPanel) {
+		
 		ImageIcon commentIcon = new ImageIcon("src/comment.png");
 		JLabel commentLabel = new JLabel(commentIcon);
 		commentLabel.setBounds(430, 12, 18, 18);
 		infoPanel.add(commentLabel);
 		
-		this.ML = ML;
 		commentLabel.addMouseListener(this);
+		
 	}
 	
 	private void addArrows() {
+		
 		ImageIcon downIcon = new ImageIcon("src/downArrow.png");
 		JLabel downLabel = new JLabel(downIcon);
 		downLabel.setToolTipText("nach unten verschieben");
@@ -259,42 +274,54 @@ public class Buchungssatz implements MouseListener{
 		bsPanel.add(upLabel);
 		upLabel.addMouseListener(this);
 		
+		
 	}
 	
 	public void addStar() {
+		
 		ImageIcon starIcon = new ImageIcon("src/star.png");
 		JLabel starLabel = new JLabel(starIcon);
 		starLabel.setToolTipText("Lehrerlösung");
 		starLabel.setBounds(16, 20, 23, 25);
 		bsNumberPanel.add(starLabel);
+		
 	}
 	
 	public void addVerified() {
+		
 		ImageIcon verifiedIcon = new ImageIcon("src/verified.png");
 		JLabel verifiedLabel = new JLabel(verifiedIcon);
 		verifiedLabel.setToolTipText("verifizierter Schüler");
 		verifiedLabel.setBounds(13, 20, 26, 28);
 		bsNumberPanel.add(verifiedLabel);
+		
 	}
 	
 	public void paintNumberOnBSNumberPanel() {
+		
 		for(int y = 0; y < MainView.bsList.size(); y++) {
 			MainView.bsList.get(y).getBSNumberLabel().setText(Integer.toString(y + 1));
 		}
+		
 	}
 	
-	private JLabel addFieldToContainer(String item, int x, int y, int width, int height) {
-		JLabel label = new JLabel(item);
+	private JTextField addFieldToContainer(String item, int x, int y, int width, int height) {
+		
+		JTextField label = new JTextField(item);
 		label.setBounds(x, y, width, height);
-		label.setFont(new Font("Roboto", Font.BOLD, 17));
+		label.setFont(MainView.font_17_bold);
 		label.setForeground(new Color(218, 218, 218));
+		label.setBackground(null);
+		label.setBorder(null);
 		bsPanel.add(label);
 		fieldList.add(label);
 
 		return label;
+		
 	}
 	
 	public void addNoteToPanel(String note, int x) {
+		
 		JLabel label = new JLabel(note);
 		label.setBounds(x, 120, 500, 30);
 		label.setFont(new Font("Roboto", Font.ITALIC, 16));
@@ -302,9 +329,12 @@ public class Buchungssatz implements MouseListener{
 		bsPanel.add(label);
 		bsPanel.repaint();
 		MainView.workPanel.repaint();
+		
 	}
 	
 	public void addInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, MouseListener ML) {
+		
+		this.ML = ML;
 		
 		JLabel infoLabel = MainView.makeMenuLabels("src/info.png", "Informationen", 17, 120, 9, 18, 18);
 		infoLabel.addMouseListener(this);
@@ -317,8 +347,8 @@ public class Buchungssatz implements MouseListener{
 		bsPanel.add(infoPanel);
 		infoPanel.setVisible(false);
 		
-		addThumbs(infoPanel, ML);
-		addCommentIcon(infoPanel, ML);
+		addThumbs(infoPanel);
+		addCommentIcon(infoPanel);
 		
 		createBSInfoContents(10, 100, "@" + name, infoPanel);
 		createBSInfoContents(150, 50, codeInfo, infoPanel);
@@ -356,17 +386,43 @@ public class Buchungssatz implements MouseListener{
 	}
 	
 	private void createBSInfoContents(int x, int width, String text, JPanel infoPanel) {
+		
 		JLabel label = new JLabel();
 		label.setForeground(Color.WHITE);
 		label.setFont(MainView.font_15);
 		label.setText(text);
 		label.setBounds(x, 2, width, 40);
 		infoPanel.add(label);
+		
 	}
 	
-	/*public insertBS() {
+	public void refreshLists() {
 		
-	}*/
+		for(int x = 0; x < llKontos.size(); x++) {
+			kontoList[x] = llKontos.get(x).getText();
+		}
+		
+		for(int x = 0; x < llPrices.size(); x++) {
+			priceList[x] = llPrices.get(x).getText();
+		}
+		
+		if(stufen == 1)
+			writeTxtFileEinstufig();
+		
+		else {
+			
+			if(leftMore)
+				nettoPrice = priceList[0];
+			else
+				nettoPrice = "-" + priceList[0];
+			
+			writeTxtFile();
+			
+		}
+		
+		encode();
+		
+	}
 	
 	
 	
@@ -377,7 +433,8 @@ public class Buchungssatz implements MouseListener{
 	
 	
 	
-	public void initBS(String[] kontoList, String[] priceList, boolean leftMore, JPanel workPanel) {
+	public Buchungssatz initBS(String[] kontoList, String[] priceList, boolean leftMore, JPanel workPanel) {
+		
 		this.kontoList = kontoList;
 		this.priceList = priceList;
 		this.leftMore = leftMore;
@@ -385,6 +442,9 @@ public class Buchungssatz implements MouseListener{
 		createBSContainer(workPanel);
 		
 		initFields();
+		
+		return this;
+		
 	}
 	
 	
@@ -394,6 +454,7 @@ public class Buchungssatz implements MouseListener{
 	private void initFields() {
 		
 		if(leftMore) {
+			
 			marginLeft_KontenLeft1 = 100;
 			marginLeft_KontenRight1 = 180;
 			
@@ -402,9 +463,11 @@ public class Buchungssatz implements MouseListener{
 			
 			marginLeft_KontenOther = 100;
 			marginLeft_PricesOther = 350;
+			
 		}
 		
 		else {
+			
 			marginLeft_KontenLeft1 = 180;
 			marginLeft_KontenRight1 = 100;
 			
@@ -413,29 +476,30 @@ public class Buchungssatz implements MouseListener{
 			
 			marginLeft_KontenOther = 180;
 			marginLeft_PricesOther = 450;
+			
 		}
 		
-		llKontos = new ArrayList<JLabel>();
-		llPrices = new ArrayList<JLabel>();
+		llKontos = new ArrayList<JTextField>();
+		llPrices = new ArrayList<JTextField>();
 		
-		if(kontoList.length == 2) //einstufig
+		if(kontoList.length == 2) 		//einstufig
 			init2KontenAnd1Price();
 		
-		else {						//mehrstufig
+		else							//mehrstufig
 			initMultipleFields();
-		}
 			
 	}
 	
 	
 
 	private void init2KontenAnd1Price() {
+		
 		stufen = 1;
 		
-		llKontos.add(addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, bsPanelHeight - 100, 200, 30)); //kontoLeft1
-		llKontos.add(addFieldToContainer(kontoList[1], marginLeft_KontenRight1, bsPanelHeight - 100, 200, 30)); //kontoRight1
+		llKontos.add(addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, bsPanelHeight - 95, 70, 20)); //kontoLeft1
+		llKontos.add(addFieldToContainer(kontoList[1], marginLeft_KontenRight1, bsPanelHeight - 95, 70, 20)); //kontoRight1
 		
-		llPrices.add(addFieldToContainer(priceList[0], marginLeft_singlePrice, bsPanelHeight - 100, 200, 30)); //priceLeft1
+		llPrices.add(addFieldToContainer(priceList[0], marginLeft_singlePrice, bsPanelHeight - 95, 90, 20)); //priceLeft1
 		
 		writeTxtFileEinstufig();
 		encode();
@@ -444,6 +508,7 @@ public class Buchungssatz implements MouseListener{
 
 	
 	private void writeTxtFileEinstufig() {
+		
 		String firstRowMargin = "                ";
 		
 		if(leftMore)
@@ -452,6 +517,7 @@ public class Buchungssatz implements MouseListener{
 			txtContent = "\r\n\r\n\r\n\r\n" + kontoList[1] + "    " + kontoList[0] + firstRowMargin + priceList[0];
 		
 		nettoPrice = "0";
+		
 	}
 	
 	
@@ -465,18 +531,19 @@ public class Buchungssatz implements MouseListener{
 		else
 			adaptMargin = -(9 * (stufen - 1)) + 17;
 		
-		llKontos.add(addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, marginTop + adaptMargin, 100, 100));
-		llKontos.add(addFieldToContainer(kontoList[1], marginLeft_KontenRight1, marginTop + adaptMargin, 100, 100));
+		llKontos.add(addFieldToContainer(kontoList[0], marginLeft_KontenLeft1, marginTop + adaptMargin, 70, 20));
+		llKontos.add(addFieldToContainer(kontoList[1], marginLeft_KontenRight1, marginTop + adaptMargin, 70, 20));
 		
-		llPrices.add(addFieldToContainer(priceList[0], marginLeft_PricesLeft1, marginTop + adaptMargin, 100, 100));
-		llPrices.add(addFieldToContainer(priceList[1], marginLeft_PricesRight1, marginTop + adaptMargin, 100, 100));
+		llPrices.add(addFieldToContainer(priceList[0], marginLeft_PricesLeft1, marginTop + adaptMargin, 90, 20));
+		llPrices.add(addFieldToContainer(priceList[1], marginLeft_PricesRight1, marginTop + adaptMargin, 90, 20));
 		
 		for(int x = 2; x < kontoList.length; x++) {
 			
-			llKontos.add(addFieldToContainer(kontoList[x], marginLeft_KontenOther, marginTop + adaptMargin + 20, 120, 100));
-			llPrices.add(addFieldToContainer(priceList[x], marginLeft_PricesOther, marginTop + adaptMargin + 20, 120, 100));
+			llKontos.add(addFieldToContainer(kontoList[x], marginLeft_KontenOther, marginTop + adaptMargin + 20, 70, 20));
+			llPrices.add(addFieldToContainer(priceList[x], marginLeft_PricesOther, marginTop + adaptMargin + 20, 90, 20));
 			
 			adaptMargin += 20;
+			
 		}
 		
 		addIntoList();
@@ -489,6 +556,7 @@ public class Buchungssatz implements MouseListener{
 	////////////////move/////////////////////
 	
 	private void moveBS(int upOrDown) { // up is -1
+		
 		makePink();
 		int myIndex = MainView.bsList.indexOf(this);
 		
@@ -504,12 +572,15 @@ public class Buchungssatz implements MouseListener{
 		otherBS.realignBSPanel(tempMargin);
 		
 		paintNumberOnBSNumberPanel();
+    	
 	}
 	
 	
 	public void realignBSPanel(int newMargin) {
+		
 		bsPanel.setBounds(5, newMargin, bsPanelWidth, bsPanelHeight);
 		bsPanelMargin = newMargin;
+		
 	}
 	
 	
@@ -517,26 +588,34 @@ public class Buchungssatz implements MouseListener{
 	/////////////remove////////////////
 	
 	public void removeBS(JPanel workPanel) {
+		
 		int myIndex = MainView.bsList.indexOf(this);
 		
 		for(int x = myIndex + 1; x < MainView.bsList.size(); x++) {
+			
 			Buchungssatz otherBS = MainView.bsList.get(x);
 			otherBS.realignBSPanel(otherBS.getBSPanelMargin() - 170);
+			
 		}
 		
 		MainView.bsPanelMargin -= 170;
+		
 	}
 	
 	private void removeFields() {
+		
 		for(int x = 0; x < fieldList.size(); x++) {
 			fieldList.get(x).setVisible(false);
 		}
+		
 	}
 	
 	private void displayFields() {
+		
 		for(int x = 0; x < fieldList.size(); x++) {
 			fieldList.get(x).setVisible(true);
 		}
+		
 	}
 	
 	
@@ -548,8 +627,10 @@ public class Buchungssatz implements MouseListener{
 	
 	
 	private void addIntoList() {
+		
 		encode();
 		writeTxtFile();
+		
 	}
 	
 	
@@ -668,11 +749,11 @@ public class Buchungssatz implements MouseListener{
 		return solutionID;
 	}
 	
-	public ArrayList<JLabel> getKontoList() {
+	public ArrayList<JTextField> getKontoList() {
 		return llKontos;
 	}
 	
-	public ArrayList<JLabel> getPriceList() {
+	public ArrayList<JTextField> getPriceList() {
 		return llPrices;
 	}
 	
@@ -735,13 +816,19 @@ public class Buchungssatz implements MouseListener{
 			((ML_db) ML).initPrintComments(solutionID);
 		
 		else if(triggerLabel.getIcon().toString().equals("src/info.png")) {
+			
 			if(infoPanel.isVisible()) {
+				
 				infoPanel.setVisible(false);
 				displayFields();
+				
 			}
+			
 			else {
+				
 				infoPanel.setVisible(true);
 				removeFields();
+				
 			}
 		}
 		

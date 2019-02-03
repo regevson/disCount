@@ -22,7 +22,7 @@ public class MainController{
 	MainModel mainModel;
 	Table_Model tab_Model;
 	
-	private boolean leftMore;
+	//private boolean leftMore;
 	
 	private LinkedList<Controller_AbstractClass> controllerList;
 
@@ -35,7 +35,7 @@ public class MainController{
 		
 	}
 	
-	private void tell_View_To_setUpBasicStuff(ArrayList<MessageBox> messageBoxList) {
+	public void tell_View_To_setUpBasicStuff(ArrayList<MessageBox> messageBoxList) {
 		
 		if(MainView.isBANNED)
 			executeBannedRoutine();
@@ -319,6 +319,49 @@ public class MainController{
 
 	public ArrayList<JPanel> execGetGroupPanelList() {
 		return mainView.getGroupPanelList();
+	}
+
+	public void execRefreshLists() {
+		mainModel.refreshAllBSLists();
+	}
+
+	public void execBuildSessionEnvironment() {
+		mainView.buildSessionEnvironment();
+	}
+
+	public void execPrintSessionComments(String comments, int oldCommentCount, int newCommentCount, String chatCommitHistory, String myEmail) {
+
+		mainView.printSessionComments(mainModel.decodeHashTag(comments, oldCommentCount, newCommentCount),
+				mainModel.decodeHashTag(chatCommitHistory, oldCommentCount, newCommentCount), myEmail);
+
+	}
+
+	public void initUpdateSessionContent(String code) {
+		
+		Controller_dbActivity dbController = (Controller_dbActivity) controllerList.get(8);
+		dbController.execUpdateSessionContent(code);
+		
+	}
+
+	public void execPrintSessionCode(String newCode, String codeCommitHistory, String myEmail) {
+		
+		execOpenProject(MainModel.convertStringToLL_Char(newCode));
+		ArrayList<String> codeCommitList = mainModel.decodeHashTag(codeCommitHistory, 0, MainModel.countOccurencesOfChar(codeCommitHistory, "#"));
+		mainModel.changeBSColorDueToCodeCommitHistory(codeCommitList, myEmail);
+		
+	}
+
+	public void initRemoveSessionFromDB() {
+		
+		Controller_dbActivity dbController = (Controller_dbActivity) controllerList.get(8);
+		dbController.execSendSessionComment("Ich bin offline!");
+		
+		try {
+			Thread.sleep(1000); // so partner has time to get comment from db
+		} catch (InterruptedException e) {e.printStackTrace();}
+		
+		dbController.initRemoveSessionFromDB();
+		
 	}
 
 	

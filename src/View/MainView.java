@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,12 +58,14 @@ import dbActivity.Controller_dbActivity;
 import dbActivity.ML_db;
 import dbActivity.QuestionComment;
 import dbActivity.db_Model;
+import extraViews.EnterEmailForSession;
 import extraViews.ExamSetupView;
 import extraViews.ExerciseAvailabilityChecker_View;
 import extraViews.InfoView;
 import extraViews.InsertExamIDView;
 import extraViews.MessageBox;
 import extraViews.Personalverrechnung_Settings_View;
+import extraViews.SearchForSessions;
 import extraViews.TeacherRegistration;
 import extraViews.View_SuperClass;
 import stats.ML_Stats;
@@ -128,13 +134,20 @@ public static boolean isBANNED = false;
 	private JLabel entryOnSB;
 
 
-	public static Font font_30 = new Font("Roboto", Font.BOLD, 30);
-	public static Font font_20 = new Font("Roboto", Font.BOLD, 20);
-	public static Font font_18 = new Font("Roboto", Font.BOLD, 18);
-	public static Font font_17 = new Font("Roboto", Font.PLAIN, 17);
-	public static Font font_17_bold = new Font("Roboto", Font.BOLD, 17);
-	public static Font font_16 = new Font("Roboto", Font.PLAIN, 16);
-	public static Font font_15 = new Font("Roboto", Font.PLAIN, 15);
+	public static Font font_30;
+	public static Font font_20;
+	public static Font font_18;
+	public static Font font_19_bold;
+	public static Font font_17;
+	public static Font font_17_bold;
+	public static Font font_16;
+	public static Font font_16_bold;
+	public static Font font_15;
+	public static Font font_14;
+
+	/*
+	public static Font font_15 = new Fonnt("Roboto", Font.PLAIN, 17);
+	 */
 	
 	private static JTextArea txtAreaHints;
 
@@ -178,6 +191,10 @@ public static boolean isBANNED = false;
 
 	public ArrayList<JPanel> groupPanelList;
 
+	public static boolean inSession = false;
+
+	private int topMargin_SessionComment = 20;
+
 	private static JRadioButton onlyTeacherSolutions;
 	
 	public static boolean databaseIsActive = true;
@@ -190,10 +207,49 @@ public static boolean isBANNED = false;
 		icons.add(Toolkit.getDefaultToolkit().getImage("src/taskbar32.png"));
 		icons.add(Toolkit.getDefaultToolkit().getImage("src/taskbar64.png"));
 		setIconImages(icons);
+		setFonts();
 		
 	}
 	
+	private void setFonts() {
+		
+		try {
+			
+			GraphicsEnvironment ge;
+			
+			font_14 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Regular.ttf")).deriveFont(Font.PLAIN, 14f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			
+			font_15 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Regular.ttf")).deriveFont(Font.PLAIN, 15f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
+			font_16 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Regular.ttf")).deriveFont(Font.PLAIN, 16f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			
+			font_16_bold = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Bold.ttf")).deriveFont(Font.PLAIN, 16f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+			font_17 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Regular.ttf")).deriveFont(Font.PLAIN, 17f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+			font_17_bold = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Bold.ttf")).deriveFont(17f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+			font_18 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Bold.ttf")).deriveFont(18f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			
+			font_19_bold = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Bold.ttf")).deriveFont(19f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+			font_20 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Bold.ttf")).deriveFont(20f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+			font_30 = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Roboto-Bold.ttf")).deriveFont(30f);
+			ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    
+		} catch (IOException|FontFormatException e) {e.printStackTrace();}
+		
+	}
 
 	public void setUpBasicStuff() {
 		
@@ -242,11 +298,8 @@ public static boolean isBANNED = false;
 		
 		makeMenuBarWP();
 		
+	
 		
-
-		
-		
-
 		
 		
 		String[] namesEKVK = {"~  Handelswareneinkauf", "~  Handelswarenverkauf",
@@ -748,6 +801,8 @@ public static boolean isBANNED = false;
 		JMenuItem menuItemExam;
 		JMenuItem menuItemInfo;
 		JMenuItem menuItemRegisterAsTeacher;
+		JMenuItem menuItemStartSession;
+		JMenuItem menuItemJoinSession;
 
 		menuBar = new JMenuBar();
 		
@@ -830,6 +885,8 @@ public static boolean isBANNED = false;
 		menuItem.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	MainModel.deleteChecked(workPanel);
+		    	if(MainView.inSession)
+		    		((ML_db) llML.get(9)).initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
 		    	workPanel.repaint();
 		    }
 		});
@@ -848,6 +905,8 @@ public static boolean isBANNED = false;
 		menuItem2.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	MainModel.deleteAll(workPanel);
+		    	if(MainView.inSession)
+		    		((ML_db) llML.get(9)).initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
 		    	workPanel.repaint();
 		    }
 		});
@@ -1041,6 +1100,42 @@ public static boolean isBANNED = false;
 			menu.add(menuItemRegisterAsTeacher);
 		
 		}
+		
+		
+		
+		menu = new JMenu("SESSION");
+		menu.setMnemonic(KeyEvent.VK_N);
+		menu.getAccessibleContext().setAccessibleDescription(
+		        "Session starten");
+		menuBar.add(menu);
+
+		setJMenuBar(menuBar);
+		
+		menuItemStartSession = new JMenuItem("Übungssession starten", KeyEvent.VK_T);
+		
+		menuItemStartSession.setAccelerator(KeyStroke.getKeyStroke('T', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItemStartSession.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	EnterEmailForSession eefs = new EnterEmailForSession((ML_db) llML.get(9), "Geben Sie die E-Mail-Addresse Ihres Partners ein!", "E-Mail", "Kontaktieren");
+		    	eefs.setVisible(true);
+		    }
+		});
+
+		menu.add(menuItemStartSession);
+		
+		menuItemJoinSession = new JMenuItem("Übungssession beitreten", KeyEvent.VK_T);
+		
+		menuItemJoinSession.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItemJoinSession.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	SearchForSessions sfs = new SearchForSessions((ML_db) llML.get(9), "Geben Sie die E-Mail-Addresse Ihres Partners ein!", "E-Mail", "Suchen");
+		    	sfs.setVisible(true);
+		    }
+		});
+
+		menu.add(menuItemJoinSession);
+	
+
 		
 		
 		
@@ -1458,22 +1553,24 @@ public static boolean isBANNED = false;
 		onlyTeacherSolutions.setText("nur Lehrerlösungen");
 		grammarCheckPanel.add(onlyTeacherSolutions);
 		
+		UIManager.put("ComboBox.background", MainView.darkDisCountBlue);
+		UIManager.put("ComboBox.foreground", Color.WHITE);
+		UIManager.put("ComboBox.selectionBackground", MainView.darkBlack);
+		UIManager.put("ComboBox.selectionForeground", Color.WHITE);
+		String count[] = {"1", "2", "3", "alle"};
+		
 		JComboBox solutionCount = new JComboBox();
 		
 		if(!check) {
 			
 			onlyTeacherSolutions.setBounds(workPanel_Width - 350, 20, 160, 20);
 			
-			UIManager.put("ComboBox.background", new Color(37, 37, 38));
-			UIManager.put("ComboBox.foreground", Color.WHITE);
-			UIManager.put("ComboBox.selectionBackground", new Color(0, 117, 211));
-			UIManager.put("ComboBox.selectionForeground", Color.WHITE);
-			String count[] = {"1", "2", "3", "alle"};
+			
 			
 			solutionCount.setModel(new DefaultComboBoxModel(count));
 			solutionCount.setBorder(new LineBorder(new Color(37, 37, 38), 2));
 			solutionCount.setEditable(true);
-			solutionCount.setFont(new Font("Roboto", Font.BOLD, 20));
+			solutionCount.setFont(MainView.font_20);
 			solutionCount.setBounds(workPanel_Width - 180, 12, 70, 30);
 			grammarCheckPanel.add(solutionCount);
 			
@@ -1658,7 +1755,7 @@ public static boolean isBANNED = false;
 		txtAnonymous.setBackground(darkBlack);
 		txtAnonymous.setBounds(60, 13, 100, 30);
 		txtAnonymous.setBorder(null);
-		txtAnonymous.setFont(new Font("Roboto", Font.BOLD, 18));
+		txtAnonymous.setFont(MainView.font_18);
 		txtAnonymous.setText("Anonymous");
 		anonymousPanel.add(txtAnonymous);
 		txtAnonymous.setColumns(10);
@@ -1827,7 +1924,7 @@ public static boolean isBANNED = false;
 		txtHeading.setText(type + ":");
 		txtHeading.setBorder(null);
 		txtHeading.setForeground(UIManager.getColor("Menu.selectionBackground"));
-		txtHeading.setFont(new Font("Roboto", Font.BOLD, 18));
+		txtHeading.setFont(MainView.font_18);
 		txtHeading.setColumns(10);
 		txtHeading.setBackground(Color.BLACK);
 		txtHeading.setBounds(44, 13, 240, 30);
@@ -2059,7 +2156,6 @@ public static boolean isBANNED = false;
 	private void addIconsToStudentLabel(JLabel studentLabel) {
 		
 		JLabel studentAdd = makeMenuLabels("src/studentAdd.png", "Diesen Schüler hinzufügen", 900, 5, 9, 24, 18);
-		
 		studentLabel.add(studentAdd);
 		
 	}
@@ -2074,6 +2170,123 @@ public static boolean isBANNED = false;
 		
 		 String message = ((ML_db) llML.get(9)).initCheckIfStudentInGroup(studentInfo);
 		 groupInfo.setText(message);
+		
+	}
+	
+	
+	
+	
+//-----------------------------------------Sessions-----------------------------------------
+	
+	public void buildSessionEnvironment() {
+		
+		inSession = true;
+		
+		contentPane.remove(panelLeft);
+		contentPane.setLayout(null);
+		
+		if(turnedOnPanel == null) { //then still startMiddlePanel
+			
+			JPanel startPanel = makeMiddlePanel();
+			contentPane.add(startPanel);
+			startPanel.setVisible(true);
+			turnedOnPanel = startPanel;
+			
+		}
+		
+		turnedOnPanel.removeAll();
+		turnedOnPanel.setPreferredSize(new Dimension(screenWidth - workPanel_Width - 30, 80000));
+		
+		JScrollPane middleSessionSP = new JScrollPane(turnedOnPanel);
+		middleSessionSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		middleSessionSP.setBorder(null);
+		middleSessionSP.setBounds(0, 0, screenWidth - workPanel_Width, screenHeight - 200);
+		middleSessionSP.setVisible(true);
+		contentPane.add(middleSessionSP);
+		
+		JPanel insertCommentPanel = new JPanel();
+		insertCommentPanel.setBounds(0, screenHeight - 200, screenWidth - workPanel_Width, 80);
+		insertCommentPanel.setLayout(null);
+		insertCommentPanel.setBackground(MainView.darkBlack);
+		contentPane.add(insertCommentPanel);
+		
+		JTextArea insertCommentArea = new JTextArea();
+		insertCommentArea.setBounds(10, 10, screenWidth - workPanel_Width - 100, 60);
+		insertCommentArea.setForeground(Color.BLACK);
+		insertCommentArea.setCaretColor(Color.BLACK);
+		insertCommentArea.setLineWrap(true);
+		insertCommentArea.setWrapStyleWord(true);
+		insertCommentArea.setText("...");
+		
+		JScrollPane insertCommentSP = new JScrollPane(insertCommentArea);
+		insertCommentSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		insertCommentSP.setBorder(null);
+		insertCommentSP.setBounds(10, 10, screenWidth - workPanel_Width - 100, 60);
+		insertCommentSP.setVisible(true);
+		insertCommentPanel.add(insertCommentSP);
+		
+		JLabel sendComment = makeMenuLabels("src/sendSessionComment.png", "Kommentar senden", screenWidth - workPanel_Width - 50, 29, 9, 24, 24);
+		insertCommentPanel.add(sendComment);
+		
+		menuPanel.remove(menuPanel.getComponent(5));
+		JLabel refreshLabel = makeMenuLabels("src/refresh.png", "Push Changes", 510, 5, 8, 39, 39);
+		menuPanel.add(refreshLabel);
+		
+		JLabel exitLabel = makeMenuLabels("src/exitTable.png", "Session beenden", 580, 10, 8, 23, 28);
+		menuPanel.add(exitLabel);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
+		
+	}
+	
+	public void printSessionComments(ArrayList<String> commentList, ArrayList<String> commitHistoryList, String myEmail) {
+		
+		boolean myComment = false;
+		
+		for(int x = 0; x < commentList.size(); x++) {
+			
+			if(commitHistoryList.get(x).equals(myEmail))
+				myComment = true;
+			
+			printSessionComment(commentList.get(x), myComment);
+			
+			myComment = false;
+			
+		}
+
+	}
+	
+	private void printSessionComment(String comment, boolean myComment) {
+		
+		int marginLeft;
+		int marginOwnComment = 400;
+		int marginOtherComment = 20;
+		
+		JScrollPane commentContainer = createAnswer(comment);
+		
+		if(myComment) {
+			
+			commentContainer.setBackground(MainView.disCountBlue);
+			marginLeft = marginOwnComment;
+			
+		}
+		
+		else {
+			
+			commentContainer.setBackground(MainView.disCountPurple);
+			marginLeft = marginOtherComment;
+		
+		}
+		
+		commentContainer.setBounds(marginLeft, topMargin_SessionComment , 300, 200);
+		
+		topMargin_SessionComment += 230;
+		
+		turnedOnPanel.add(commentContainer);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
 		
 	}
 	
@@ -2100,5 +2313,9 @@ public static boolean isBANNED = false;
 	public ArrayList<JPanel> getGroupPanelList() {
 		return groupPanelList;
 	}
+
+	
+
+	
 
 }

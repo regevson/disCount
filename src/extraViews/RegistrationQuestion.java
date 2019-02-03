@@ -59,7 +59,7 @@ public class RegistrationQuestion extends JFrame implements ActionListener{
 		contentPane.setBackground(Color.WHITE);
 		
 		JLabel lblHabenSieSich = new JLabel("Haben Sie sich bereits registriert?");
-		lblHabenSieSich.setFont(new Font("Roboto", Font.BOLD, 20));
+		lblHabenSieSich.setFont(MainView.font_20);
 		lblHabenSieSich.setForeground(new Color(128, 128, 128));
 		lblHabenSieSich.setBounds(302, 30, 310, 52);
 		contentPane.add(lblHabenSieSich);
@@ -74,7 +74,7 @@ public class RegistrationQuestion extends JFrame implements ActionListener{
 		btnNo.setForeground(purple);
 		btnNo.setContentAreaFilled(false);
 		btnNo.setOpaque(true);
-		btnNo.setFont(new Font("Roboto", Font.BOLD, 17));
+		btnNo.setFont(MainView.font_17_bold);
 		btnNo.setBorder(new LineBorder(new Color(128, 128, 128), 1, true));
 		btnNo.setBounds(92, 129, 238, 55);
 		btnNo.addActionListener(this);
@@ -85,7 +85,7 @@ public class RegistrationQuestion extends JFrame implements ActionListener{
 		btnYes.setForeground(purple);
 		btnYes.setContentAreaFilled(false);
 		btnYes.setOpaque(true);
-		btnYes.setFont(new Font("Roboto", Font.BOLD, 17));
+		btnYes.setFont(MainView.font_17_bold);
 		btnYes.setBorder(new LineBorder(new Color(128, 128, 128), 1, true));
 		btnYes.setBounds(92, 205, 238, 55);
 		btnYes.addActionListener(this);
@@ -120,7 +120,7 @@ public class RegistrationQuestion extends JFrame implements ActionListener{
 		btnAnmelden.setForeground(Color.WHITE);
 		btnAnmelden.setContentAreaFilled(false);
 		btnAnmelden.setOpaque(true);
-		btnAnmelden.setFont(new Font("Roboto", Font.BOLD, 20));
+		btnAnmelden.setFont(MainView.font_20);
 		btnAnmelden.setBorder(new LineBorder(purple, 2, true));
 		btnAnmelden.setBounds(550, 291, 233, 48);
 		btnAnmelden.setVisible(false);
@@ -153,14 +153,14 @@ public class RegistrationQuestion extends JFrame implements ActionListener{
 		
 		emailIncorr = new JLabel("Es gibt kein disCount-Konto mit dieser Adresse!");
 		emailIncorr.setForeground(Color.BLACK);
-		emailIncorr.setFont(new Font("Roboto", Font.BOLD, 17));
+		emailIncorr.setFont(MainView.font_17_bold);
 		emailIncorr.setBounds(92, 343, 421, 52);
 		emailIncorr.setVisible(false);
 		contentPane.add(emailIncorr);
 		
 		passIncorr = new JLabel("Das Passwort ist falsch");
 		passIncorr.setForeground(Color.BLACK);
-		passIncorr.setFont(new Font("Roboto", Font.BOLD, 17));
+		passIncorr.setFont(MainView.font_17_bold);
 		passIncorr.setBounds(92, 343, 421, 52);
 		contentPane.add(passIncorr);
 		passIncorr.setVisible(false);

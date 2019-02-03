@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import View.Buchungssatz;
 import View.MainModel;
@@ -78,6 +79,8 @@ public class db_Model {
 	private String uploaderID;
 	private ArrayList<Integer> examBSList = null;
 	private Color bsColor = MainView.disCountPurple;
+	private int sessionID;
+	private String partnerEmail;
 	
 	
 	
@@ -134,13 +137,13 @@ public class db_Model {
       
            checkIfBanned();
            
-           //setLoggedIn();
+           setLoggedIn();
            
            getMinimumConstants();
    		
            getStats();
            
-           getMyID();
+           myID = getIDByEmail(email);
            
        }
 		 
@@ -261,12 +264,18 @@ public class db_Model {
 	}
 
 
-	private void getMyID() throws SQLException {
+	private int getIDByEmail(String email) {
 		
-		rs = st.executeQuery("SELECT id FROM users WHERE email='" + email + "'");
+		try {
+		
+			rs = st.executeQuery("SELECT id FROM users WHERE email='" + email + "'");
 
-        if(rs.next())
-     	   myID = rs.getInt("id");
+	        if(rs.next())
+	     	   return rs.getInt("id");
+	        
+		} catch(Exception e) {e.printStackTrace();}
+		
+		return -1;
 		
 	}
 	
@@ -335,7 +344,7 @@ public class db_Model {
 		 try {
 			 
 			st = conn.createStatement();
-			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (uploaderID, code, codeInfo, groupIDs) VALUES ('" + myID + "','" + code_str + "'," + "'" + exercise + "'," + "'" + groupIDs + "'" + ")");
+			st.executeUpdate("INSERT INTO usersolutions" + schoolType.toLowerCase() + " (uploaderID, code, codeInfo, comments, groupIDs) VALUES ('" + myID + "','" + code_str + "'," + "'" + exercise + "'," + "'" + "', '" + groupIDs + "'" + ")");
 			
 			increaseCommunityStats(1);
 			checkAdded();
@@ -957,8 +966,8 @@ public class db_Model {
 	
 	private void investigateError(int index,  LinkedList<Buchungssatz> correctBSList, LinkedList<Buchungssatz> unsureBSList, boolean allRed) {
 
-		ArrayList<JLabel> unsureKontoList = unsureBSList.get(index).getKontoList();
-		ArrayList<JLabel> unsurePriceList = unsureBSList.get(index).getPriceList();
+		ArrayList<JTextField> unsureKontoList = unsureBSList.get(index).getKontoList();
+		ArrayList<JTextField> unsurePriceList = unsureBSList.get(index).getPriceList();
 		
 		if(unsureKontoList == null)
 			return;
@@ -969,8 +978,8 @@ public class db_Model {
 			return;
 		}
 		
-		ArrayList<JLabel> correctKontoList = correctBSList.get(index).getKontoList();
-		ArrayList<JLabel> correctPriceList = correctBSList.get(index).getPriceList();
+		ArrayList<JTextField> correctKontoList = correctBSList.get(index).getKontoList();
+		ArrayList<JTextField> correctPriceList = correctBSList.get(index).getPriceList();
 
 		
 		if((correctKontoList.size() != unsureKontoList.size()))
@@ -998,7 +1007,7 @@ public class db_Model {
 		}
 	}
 	
-	private void paintAllRed(ArrayList<JLabel> labelList) {
+	private void paintAllRed(ArrayList<JTextField> labelList) {
 		
 		for(int x = 0; x < labelList.size(); x++) {
 			labelList.get(x).setForeground(Color.RED);
@@ -1006,7 +1015,7 @@ public class db_Model {
 		
 	}
 	
-	private void checkAndHighlightIfWrong(ArrayList<JLabel> unsureList, ArrayList<JLabel> correctList, int index) {
+	private void checkAndHighlightIfWrong(ArrayList<JTextField> unsureList, ArrayList<JTextField> correctList, int index) {
 		
 		if(!correctList.get(index).getText().equals(unsureList.get(index).getText()))
 			unsureList.get(index).setForeground(Color.RED);
@@ -1863,9 +1872,114 @@ public class db_Model {
 	}
 
 
+	
+	
+	
+//---------------------------------------Sessions----------------------------------------
+	
 
 
+	public int createSession(String partnerEmail) {
 
+		try {
+			
+			if(getIDByEmail(partnerEmail) == -1)
+				return -1;
+
+			st.executeUpdate(
+					"INSERT INTO sessions (student1, student2, code, chat, codeCommitHistory, chatCommitHistory) VALUES ('"
+							+ email + "', '" + partnerEmail + "', '" + "-1" + "', '" + "" + "', '" + "" + "', '" + ""
+							+ "')");
+
+			return searchForSession(partnerEmail);
+
+		} catch (SQLException e) {e.printStackTrace();}
+
+		return -1;
+
+	}	
+	
+	public int searchForSession(String partnerEmail) {
+		
+		this.partnerEmail = partnerEmail;
+		
+		try {
+			
+			rs = st.executeQuery("SELECT id FROM sessions WHERE student1='" + partnerEmail + "' AND student2='" + email + "'");
+			
+			if(rs.next())
+				sessionID = rs.getInt("id");
+			
+		} catch(SQLException e) {sessionID = -1; e.printStackTrace();}
+		
+		return sessionID;
+
+	}
+	
+	public void sendSessionComment(String comment) {
+		
+		try {
+			
+			String chat = getColumnFromSession("chat");
+			chat += "#" + comment;
+			
+			String chatCommitHistory = getColumnFromSession("chatCommitHistory");
+			chatCommitHistory += "#" + email;
+			
+			st.executeUpdate("UPDATE sessions SET chat='" + chat + "'");
+			st.executeUpdate("UPDATE sessions SET chatCommitHistory='" + chatCommitHistory + "'");
+			
+		} catch(SQLException e) {e.printStackTrace();}
+
+	}
+	
+	
+	public String getColumnFromSession(String column) {
+		
+		String content = "";
+		
+		try {
+			
+			rs = st.executeQuery("SELECT " + column + " FROM sessions WHERE student1='" + email + "' OR student2='" + email + "'");
+			
+			if(rs.next())
+				content += rs.getString(column);
+			
+		} catch(SQLException e) {e.printStackTrace();}
+		
+		return content;
+		
+	}
+	
+	public void updateSessionContent(String code) {
+		
+		try {
+			
+			String codeCommitHistory = getColumnFromSession("codeCommitHistory");
+			codeCommitHistory += "#" + email;
+			
+			st.executeUpdate("UPDATE sessions SET code='" + code + "'");
+			st.executeUpdate("UPDATE sessions SET codeCommitHistory='" + codeCommitHistory + "'");
+			
+		} catch(SQLException e) {e.printStackTrace();}
+		
+	}
+	
+	public void removeSessionFromDB() {
+		
+		try {
+			
+			st.executeUpdate("DELETE FROM sessions WHERE student1='" + email + "' OR student2='" + email + "'");
+		
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		
+	}
+	
+	
+	
+	
+	
 
 //---------------------------------------Getter----------------------------------------
 
@@ -1875,6 +1989,10 @@ public class db_Model {
 	
 	public String getName() {
 		return user_name;
+	}
+	
+	public String getEmail() {
+		return email;
 	}
 	
 	public String getUploaderInfo() {
@@ -1957,12 +2075,6 @@ public class db_Model {
 	public int getStudentNumber() {
 		return studentNumber;
 	}
-
-
-
-
-	
-
 
 
 

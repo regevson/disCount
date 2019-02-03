@@ -36,19 +36,19 @@ public class InfoView extends JFrame {
 		contentPane.add(lblDiscountEin);
 		
 		JLabel lblEntwickler = new JLabel("Entwickler:");
-		lblEntwickler.setFont(new Font("Roboto", Font.BOLD, 18));
+		lblEntwickler.setFont(MainView.font_18);
 		lblEntwickler.setForeground(Color.DARK_GRAY);
 		lblEntwickler.setBounds(46, 192, 180, 30);
 		contentPane.add(lblEntwickler);
 		
 		JLabel lblEmailaddresse = new JLabel("E-Mail-Addresse:");
-		lblEmailaddresse.setFont(new Font("Roboto", Font.BOLD, 18));
+		lblEmailaddresse.setFont(MainView.font_18);
 		lblEmailaddresse.setForeground(Color.DARK_GRAY);
 		lblEmailaddresse.setBounds(46, 239, 187, 35);
 		contentPane.add(lblEmailaddresse);
 		
 		JLabel lblTel = new JLabel("Tel:");
-		lblTel.setFont(new Font("Roboto", Font.BOLD, 18));
+		lblTel.setFont(MainView.font_18);
 		lblTel.setForeground(Color.DARK_GRAY);
 		lblTel.setBounds(48, 287, 149, 35);
 		contentPane.add(lblTel);
@@ -56,7 +56,7 @@ public class InfoView extends JFrame {
 		JTextField lblJuwalRegev = new JTextField("Juwal Regev");
 		lblJuwalRegev.setEditable(false);
 		lblJuwalRegev.setBorder(new MatteBorder(0,0,2,0, purple));
-		lblJuwalRegev.setFont(new Font("Roboto", Font.BOLD, 18));
+		lblJuwalRegev.setFont(MainView.font_18);
 		lblJuwalRegev.setForeground(Color.DARK_GRAY);
 		lblJuwalRegev.setBounds(244, 192, 299, 35);
 		contentPane.add(lblJuwalRegev);
@@ -64,7 +64,7 @@ public class InfoView extends JFrame {
 		JTextField lblJuwalregevhotmailcom = new JTextField("juwal.regev@hotmail.com");
 		lblJuwalregevhotmailcom.setEditable(false);
 		lblJuwalregevhotmailcom.setBorder(new MatteBorder(0,0,2,0, purple));
-		lblJuwalregevhotmailcom.setFont(new Font("Roboto", Font.BOLD, 18));
+		lblJuwalregevhotmailcom.setFont(MainView.font_18);
 		lblJuwalregevhotmailcom.setForeground(Color.DARK_GRAY);
 		lblJuwalregevhotmailcom.setBounds(245, 239, 298, 35);
 		contentPane.add(lblJuwalregevhotmailcom);
@@ -72,7 +72,7 @@ public class InfoView extends JFrame {
 		JTextField telTF = new JTextField("069910983630");
 		telTF.setEditable(false);
 		telTF.setBorder(new MatteBorder(0,0,2,0, purple));
-		telTF.setFont(new Font("Roboto", Font.BOLD, 18));
+		telTF.setFont(MainView.font_18);
 		telTF.setForeground(Color.DARK_GRAY);
 		telTF.setBounds(244, 287, 299, 35);
 		contentPane.add(telTF);

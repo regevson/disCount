@@ -109,7 +109,6 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	
 	public void makeAbschreibung() {
-		System.out.println("Abschreibung");
 		myController.exec_Abschreibung("Abschreibung", "7010", FIXEDAW, null, null, leftmore2Stufig, true, true);
 	}
 	
