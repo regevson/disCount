@@ -527,6 +527,9 @@ public class MainModel {
 	
 	public ArrayList<Buchungssatz> prepareCollection(int index, JPanel workPanel, ArrayList<Buchungssatz> bsList) {
 		
+		if(llChar.isEmpty())
+			return null;
+		
 		boolean leftMore = false;
 		
 		if(index != -1) {

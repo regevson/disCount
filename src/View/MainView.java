@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -884,10 +885,14 @@ public static boolean isBANNED = false;
 		menuItem.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuItem.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	
 		    	MainModel.deleteChecked(workPanel);
+		    	
 		    	if(MainView.inSession)
 		    		((ML_db) llML.get(9)).initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
+		    	
 		    	workPanel.repaint();
+		    	
 		    }
 		});
 		
@@ -1513,6 +1518,9 @@ public static boolean isBANNED = false;
 	
 	public void addExerciseSelectionPanel(boolean check) {
 		
+		final String code = MainModel.getCodeOnWorkPanel();
+		MainModel.deleteAll(workPanel);
+		
 		if(grammarCheckPanel != null)
 			removeExerciseSelectionPanel();
 		
@@ -1564,9 +1572,7 @@ public static boolean isBANNED = false;
 		if(!check) {
 			
 			onlyTeacherSolutions.setBounds(workPanel_Width - 350, 20, 160, 20);
-			
-			
-			
+
 			solutionCount.setModel(new DefaultComboBoxModel(count));
 			solutionCount.setBorder(new LineBorder(new Color(37, 37, 38), 2));
 			solutionCount.setEditable(true);
@@ -1585,14 +1591,33 @@ public static boolean isBANNED = false;
 					((ML_db) llML.get(9)).initCheckBS(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected());
 				else
 					((ML_db) llML.get(9)).initShowSuggestions(txtClass.getText() + "/" + txtPage.getText() + "/" + txtNumber.getText(), onlyTeacherSolutions.isSelected(), (String) solutionCount.getSelectedItem());
-				
+			
 			}
 
 			@Override public void mouseEntered(java.awt.event.MouseEvent e) {}@Override public void mouseExited(java.awt.event.MouseEvent e) {}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {	}});
 	
 		grammarCheckPanel.add(checkTHEMPic);
 		
+		new Thread(new Runnable() {
+		    private String code;
+		    public Runnable init(String code) {
+		        this.code = code;
+		        return this;
+		    }
+		    @Override
+		    public void run() {
+		    	
+		    	MainView.noColorFade = true;
+		        ((ML_db) llML.get(9)).initOpenProject(MainModel.convertStringToLL_Char(this.code));
+		        MainView.noColorFade = false;
+		        
+		    }
+		}.init(code)).start();
+		
 	}
+	
+	
+	
 	
 	private JTextField tfDesignDBPanel(JTextField tf) {
 		
