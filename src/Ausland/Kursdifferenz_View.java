@@ -1,5 +1,7 @@
 package Ausland;
 
+import java.awt.Color;
+
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
@@ -30,14 +32,18 @@ public class Kursdifferenz_View extends View_SuperClass{
 
 	@Override
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
+		
 		if(IGE_IMP_CB.isSelected())
 			makeKursdifferenz(true);
 		else
 			makeKursdifferenz(false);
+		
 	}
 	
 	private void makeCB1() {
 		IGE_IMP_CB = new JCheckBox("IG Erwerb oder Import");
+		IGE_IMP_CB.setBackground(null);
+		IGE_IMP_CB.setForeground(Color.WHITE);
 		IGE_IMP_CB.setFont(MainView.font_16);
 		IGE_IMP_CB.setBounds(10, 180, 200, 25);
 		contentPane.add(IGE_IMP_CB);
@@ -45,6 +51,8 @@ public class Kursdifferenz_View extends View_SuperClass{
 	
 	private void makeCB2() {
 		IGL_EXP_CB = new JCheckBox("IG Lieferung oder Export");
+		IGL_EXP_CB.setBackground(null);
+		IGL_EXP_CB.setForeground(Color.WHITE);
 		IGL_EXP_CB.setFont(MainView.font_16);
 		IGL_EXP_CB.setBounds(10, 210, 220, 25);
 		contentPane.add(IGL_EXP_CB);

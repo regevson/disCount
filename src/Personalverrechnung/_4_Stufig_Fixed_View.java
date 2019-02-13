@@ -30,9 +30,9 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 			
 		makeKonto1(konto1);
 		makeKonto2Fixed(konten2[0]);
-		makeRightKonto(konto3, yFirst + 20);
-		makeRightKonto(konto4, yFirst + 40);
-		makeRightKonto(percent, yFirst + 60);
+		makeRightKonto(konto3, 235);
+		makeRightKonto(konto4, 235 + (235 - 195));
+		//makeRightKonto(percent, 195 + 100);
 		
 		makePrices();
 		makeInfoFields();
@@ -42,7 +42,7 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 		JLabel lblKonto = new JLabel(konto);
 		lblKonto.setForeground(Color.WHITE);
 		lblKonto.setFont(MainView.font_20);
-		lblKonto.setBounds(xLeft, y, 71, 26);
+		lblKonto.setBounds(marginLeft1, y, 71, 26);
 		contentPane.add(lblKonto);
 	}
 	
@@ -50,25 +50,25 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 	private void makePrices() {
 		txtPrice1 = new JTextField("Gehälter");
 		View_SuperClass.txtFieldDesign(txtPrice1);
-		txtPrice1.setBounds(xLeft+200, yFirst, 130, 42);
+		txtPrice1.setBounds(marginLeft1+200, 195, 130, 42);
 		contentPane.add(txtPrice1);
 		txtPrice1.setColumns(10);
 		
 		txtPrice2 = new JTextField("Krankenkasse");
 		View_SuperClass.txtFieldDesign(txtPrice2);
-		txtPrice2.setBounds(xLeft+400, yFirst, 140, 42);
+		txtPrice2.setBounds(marginLeft1+400, 195, 140, 42);
 		contentPane.add(txtPrice2);
 		txtPrice2.setColumns(10);
 		
 		txtPrice3 = new JTextField("Finanzamt");
 		View_SuperClass.txtFieldDesign(txtPrice3);
-		txtPrice3.setBounds(xLeft+400, ySecond+10, 140, 42);
+		txtPrice3.setBounds(marginLeft1+400, 235+10, 140, 42);
 		contentPane.add(txtPrice3);
 		txtPrice3.setColumns(10);
 		
 		txtPrice4 = new JTextField("Mitarbeiter");
 		View_SuperClass.txtFieldDesign(txtPrice4);
-		txtPrice4.setBounds(xLeft+400, ySecond + (ySecond-yFirst)+20, 140, 42);
+		txtPrice4.setBounds(marginLeft1+400, 235 + (235-195)+20, 140, 42);
 		contentPane.add(txtPrice4);
 		txtPrice4.setColumns(10);
 	}
@@ -77,25 +77,25 @@ public class _4_Stufig_Fixed_View extends View_SuperClass_2Outputs{
 	private void makeInfoFields() {
 		SV_DGA = new JTextField("SV-DGA in €");
 		View_SuperClass.txtFieldDesign(SV_DGA);
-		SV_DGA.setBounds(xLeft+800, yFirst, 130, 42);
+		SV_DGA.setBounds(marginLeft1+800, 195, 130, 42);
 		contentPane.add(SV_DGA);
 		SV_DGA.setColumns(10);
 		
 		DB = new JTextField("DB in %");
 		View_SuperClass.txtFieldDesign(DB);
-		DB.setBounds(xLeft+800, ySecond+10, 130, 42);
+		DB.setBounds(marginLeft1+800, 235+10, 130, 42);
 		contentPane.add(DB);
 		DB.setColumns(10);
 		
 		DZ = new JTextField("DZ in %");
 		View_SuperClass.txtFieldDesign(DZ);
-		DZ.setBounds(xLeft+800, ySecond + (ySecond-yFirst)+20, 130, 42);
+		DZ.setBounds(marginLeft1+800, 235 + (235-195)+20, 130, 42);
 		contentPane.add(DZ);
 		DZ.setColumns(10);
 		
 		KommSt = new JTextField("KommSt in %");
 		View_SuperClass.txtFieldDesign(KommSt);
-		KommSt.setBounds(xLeft+800, ySecond + 2*((ySecond-yFirst)+15), 130, 42);
+		KommSt.setBounds(marginLeft1+800, 235 + 2*((235-195)+15), 130, 42);
 		contentPane.add(KommSt);
 		KommSt.setColumns(10);
 	}

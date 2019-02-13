@@ -1,11 +1,14 @@
 package extraViews;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -18,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
@@ -33,84 +37,118 @@ public class View_SuperClass extends JFrame{
 	public JComboBox variableTax;
 	public ActionListener AL;
 	
-	public int xLeft;
-	public int xRight;
-	public int yFirst;
-	public int ySecond;
 	
-	public static int kontenLeftWP = 100;
-	public static int kontenRightWP = 180;
+	private final int kontenLeft = 150;
+	private final int kontenRight = 220;
 	
-	public static int pricesLeftWP = 350;
-	public static int pricesRightWP = 450;
+	protected int marginLeft1 = 0;
+	protected int marginLeft2 = 0;
 	
-	public int boundsWidth = 870, boundsHeight = 470;
+	private int boundsWidth = 870, boundsHeight = 470;
 
 	
 	
-	public static JTextField txtPreis;
-	public static JTextField txtKontonummer;
-	public static JCheckBox netto;
-	public static JCheckBox brutto;
-	public static JTextField emballagenPrice;
-	public static JLabel AWET;
-	public static JLabel kontoEKAUSG;
-	public static JLabel kontoVKAUSG;
-	public static JTextField rabattPercent = null;
+	protected static JTextField txtPreis;
+	protected static JTextField txtKontonummer;
+	protected static JCheckBox netto;
+	protected static JCheckBox brutto;
+	protected static JTextField emballagenPrice;
+	protected static JLabel AWET;
+	protected static JLabel kontoEKAUSG;
+	protected static JLabel kontoVKAUSG;
+	protected static JTextField rabattPercent = null;
 	
-	public static JLabel lblKonto1;
-	public static JLabel lblKonto2Fixed;
-	public static JLabel lblKonto3;
-	public static JLabel lblKonto4;
-	public static JComboBox lblKonto2Variable;
+	protected static JLabel lblKonto1;
+	protected static JLabel lblKonto2Fixed;
+	protected static JLabel lblKonto3;
+	protected static JLabel lblKonto4;
+	protected static JComboBox lblKonto2Variable;
+	private JFrame frame;
 	
-	public static String finalZahlungskonto;
+	protected static String finalZahlungskonto;
 	
-	public boolean leftMore;
+	protected boolean leftMore;
 	
 
-	public void setUpBasicStuff(String cmd, String Konto1, String[] Konten2, String Konto3, String percent, int[] coordinates, boolean fixed, Controller_AbstractClass myController, boolean leftMore) {
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setUndecorated(true);
-		setBounds(100, 100, boundsWidth, boundsHeight);
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(51, 51, 51));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+	public void setUpBasicStuff(String cmd, String Konto1, String[] Konten2, String Konto3, String percent, boolean fixed, Controller_AbstractClass myController, boolean leftMore) {
 		
-		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
+		frame = this;
+		
+		if(MainView.openWindow == null) {
+			
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setUndecorated(true);
+			setBounds(100, 100, boundsWidth, boundsHeight);
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+			contentPane = new JPanel();
+			contentPane.setBackground(new Color(51, 51, 51));
+			setContentPane(contentPane);
+			contentPane.setLayout(null);
+			
+			getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
 
-		this.myController = myController;
-		this.leftMore = leftMore;
-		addPic();
+			this.myController = myController;
+			this.leftMore = leftMore;
+			addPic();
+			
+			JLabel lblTitle = new JLabel(cmd);
+			lblTitle.setFont(new Font("Roboto", Font.BOLD, 22));
+			lblTitle.setForeground(new Color(0, 117, 211));
+			lblTitle.setBounds(0, 28, boundsWidth, 31);
+			lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+			contentPane.add(lblTitle);
+			
+			JButton btnFertig = new JButton("Fertig");
+			btnFertig.setBackground(MainView.darkBlack);
+			btnFertig.setForeground(Color.WHITE);
+			btnFertig.setContentAreaFilled(false);
+			btnFertig.setOpaque(true);
+			btnFertig.setFont(MainView.font_20);
+			btnFertig.setBorder(new LineBorder(new Color(0, 117, 211), 2, true));
+			btnFertig.setBounds(675, 376, 142, 48);
+			btnFertig.addActionListener(new ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					
+					setUpRoutine(Konto1, Konten2, Konto3, fixed, percent);
+					dispose();
+					MainView.openWindow = null;
+					
+				}
+	
+					});
+			contentPane.add(btnFertig);
+			
+			JLabel escapeLabel = MainView.makeMenuLabels("src/escape.png", "Schlieﬂen", boundsWidth - 43, 11, -1, 23, 23);
+			escapeLabel.addMouseListener(new MouseAdapter() { 
+		          public void mousePressed(MouseEvent e) { 
+		        	  
+		              dispose();
+		              MainView.openWindow = null;
+		              
+		            } 
+		          });
+			contentPane.add(escapeLabel);
+			
+			
+			setMargins(fixed, Konto3);
+			build(Konto1, Konten2, Konto3, fixed);
+			
+			setVisible(true);
+			MainView.openWindow = frame;
+			
+		}
 		
-		JLabel lblTitle = new JLabel(cmd);
-		lblTitle.setFont(new Font("Roboto", Font.BOLD, 22));
-		lblTitle.setForeground(new Color(0, 117, 211));
-		lblTitle.setBounds(290, 28, 423, 31);
-		contentPane.add(lblTitle);
+		else
+			manageOpenWindow();
 		
-		JButton btnFertig = new JButton("Fertig");
-		btnFertig.setBackground(MainView.darkBlack);
-		btnFertig.setForeground(Color.WHITE);
-		btnFertig.setContentAreaFilled(false);
-		btnFertig.setOpaque(true);
-		btnFertig.setFont(MainView.font_20);
-		btnFertig.setBorder(new LineBorder(new Color(0, 117, 211), 2));
-		btnFertig.setBounds(667, 356, 142, 48);
-		btnFertig.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				setUpRoutine(Konto1, Konten2, Konto3, fixed, percent);
-				dispose();
-			}
-
-				});
-		contentPane.add(btnFertig);
+	}
+	
+	private void manageOpenWindow() {
 		
-		setXYWidthHeight(coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
-		build(Konto1, Konten2, Konto3, fixed);
+		MainView.openWindow.toFront();
+		MainView.openWindow.repaint();
+		vibrate(MainView.openWindow);
 		
 	}
 	
@@ -129,11 +167,44 @@ public class View_SuperClass extends JFrame{
 	}
 	
 	
+	private void setMargins(boolean fixed, String konto3) {
+		
+		if(leftMore) {
+			
+			marginLeft1 = kontenLeft;
+			marginLeft2 = kontenRight;
+			
+			if(!fixed) {
+				
+				marginLeft1 -= 40;
+				marginLeft2 += 40;
+				
+			}
+			
+		}
+		
+		else {
+			
+			marginLeft1 = kontenRight;
+			marginLeft2 = kontenLeft;
+			
+			if(!fixed) {
+				
+				marginLeft1 += 80;
+				marginLeft2 -= 50;
+				
+			}
+			
+		}
+		
+	}
+	
+	
 	public void makeKonto1(String konto1) {
 		lblKonto1 = new JLabel(konto1);
 		lblKonto1.setFont(MainView.font_20);
 		lblKonto1.setForeground(Color.WHITE);
-		lblKonto1.setBounds(xLeft, yFirst, 71, 26);
+		lblKonto1.setBounds(marginLeft1, 195, 71, 26);
 		contentPane.add(lblKonto1);
 	}
 	
@@ -141,7 +212,7 @@ public class View_SuperClass extends JFrame{
 		lblKonto2Fixed = new JLabel(konto2);
 		lblKonto2Fixed.setForeground(Color.WHITE);
 		lblKonto2Fixed.setFont(MainView.font_20);
-		lblKonto2Fixed.setBounds(xRight, yFirst, 248, 31);
+		lblKonto2Fixed.setBounds(marginLeft2, 195, 248, 26);
 		contentPane.add(lblKonto2Fixed);
 	}
 	
@@ -155,7 +226,7 @@ public class View_SuperClass extends JFrame{
 		lblKonto2Variable.setBorder(new LineBorder(new Color(37, 37, 38), 2));
 		lblKonto2Variable.setEditable(true);
 		lblKonto2Variable.setFont(MainView.font_20);
-		lblKonto2Variable.setBounds(xRight, yFirst, 248, 31);
+		lblKonto2Variable.setBounds(marginLeft2, 195, 148, 31);
 		contentPane.add(lblKonto2Variable);
 	}
 	
@@ -182,16 +253,10 @@ public class View_SuperClass extends JFrame{
 		lblKonto3 = new JLabel(konto3);
 		lblKonto3.setFont(MainView.font_20);
 		lblKonto3.setForeground(Color.WHITE);
-		lblKonto3.setBounds(xLeft, ySecond, 56, 16);
+		lblKonto3.setBounds(marginLeft1, 235, 56, 16);
 		contentPane.add(lblKonto3);
 	}
 	
-	public void setXYWidthHeight(int xLeft, int xRight, int yFirst, int ySecond) {
-		this.xLeft = xLeft;
-		this.xRight = xRight;
-		this.yFirst = yFirst;
-		this.ySecond = ySecond;
-	}
 	
 	public void makePrice() {
 		txtPreis = new JTextField();
@@ -206,7 +271,7 @@ public class View_SuperClass extends JFrame{
 	public void makeButtons() {
 		netto = new JCheckBox("netto");
 		checkBoxDesign(netto);
-		netto.setBounds(611, 267, 71, 25);
+		netto.setBounds(617, 257, 71, 25);
 		netto.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	netto.setForeground(new Color(0, 117, 211));
@@ -221,7 +286,7 @@ public class View_SuperClass extends JFrame{
 		    	brutto.setForeground(new Color(0, 117, 211));
 		    }
 		});
-		brutto.setBounds(696, 268, 113, 25);
+		brutto.setBounds(617, 288, 113, 25);
 		contentPane.add(brutto);
 	}
 	
@@ -353,6 +418,36 @@ public class View_SuperClass extends JFrame{
 			{}@Override public void mousePressed(java.awt.event.MouseEvent e) {}@Override public void mouseReleased(java.awt.event.MouseEvent e) {}
 
 		});
+	}
+	
+	
+	
+	
+	
+	public static void vibrate(Frame frame) {
+		
+		try {
+			
+			frame.setVisible(true);
+			
+			final int originalX = frame.getLocationOnScreen().x;
+			final int originalY = frame.getLocationOnScreen().y;
+			
+			for (int i = 0; i < 10; i++) {
+				
+				Thread.sleep(10);
+				frame.setLocation(originalX, originalY + 5);
+				Thread.sleep(10);
+				frame.setLocation(originalX, originalY - 5);
+				Thread.sleep(10);
+				frame.setLocation(originalX + 5, originalY);
+				Thread.sleep(10);
+				frame.setLocation(originalX, originalY);
+				
+			}
+			
+		} catch (Exception e) {e.printStackTrace();}
+		
 	}
 	
 }

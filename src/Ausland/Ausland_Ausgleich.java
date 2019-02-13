@@ -9,7 +9,6 @@ import javax.swing.JTextField;
 
 import View.Buchungssatz;
 import View.MainModel;
-import View.MainView;
 import extraViews.View_SuperClass;
 import extraViews.View_SuperClass_2Outputs;
 
@@ -95,7 +94,7 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 	private void makeFremdwährungCheckbox() {
 		fwCB = new JCheckBox("Fremdwährung");
 		View_SuperClass.checkBoxDesign(fwCB);
-		fwCB.setBounds(700, 267, 200, 25);
+		fwCB.setBounds(618, 277, 200, 25);
 		fwCB.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				fwSatz.setVisible(true);
@@ -109,7 +108,7 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 	private void makeSkontoCheckbox() {
 		skCB = new JCheckBox("Skonto");
 		View_SuperClass.checkBoxDesign(skCB);
-		skCB.setBounds(270, 267, 200, 25);
+		skCB.setBounds(618, 247, 200, 25);
 		skCB.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				skField.setVisible(true);
@@ -123,7 +122,7 @@ public class Ausland_Ausgleich extends View_SuperClass_2Outputs{
 	private void makeSpesenCheckbox() {
 		spCB = new JCheckBox("Spesen");
 		View_SuperClass.checkBoxDesign(spCB);
-		spCB.setBounds(570, 267, 100, 25);
+		spCB.setBounds(618, 307, 100, 25);
 		spCB.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				spField.setVisible(true);

@@ -254,24 +254,37 @@ public class ExamLobby extends JFrame {
 	}
 	
 
-	public void updateFinishedStudents(ArrayList<String> finishedStudentsNames, ArrayList<Double> alStudentResults) {
+	public int updateFinishedStudents(ArrayList<String> finishedStudentsNames, ArrayList<Double> alStudentResults) {
+		
+		int cheaterCount = 0;
 		
 		for(int x = 0; x < finishedStudentsNames.size(); x++) {
+			System.out.println("finished student: " + finishedStudentsNames.get(x));
+			System.out.println("finished students results: " + alStudentResults.get(x));
 			
-			if(alStudentResults.get(x) == -31) {
+			if(alStudentResults.get(x) == -31 || alStudentResults.get(x) == -2) {
+				System.out.println("in bad");
 				
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setText("ungültig");
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setForeground(Color.RED);
 				
-				paintEvictDecisionIcons(hmStringToJPanel.get(finishedStudentsNames.get(x)));
-				
+				if(alStudentResults.get(x) == -31) {
+					
+					paintEvictDecisionIcons(hmStringToJPanel.get(finishedStudentsNames.get(x)));
+					cheaterCount++;
+					
+				}
 			}
 			
 			else
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setText(MainModel.roundDouble_giveBack_String(alStudentResults.get(x)) + "%");
+			
 		}
 
+		contentPane.revalidate();
 		contentPane.repaint();
+		
+		return cheaterCount;
 		
 	}
 

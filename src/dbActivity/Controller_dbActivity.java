@@ -31,6 +31,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	private Timer timer;
 	public static boolean inExam = false;
 	public ArrayList<Integer> cheaterList;
+	private int seenResults;
 	
 	
 	
@@ -203,6 +204,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public int execSetUpExamOnDB(String solution, int studentCount, int bsCount, boolean enableBSHelp) {
+		seenResults = 0;
 		cheaterList = new ArrayList<Integer>();
 		return myModel.setUpExamOnDB(solution, studentCount, bsCount, enableBSHelp);
 	}
@@ -274,41 +276,52 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	
 	public final Runnable scanForFinishedStudents = new Runnable() {
+		
 		boolean allStudentsFinished = false;
-		int seenResults = 0;
 
         public void run() {
+        	
         	timer.scheduleAtFixedRate(new TimerTask() {
         		  @Override
         		  public void run() {
+        			  
         			  ArrayList<Double> alStudentResults = myModel.scanForFinishedStudents(studentCount, cheaterList);
         			  seenResults += alStudentResults.size();
         			  
         			  if(alStudentResults.size() >= 1) {
+        				  
         				  ArrayList<String> finishedStudentsNames = myModel.getStudentsNamesBasedOnScanList();
-        				  lobby.updateFinishedStudents(finishedStudentsNames, alStudentResults);
+        				  int cheaterCount = lobby.updateFinishedStudents(finishedStudentsNames, alStudentResults);
+        				  seenResults -= cheaterCount;
         				  
         				  System.out.println(studentCount +"  studntcount");
-	        			  if(seenResults == studentCount) {
-	        				  cancelTimer();
+	        			 
+        				  if(seenResults == studentCount) {
+	        				
+        					  cancelTimer();
 	        				  
 	        				  allStudentsFinished = true;
 	        				  lobby.notifyAllStudentsFinished();
 	        				  myModel.getScanList().removeAll(myModel.getScanList());
 	        				  return;
-	        			  }
-        			  }
+	        			  
+        				  }
         				  
-        			 
+        			  }
+        			  
+        			  System.out.println(seenResults +"  seenresults");
+        				  
         		  }
         		  
-        		 
+        		  
+        		  
         		}, 3*1000, 3*1000);
         	
         	 if(allStudentsFinished)
         		 return;
         		 
         }
+        
     };
 
 
@@ -345,7 +358,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		myModel.getExamSolutionsFromDB();
 		int allow = myModel.getBSHelpPermission();
 		if(allow == 0)
-			MC.execRemoveLeftPanelAndMenu();
+			MC.execSetupExamEnvironment();
 		waitView.examOpened();
 		inExam = true;
     }
@@ -362,6 +375,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
     }
 
 	public double execHandInExam(JPanel workPanel) {
+		
 		inExam = false;
 		
 		LinkedList<Buchungssatz> unsureBSList = new LinkedList<Buchungssatz>();
@@ -393,9 +407,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		myModel.handInEvaluation(outcomeList);
 		
 		
-		MC.execShowLeftPanel();
+		MC.execRemoveExamEnvironment();
 		
 		return percentage;
+		
 	}
 	
 	private double calcPercentage(ArrayList<Integer> outcomeList) {
@@ -421,6 +436,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public void execSignInStudent() {
+		
 		int examIsFull = myModel.signInStudent();
 		
 		if(examIsFull == 1)
@@ -432,11 +448,14 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public ArrayList<String> execGetEvaluation() {
+		
 		ArrayList<Integer> evalList = myModel.getEvaluationFromDB();
 		return calcSuccessRate(evalList);
+		
 	}
 	
 	private ArrayList<String> calcSuccessRate(ArrayList<Integer> evalList) {
+		
 		ArrayList<String> percentList = new ArrayList<String>();
 		
 		for(int x = 0; x < evalList.size(); x++) {
@@ -444,6 +463,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		}
 		
 		return percentList;
+		
 	}
 
 	
@@ -455,7 +475,6 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		
 		myModel.getResultIDFromDB();
 		myModel.notifyTeacherOfLeave();
-		inExam = false;
 		setTimer(new Timer());
 		new Thread(scanForCheatingDecision).start();
 		
@@ -474,7 +493,6 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 					if(decision == 1) {
 						
 						cancelTimer();
-						inExam = true;
 						paintDecisionInfo("Du darfst weitermachen!");
 						
 					}
@@ -482,8 +500,9 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 					else if(decision == -1) {
 
 						cancelTimer();
+						inExam = false;
 						paintDecisionInfo("Die Prüfung ist leider ungültig!");
-						MC.execShowLeftPanel();
+						MC.execRemoveExamEnvironment();
 						
 					}
 					
@@ -568,7 +587,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
     
     private void paintDecisionInfo(String decision) {
     	
-    	 MessageBox msgBox = new MessageBox("Achtung!", "Dein Lehrer hat eine Entscheidung gefällt!", decision, "smallMessage");
+    	 MessageBox msgBox = new MessageBox("Achtung!", "Dein Lehrer hat eine Entscheidung gefällt!", decision, "cheating");
          msgBox.setVisible(true);
     	
     }
@@ -692,7 +711,12 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public void execChangeResultValue(int value) {
+		
+		if(value == -2)
+			seenResults++;
+		
 		myModel.changeResultValue(cheaterList, value);
+		
 	}
 
 	public void initRefreshLists() {

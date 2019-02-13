@@ -22,19 +22,7 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	String[] ANLIB = {"0300", "0400"};
 	
-	int[] leftmore2Stufig = {150, 250, 170, 210};
-	int[] leftmore2Stufig_X = {400, 100, 170, 210};
-	
-	int[] IGLAGCoo = {150, 250, 170, 200};
-	
 
-	int[] bigGB = {250, 150, 170, 210};
-	
-	int[] leftmore1Stufig_X = {380, 100, 170, 210};
-	
-	
-	
-	
 	
 	public ML_Anlagenbewertung(MainController mainController) {
 		myController = new Controller_Anlagenbewertung(mainController);
@@ -53,27 +41,27 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	
 	if(cmd.contains("~  Teilzahlung")) {
-		myController.exec_2Stufig_Fixed_View(cmd, "0710", FULLAW, "2500", "20", leftmore2Stufig, false, true);
+		myController.exec_2Stufig_Fixed_View(cmd, "0710", FULLAW, "2500", "20", false, true);
 	}
 	
 
 	else if(cmd.contains("~  Anlagen in Bau Umbuchung")) {
-		myController.exec_1Stufig_ohneSteuer(cmd, "0710", ANLIB, null, "20", leftmore1Stufig_X, false, true);
+		myController.exec_1Stufig_ohneSteuer(cmd, "0710", ANLIB, null, "20", false, true);
 	}
 	
 	
 	else if(cmd.contains("~  Instandhaltung")) {
-		myController.exec_2Stufig_Fixed_View(cmd, "7200", FULLAW, "2500", "20", leftmore2Stufig, false, true);
+		myController.exec_2Stufig_Fixed_View(cmd, "7200", FULLAW, "2500", "20", false, true);
 	}
 	
 	
 	else if(cmd.contains("~  Anlagenaktivierung")) {
-		myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", leftmore2Stufig, false, true);
+		myController.exec_2Stufig_VariableKonto(cmd, null, FULLAW, "2500", "20", false, true);
 	}
 	
 	
 	else if(cmd.contains("~  Anlagenausscheidung durch Verkauf")) {
-		myController.exec_Anlagenausscheidung_durchVerkauf(cmd, "4600", FULLAW, "3500", null, null, "20", leftmore2Stufig_X, false, null, true);
+		myController.exec_Anlagenausscheidung_durchVerkauf(cmd, "4600", FULLAW, "3500", null, null, "20", false, null, true);
 	}
 	
 }
@@ -109,7 +97,7 @@ public class ML_Anlagenbewertung implements MouseListener{
 	
 	
 	public void makeAbschreibung() {
-		myController.exec_Abschreibung("Abschreibung", "7010", FIXEDAW, null, null, leftmore2Stufig, true, true);
+		myController.exec_Abschreibung("Abschreibung", "7010", FIXEDAW, null, null, true, true);
 	}
 	
 }

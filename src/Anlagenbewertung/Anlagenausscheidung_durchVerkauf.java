@@ -42,7 +42,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 	private void makeAnlKonto() {
 		txtAnlage = new JTextField("Anlagenkonto");
 		View_SuperClass.txtFieldDesign(txtAnlage);
-		txtAnlage.setBounds(850, yFirst-100, 220, 40);
+		txtAnlage.setBounds(850, 195-100, 220, 40);
 		contentPane.add(txtAnlage);
 		txtAnlage.setColumns(10);
 	}
@@ -50,7 +50,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 	private void makeAW() {
 		txtAW = new JTextField("Anschaffungswert");
 		View_SuperClass.txtFieldDesign(txtAW);
-		txtAW.setBounds(850, yFirst-50, 220, 40);
+		txtAW.setBounds(850, 195-50, 220, 40);
 		contentPane.add(txtAW);
 		txtAW.setColumns(10);
 	}
@@ -58,7 +58,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 	private void makeND() {
 		txtND = new JTextField("Nutzungsdauer");
 		View_SuperClass.txtFieldDesign(txtND);
-		txtND.setBounds(850, yFirst, 220, 40);
+		txtND.setBounds(850, 195, 220, 40);
 		contentPane.add(txtND);
 		txtND.setColumns(10);
 	}
@@ -68,7 +68,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		IBN_Monat = new JTextField();
 		View_SuperClass.txtFieldDesign(IBN_Monat);
 		IBN_Monat.setText("Monat Verkauf");
-		IBN_Monat.setBounds(850, ySecond + 10, 220, 42);
+		IBN_Monat.setBounds(850, 235 + 10, 220, 42);
 		contentPane.add(IBN_Monat);
 		IBN_Monat.setColumns(10);
 	}
@@ -78,7 +78,7 @@ public class Anlagenausscheidung_durchVerkauf extends View_SuperClass_2Outputs{
 		buchWert = new JTextField();
 		View_SuperClass.txtFieldDesign(buchWert);
 		buchWert.setText("Buchwert");
-		buchWert.setBounds(850, ySecond + (ySecond - yFirst) + 23, 220, 42);
+		buchWert.setBounds(850, 235 + (235 - 195) + 23, 220, 42);
 		contentPane.add(buchWert);
 		buchWert.setColumns(10);
 	}

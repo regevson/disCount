@@ -287,6 +287,7 @@ public class ML_db implements MouseListener{
 			
 			else if(jltemp.getIcon().toString().equals("src/sadFace.png")) {
 				
+				System.out.println("clicked sad face");
 				myController.execChangeResultValue(-2);
 				
 				lobby.removeSmileys((JPanel) jltemp.getParent());

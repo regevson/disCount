@@ -66,12 +66,17 @@ public class Skonto_1_2_Stufig extends View_SuperClass_2Outputs {
 
 		
 		if(netto.isSelected()) {
+			
 			bruttoPrice = myController.initNettoToBrutto(txtPreis.getText(), percent);
 			skontoBruttoPrice = ((Controller_Rechnungsausgleich) myController).initNettoToSkontoBrutto(txtPreis.getText(), skontoPercent.getText());
+			
 		}
+		
 		else {
+			
 			nettoPrice = myController.initBruttoToNetto(txtPreis.getText(), percent);
 			skontoBruttoPrice = ((Controller_Rechnungsausgleich) myController).initBruttoToSkontoBrutto(txtPreis.getText(), skontoPercent.getText());
+			
 		}
 		
 		

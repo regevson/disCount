@@ -25,10 +25,6 @@ public class ML_Personalverrechnung implements MouseListener{
 		
 	String[] FULLAW = {"2800", "2700", "3300", "3190 (Bankomatkarte)", "3180 (Kreditkarte)"};
 	String[] FIXEDAW = {"6200"};
-	
-	int[] leftmore2Stufig = {150, 250, 170, 210};
-
-	int[] bigGB = {250, 150, 170, 210};
 		
 		
 	String cmd = ((JLabel) e.getSource()).getText();
@@ -39,27 +35,27 @@ public class ML_Personalverrechnung implements MouseListener{
 	
 	
 	if(cmd.equals("~  Gehaltsbuchungen")) {
-		myController.exec__4_Stufig_Fixed_View(cmd, "3600", FIXEDAW, "3540", "3850", null, null, bigGB, true, null, false);
+		myController.exec__4_Stufig_Fixed_View(cmd, "3600", FIXEDAW, "3540", "3850", null, null, true, null, false);
 	}
 	
 	else if(cmd.equals("~  Geschäftsessen")) {
-		myController.exec_Geschäftsessen_View(cmd, null, FULLAW, "5080", "20", leftmore2Stufig, true, true);
+		myController.exec_Geschäftsessen_View(cmd, null, FULLAW, "5080", "20", true, true);
 	}
 	
 	else if(cmd.equals("~  Fahrtkosten")) {
-		myController.exec_Fahrtkosten_View(cmd, null, FULLAW, "2500", "10", leftmore2Stufig, false, true);
+		myController.exec_Fahrtkosten_View(cmd, null, FULLAW, "2500", "10", false, true);
 	}
 	
 	else if(cmd.equals("~  Kilometergeld Unternehmer")) {
-		myController.exec_Kilometergeld_Unternehmer_View(cmd, "7345", FULLAW, null, null, leftmore2Stufig, false, true);
+		myController.exec_Kilometergeld_Unternehmer_View(cmd, "7345", FULLAW, null, null, false, true);
 	}
 	
 	else if(cmd.equals("~  Tagesgeld")) {
-		myController.exec_Tagesgeld_View(cmd, "7360", FULLAW, "2500", "10", leftmore2Stufig, false, true);
+		myController.exec_Tagesgeld_View(cmd, "7360", FULLAW, "2500", "10", false, true);
 	}
 	
 	else if(cmd.equals("~  Nächtigungsgeld")) {
-		myController.exec_2Stufig_Fixed_View(cmd, "7364", FULLAW, "2500", "13", leftmore2Stufig, false, true);
+		myController.exec_2Stufig_Fixed_View(cmd, "7364", FULLAW, "2500", "13", false, true);
 	}
 	
 

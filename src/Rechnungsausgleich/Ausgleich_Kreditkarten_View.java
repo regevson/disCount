@@ -17,12 +17,14 @@ public class Ausgleich_Kreditkarten_View extends View_SuperClass{
 
 	@Override
 	public void build(String Konto1, String[] Konten2, String Konto3, boolean fixed) {
+		
 		makeKonto1(Konto1);
 		makeKonto2Fixed(Konten2[0]);
 		makeKonto3(Konto3);
 		makePrice();
 		makePrice2();
 		makeKonto4();
+		
 	}
 	
 
@@ -33,7 +35,7 @@ public class Ausgleich_Kreditkarten_View extends View_SuperClass{
 		lblKonto4 = new JLabel("2500");
 		lblKonto4.setFont(MainView.font_20);
 		lblKonto4.setForeground(Color.WHITE);
-		lblKonto4.setBounds(xLeft, ySecond+(ySecond-yFirst), 56, 16);
+		lblKonto4.setBounds(marginLeft1, 235 + (235 - 195), 56, 16);
 		contentPane.add(lblKonto4);
 	}
 	

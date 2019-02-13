@@ -17,19 +17,19 @@ public class Geschäftsessen_View extends View_SuperClass{
 	private void makePrices() {
 		txtPrice1 = new JTextField("Gesamte Kosten");
 		View_SuperClass.txtFieldDesign(txtPrice1);
-		txtPrice1.setBounds(xLeft, yFirst, 170, 42);
+		txtPrice1.setBounds(marginLeft1, 195, 170, 42);
 		contentPane.add(txtPrice1);
 		txtPrice1.setColumns(10);
 		
 		txtPrice2 = new JTextField("Betrag zu 20%");
 		View_SuperClass.txtFieldDesign(txtPrice2);
-		txtPrice2.setBounds(xLeft, ySecond+10, 170, 42);
+		txtPrice2.setBounds(marginLeft1, 235 + 10, 170, 42);
 		contentPane.add(txtPrice2);
 		txtPrice2.setColumns(10);
 		
 		txtPrice3 = new JTextField("Betrag zu 10%");
 		View_SuperClass.txtFieldDesign(txtPrice3);
-		txtPrice3.setBounds(xLeft, ySecond+(ySecond-yFirst)+20, 170, 42);
+		txtPrice3.setBounds(marginLeft1, 235 + (235 - 195) + 20, 170, 42);
 		contentPane.add(txtPrice3);
 		txtPrice3.setColumns(10);
 	}

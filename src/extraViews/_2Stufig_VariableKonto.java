@@ -9,24 +9,29 @@ public class _2Stufig_VariableKonto extends View_SuperClass{
 	
 	@Override
 	public void build(String Konto1, String[] Konten2, String Konto3, boolean fixed) {
+		
 		makeVariableTextField();
+		
 		if(fixed == true)
 			makeKonto2Fixed(Konten2[0]);
 		else
 			makeKonto2Variable(Konten2);
+		
 		makeKonto3(Konto3);
 		makePrice();
 		makeVariableTax();
 		makeButtons();
+		
 	}
 
 	private void makeVariableTextField() {
+		
 		txtKontonummer = new JTextField("Kontonummer");
 		txtKontonummer.setFont(MainView.font_18);
-		txtKontonummer.setBounds(50, yFirst, 130, 26);
+		txtKontonummer.setBounds(marginLeft1, 198, 130, 26);
 		contentPane.add(txtKontonummer);
 		txtKontonummer.setColumns(10);
-		xLeft = 50;
+		
 	}
 	
 	

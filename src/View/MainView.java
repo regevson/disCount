@@ -200,6 +200,8 @@ public static boolean isBANNED = false;
 	
 	public static boolean databaseIsActive = true;
 	
+	public static JFrame openWindow = null; // (to prevent window-massacre)
+	
 	
 	
 	public MainView() {
@@ -1434,7 +1436,8 @@ public static boolean isBANNED = false;
 		JLabel picLabel = new JLabel(icon);
 		picLabel.setBounds(x, y, width, height);
 		picLabel.setFont(font_17);
-		picLabel.addMouseListener(llML.get(mouseListener));
+		if(mouseListener != -1)
+			picLabel.addMouseListener(llML.get(mouseListener));
 		picLabel.setToolTipText(toolTipText);
 		return picLabel;
 		
@@ -1610,6 +1613,9 @@ public static boolean isBANNED = false;
 		    	MainView.noColorFade = true;
 		        ((ML_db) llML.get(9)).initOpenProject(MainModel.convertStringToLL_Char(this.code));
 		        MainView.noColorFade = false;
+		        
+		        contentPane.revalidate();
+		        contentPane.repaint();
 		        
 		    }
 		}.init(code)).start();
@@ -2033,7 +2039,7 @@ public static boolean isBANNED = false;
 		tempPanel.remove(newQuestionPanel);
 	}
 
-	public void removeLeftPanelAndMenu() {
+	public void setupExamEnvironment() {
 		
 		tempMenuBar = new JMenuBar();
 		tempMenuBar = menuBar;
@@ -2063,14 +2069,18 @@ public static boolean isBANNED = false;
 
 		menu.add(menuItemExam);
 		setJMenuBar(menuBar);
-		this.panelLeft.setVisible(false);
+		panelLeft.setVisible(false);
+		if(turnedOnPanel != null)
+			turnedOnPanel.setVisible(false);
 		
 	}
 	
-	public void showLeftPanel() {
+	public void removeExamEnvironment() {
 		
 		menuBar.setVisible(true);
-		this.panelLeft.setVisible(true);
+		panelLeft.setVisible(true);
+		if(turnedOnPanel != null)
+			turnedOnPanel.setVisible(true);
 		
 	}
 
@@ -2087,16 +2097,15 @@ public static boolean isBANNED = false;
 	         public void windowDeactivated(WindowEvent wEvt) {
 	        	 
 	        	 if(!legalWindowChange && Controller_dbActivity.inExam) {
-	        		 
+	        		
+	        		grantWindowChange();
 		            MessageBox msgBox = new MessageBox("Achtung!", "Du hast die Prüfungsumgebung verlassen", "Dein Lehrer wurde verständigt", "smallMessage");
 		            msgBox.setVisible(true);
 		            ((ML_db) llML.get(9)).initNotifyTeacherOfLeave();
-		            removeMe();
-		            setJMenuBar(tempMenuBar);
 		            
 		         }
 	        	 
-	        	 else if(!legalWindowChange && !Controller_dbActivity.inExam)
+	        	 else if(!Controller_dbActivity.inExam)
 	        		 removeMe();
 	        	 
 	         }
@@ -2220,12 +2229,12 @@ public static boolean isBANNED = false;
 		}
 		
 		turnedOnPanel.removeAll();
-		turnedOnPanel.setPreferredSize(new Dimension(screenWidth - workPanel_Width - 30, 80000));
+		turnedOnPanel.setPreferredSize(new Dimension(screenWidth - workPanel_Width - 50, 80000));
 		
 		JScrollPane middleSessionSP = new JScrollPane(turnedOnPanel);
 		middleSessionSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		middleSessionSP.setBorder(null);
-		middleSessionSP.setBounds(0, 0, screenWidth - workPanel_Width, screenHeight - 200);
+		middleSessionSP.setBounds(0, 0, screenWidth - workPanel_Width - 20, screenHeight - 200);
 		middleSessionSP.setVisible(true);
 		contentPane.add(middleSessionSP);
 		

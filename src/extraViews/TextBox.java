@@ -3,6 +3,8 @@ package extraViews;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -39,11 +41,11 @@ public abstract class TextBox extends JFrame{
 		
 		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
 		
-		JLabel lblGebenSieDie = new JLabel(heading);
-		lblGebenSieDie.setFont(MainView.font_20);
-		lblGebenSieDie.setForeground(MainView.disCountBlue);
-		lblGebenSieDie.setBounds(151, 33, 400, 55);
-		contentPane.add(lblGebenSieDie);
+		JLabel headingLabel = new JLabel(heading);
+		headingLabel.setFont(MainView.font_20);
+		headingLabel.setForeground(MainView.disCountBlue);
+		headingLabel.setBounds(151, 33, 400, 55);
+		contentPane.add(headingLabel);
 		
 		textField = new JTextField();
 		textField.setText(placeholder);
@@ -56,11 +58,18 @@ public abstract class TextBox extends JFrame{
 		btn.setForeground(Color.WHITE);
 		btn.setContentAreaFilled(false);
 		btn.setOpaque(true);
-		btn.setFont(MainView.font_20);
+		btn.setFont(MainView.font_17_bold);
 		btn.setBorder(new LineBorder(new Color(0, 117, 211), 2));
 		btn.setBounds(446, 236, 109, 39);
 		contentPane.add(btn);
 		
+		JLabel escapeLabel = MainView.makeMenuLabels("src/escape.png", "Schlieﬂen", 555, 10, -1, 23, 23);
+		escapeLabel.addMouseListener(new MouseAdapter() { 
+	          public void mousePressed(MouseEvent me) { 
+	              dispose();
+	            } 
+	          }); 
+		contentPane.add(escapeLabel);
 	}
 	
 	

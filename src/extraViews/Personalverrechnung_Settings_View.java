@@ -1,7 +1,9 @@
 package extraViews;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +50,9 @@ public class Personalverrechnung_Settings_View extends JFrame {
 			jf.setContentPane(contentPane);
 			contentPane.setLayout(null);
 			jf.setVisible(true);
+			
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			jf.setLocation(dim.width/2-jf.getSize().width/2, dim.height/2-jf.getSize().height/2);
 			
 			JLabel lblCurrentSV1 = new JLabel("SV bis bis Ä 1.311,00");
 			lblCurrentSV1.setFont(MainView.font_16);
@@ -105,7 +110,9 @@ public class Personalverrechnung_Settings_View extends JFrame {
 			contentPane.add(txtCurrentSV4);
 			
 			JLabel lblSozialversicherung = new JLabel("Sozialversicherung");
-			lblSozialversicherung.setBounds(216, 36, 56, 16);
+			lblSozialversicherung.setFont(MainView.font_20);
+			lblSozialversicherung.setForeground(Color.WHITE);
+			lblSozialversicherung.setBounds(250, 22, 300, 40);
 			contentPane.add(lblSozialversicherung);
 			
 			JPanel panel = new JPanel();
@@ -149,7 +156,9 @@ public class Personalverrechnung_Settings_View extends JFrame {
 			contentPane.add(textField_mehrals60KPP);
 			
 			JLabel lblKleinesPp = new JLabel("kleines PP");
-			lblKleinesPp.setBounds(336, 354, 56, 16);
+			lblKleinesPp.setFont(MainView.font_16_bold);
+			lblKleinesPp.setForeground(Color.WHITE);
+			lblKleinesPp.setBounds(330, 354, 100, 30);
 			contentPane.add(lblKleinesPp);
 			
 			txtmind20GPP = new JTextField();
@@ -170,9 +179,11 @@ public class Personalverrechnung_Settings_View extends JFrame {
 			textField_mehrals60GPP.setBounds(496, 568, 100, 40);
 			contentPane.add(textField_mehrals60GPP);
 			
-			JLabel label = new JLabel("kleines PP");
-			label.setBounds(512, 354, 56, 16);
-			contentPane.add(label);
+			JLabel grossesPP = new JLabel("groﬂes PP");
+			grossesPP.setFont(MainView.font_16_bold);
+			grossesPP.setForeground(Color.WHITE);
+			grossesPP.setBounds(510, 354, 100, 30);
+			contentPane.add(grossesPP);
 			
 			JButton btnNewButton = new JButton("\u00C4nderungen speichern");
 			btnNewButton.setBackground(new Color(37, 37, 38));

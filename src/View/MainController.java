@@ -247,12 +247,12 @@ public class MainController{
 		return dbController.execGetGraphInfo();
 	}
 
-	public void execRemoveLeftPanelAndMenu() {
-		mainView.removeLeftPanelAndMenu();
+	public void execSetupExamEnvironment() {
+		mainView.setupExamEnvironment();
 	}
 	
-	public void execShowLeftPanel() {
-		mainView.showLeftPanel();
+	public void execRemoveExamEnvironment() {
+		mainView.removeExamEnvironment();
 	}
 
 	public void execSetWindowListener() {

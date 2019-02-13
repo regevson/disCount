@@ -117,7 +117,7 @@ public class IG_Erwerb_Kauf_View extends View_SuperClass_2Outputs{
 	private void makeNotice(String msg) {
 		JLabel jl = new JLabel(msg);
 		jl.setFont(MainView.font_17);
-		jl.setBounds(xLeft, ySecond+100, 500, 20);
+		jl.setBounds(marginLeft1, 235 + 100, 500, 20);
 		jl.setForeground(Color.WHITE);
 		contentPane.add(jl);
 	}

@@ -38,7 +38,10 @@ public class MessageBox extends JFrame {
 		
 		else if(messageType.equals("smallMessage"))
 			makeSmallMessage(title, heading1, text);
-			
+		
+		else if(messageType.equals("cheating"))
+			makeCheatingMessage(title, heading1, text);
+		
 		else if(messageType.equals("badMessage"))
 			makeBadMessage(title, heading1, text);
 			
@@ -95,6 +98,71 @@ public class MessageBox extends JFrame {
 		btnAllesKlar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
+			}
+		});
+		btnAllesKlar.setBounds(732, 227, 123, 40);
+		btnAllesKlar.setFont(MainView.font_16_bold);
+		btnAllesKlar.setFocusable(false);
+		btnAllesKlar.setContentAreaFilled(false);
+		btnAllesKlar.setBackground(purple);
+		btnAllesKlar.setOpaque(true);
+		btnAllesKlar.setForeground(Color.WHITE);
+		contentPane.add(btnAllesKlar);
+		
+	}
+
+	
+	private void makeCheatingMessage(String title, String heading1, String text) {
+		
+		setTitle(title);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 898, 290);
+		setUndecorated(true);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, purple));
+		
+		JLabel lblHeading = new JLabel(heading1);
+		lblHeading.setFont(MainView.font_19_bold);
+		lblHeading.setBounds(22, 13, 782, 46);
+		lblHeading.setForeground(Color.GRAY);
+		contentPane.add(lblHeading);
+		
+		JTextArea textArea = new JTextArea(text);
+		textArea.setEnabled(true);
+		textArea.setEditable(false);
+		textArea.setLineWrap(true);
+		textArea.setBorder(new LineBorder(purple, 1, true));
+		textArea.setBorder(BorderFactory.createCompoundBorder(textArea.getBorder(), BorderFactory.createEmptyBorder(12, 12, 12, 12)));
+		textArea.setWrapStyleWord(true);
+		textArea.setBackground(Color.WHITE);
+		textArea.setFont(MainView.font_16);
+		textArea.setForeground(Color.DARK_GRAY);
+		textArea.setBounds(22, 72, 833, 114);
+		contentPane.add(textArea);
+		
+		JButton btnAllesKlar = new JButton("Alles klar!");
+		btnAllesKlar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				setCursor(MainView.handCursor());
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				setCursor(MainView.normalCursor());
+			}
+		});
+		btnAllesKlar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				MainView.forbidWindowChange();
 			}
 		});
 		btnAllesKlar.setBounds(732, 227, 123, 40);

@@ -137,7 +137,7 @@ public class db_Model {
       
            checkIfBanned();
            
-           setLoggedIn();
+          // setLoggedIn();
            
            getMinimumConstants();
    		
@@ -1285,15 +1285,18 @@ public class db_Model {
 		
 		for(int x = 1; x <= studentCount; x++) {
 			
+			System.out.println("scanning student" + x);
+			
 			try {
     			
-    			rs = st.executeQuery("SELECT student" + x + " FROM exams WHERE id='" + resultID + "'");
+    			ResultSet rs = st.executeQuery("SELECT student" + x + " FROM exams WHERE id='" + resultID + "'");
 
 				if(rs.next())
 					result = rs.getDouble("student" + x);
 				
 				if(result != -1 && result != -99 && result != -2) { // -1 -> student not finished yet; -99 -> student cheated, now waiting for teacher decision; -2 -> student evicted due to cheating
 					
+					System.out.println("student" + x + "  is inside");
 					alResults.add(result);
 					scanList.add(x);
 					
@@ -1303,7 +1306,7 @@ public class db_Model {
 						cheaterList.add(x);
 						
 					}
-					
+
 					else
 						changeResultValue(x, -1);
 					
@@ -1335,7 +1338,6 @@ public class db_Model {
 			for(int x = 0; x < cheaterList.size(); x++) {
 			
 				st.executeUpdate("UPDATE exams SET student" + cheaterList.get(x) + "='" + value + "' WHERE id='" + resultID + "'");
-				st.executeUpdate("UPDATE exams SET student" + cheaterList.get(x) + "='" + value + "' WHERE id='" + pid + "'");
 			
 			}
 			
@@ -1617,6 +1619,7 @@ public class db_Model {
 			if(rs.next()) {
 				
 				int decision = rs.getInt("student" + studentNumber);
+				System.out.println("decision: " + decision);
 				
 				if(decision == -1) // cheater is allowed to continue
 					return 1;
@@ -1883,6 +1886,8 @@ public class db_Model {
 
 		try {
 			
+			closeOpenedSessions(email);
+			
 			if(getIDByEmail(partnerEmail) == -1)
 				return -1;
 
@@ -1897,7 +1902,24 @@ public class db_Model {
 
 		return -1;
 
-	}	
+	}
+	
+	private void closeOpenedSessions(String email) {
+		
+		try {
+			
+			ResultSet rs = st.executeQuery("SELECT id FROM sessions WHERE student1='" + email + "' OR student2='" + email + "'");
+			
+			while(rs.next()) {
+				
+				int id = rs.getInt("id");
+				removeSessionFromDB(id);
+			
+			}
+			
+		} catch(SQLException e) {e.printStackTrace();}
+
+	}
 	
 	public int searchForSession(String partnerEmail) {
 		
@@ -1905,7 +1927,7 @@ public class db_Model {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT id FROM sessions WHERE student1='" + partnerEmail + "' AND student2='" + email + "'");
+			ResultSet rs = st.executeQuery("SELECT id FROM sessions WHERE student1='" + partnerEmail + "' AND student2='" + email + "'");
 			
 			if(rs.next())
 				sessionID = rs.getInt("id");
@@ -1940,7 +1962,7 @@ public class db_Model {
 		
 		try {
 			
-			rs = st.executeQuery("SELECT " + column + " FROM sessions WHERE student1='" + email + "' OR student2='" + email + "'");
+			ResultSet rs = st.executeQuery("SELECT " + column + " FROM sessions WHERE student1='" + email + "' OR student2='" + email + "'");
 			
 			if(rs.next())
 				content += rs.getString(column);
@@ -1976,6 +1998,18 @@ public class db_Model {
 		
 	}
 	
+	
+	
+	public void removeSessionFromDB(int id) {
+		
+		try {
+			
+			st.executeUpdate("DELETE FROM sessions WHERE id='" + id + "'");
+		
+		} catch (SQLException e) {e.printStackTrace();}
+		
+		
+	}
 	
 	
 	

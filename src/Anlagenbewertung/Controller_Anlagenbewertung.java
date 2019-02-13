@@ -10,18 +10,16 @@ public class Controller_Anlagenbewertung extends Controller_AbstractClass{
 		super(MC);
 	}
 	
-	public void exec_Anlagenausscheidung_durchVerkauf(String cmd, String konto1, String[] kontoSelection, String konto3, String konto4, String konto5, String percent, int[] coordinates, boolean fixed, String extra, boolean leftMore) {
+	public void exec_Anlagenausscheidung_durchVerkauf(String cmd, String konto1, String[] kontoSelection, String konto3, String konto4, String konto5, String percent, boolean fixed, String extra, boolean leftMore) {
 		Anlagenausscheidung_durchVerkauf view = new Anlagenausscheidung_durchVerkauf();
 		view.changeBounds(1300, 470);
-		view.setUpBasicStuff(cmd, konto1, kontoSelection, konto3, konto4, konto5, percent, coordinates, fixed, extra, this, leftMore);
-		view.setVisible(true);
+		view.setUpBasicStuff(cmd, konto1, kontoSelection, konto3, konto4, konto5, percent, fixed, extra, this, leftMore);
 	}
 
-	public void exec_Abschreibung(String cmd, String konto1, String[] kontoSelection, String konto3, String steuer, int[] coordinates, boolean fixed, boolean leftMore) {
+	public void exec_Abschreibung(String cmd, String konto1, String[] kontoSelection, String konto3, String steuer, boolean fixed, boolean leftMore) {
 		Abschreibung_View view = new Abschreibung_View();
 		view.changeBounds(1300, 470);
-		view.setUpBasicStuff(cmd, konto1, kontoSelection, konto3, steuer, coordinates, fixed, this, leftMore);
-		view.setVisible(true);
+		view.setUpBasicStuff(cmd, konto1, kontoSelection, konto3, steuer, fixed, this, leftMore);
 		if(view.warningActivated)
 			view.doADispose();	
 	}

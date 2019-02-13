@@ -3,9 +3,12 @@ package extraViews;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
 
@@ -18,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -33,11 +37,15 @@ public class View_SuperClass_2Outputs extends JFrame{
 	public JPanel contentPane;
 	public ActionListener AL;
 	
-	public int xLeft;
-	public int xRight;
-	public int yFirst;
-	public int ySecond;
 	public boolean leftMore;
+	
+	
+	private final int kontenLeft = 150;
+	private final int kontenRight = 220;
+	
+	protected int marginLeft1 = 0;
+	protected int marginLeft2 = 0;
+	
 	
 	public int boundsWidth = 870, boundsHeight = 470;
 
@@ -64,60 +72,95 @@ public class View_SuperClass_2Outputs extends JFrame{
 	
 	
 	public static String finalZahlungskonto;
-	
+	private JFrame frame;
 
-	public void setUpBasicStuff(String cmd, String Konto1, String[] Konto2, String Konto3, String Konto4, String Konto5, String percent, int[] coordinates, boolean fixed, String extra, Controller_AbstractClass myController, boolean leftMore) {
+	public void setUpBasicStuff(String cmd, String Konto1, String[] Konto2, String Konto3, String Konto4, String Konto5, String percent, boolean fixed, String extra, Controller_AbstractClass myController, boolean leftMore) {
 		
-		this.konto4 = Konto4;
-		this.konto5 = Konto5;
-		this.percent = percent;
-		this.leftMore = leftMore;
+		frame = this;
 		
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setUndecorated(true);
-		setBounds(100, 100, boundsWidth, boundsHeight);
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(51, 51, 51));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		if(MainView.openWindow == null) {
 		
-		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
-		
-		this.myController = myController;
-		addPic();
-		
-		JLabel lblTitle = new JLabel(cmd);
-		lblTitle.setFont(new Font("Roboto", Font.BOLD, 22));
-		lblTitle.setForeground(new Color(0, 117, 211));
-		lblTitle.setBounds(290, 28, 423, 31);
-		contentPane.add(lblTitle);
-		
-		JButton btnFertig = new JButton("Fertig");
-		btnFertig.setBackground(MainView.darkBlack);
-		btnFertig.setForeground(Color.WHITE);
-		btnFertig.setContentAreaFilled(false);
-		btnFertig.setOpaque(true);
-		btnFertig.setFont(MainView.font_20);
-		btnFertig.setBorder(new LineBorder(new Color(0, 117, 211), 2));
-		btnFertig.setBounds(667, 356, 142, 48);
-		btnFertig.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				try{
-				setUpRoutine(Konto4, Konto5, percent, fixed, extra);
-				}catch(Exception ex) {
+			this.konto4 = Konto4;
+			this.konto5 = Konto5;
+			this.percent = percent;
+			this.leftMore = leftMore;
+			
+			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			setUndecorated(true);
+			setBounds(100, 100, boundsWidth, boundsHeight);
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
+			contentPane = new JPanel();
+			contentPane.setBackground(new Color(51, 51, 51));
+			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+			setContentPane(contentPane);
+			contentPane.setLayout(null);
+			
+			getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, MainView.disCountBlue));
+			
+			this.myController = myController;
+			addPic();
+			
+			JLabel lblTitle = new JLabel(cmd);
+			lblTitle.setFont(new Font("Roboto", Font.BOLD, 22));
+			lblTitle.setForeground(new Color(0, 117, 211));
+			lblTitle.setBounds(0, 28, boundsWidth, 31);
+			lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+			contentPane.add(lblTitle);
+			
+			JButton btnFertig = new JButton("Fertig");
+			btnFertig.setBackground(MainView.darkBlack);
+			btnFertig.setForeground(Color.WHITE);
+			btnFertig.setContentAreaFilled(false);
+			btnFertig.setOpaque(true);
+			btnFertig.setFont(MainView.font_20);
+			btnFertig.setBorder(new LineBorder(new Color(0, 117, 211), 2));
+			btnFertig.setBounds(675, 375, 142, 48);
+			btnFertig.addActionListener(new ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
+					try {
+						
+						setUpRoutine(Konto4, Konto5, percent, fixed, extra);
+						MainView.openWindow = null;
+					
+					}catch(Exception ex) {ex.printStackTrace();}
+					
 					dispose();
 				}
-				dispose();
-			}
-
-				});
-		contentPane.add(btnFertig);
+	
+					});
+			contentPane.add(btnFertig);
+			
+			
+			JLabel escapeLabel = MainView.makeMenuLabels("src/escape.png", "Schlieﬂen", boundsWidth - 43, 11, -1, 23, 23);
+			escapeLabel.addMouseListener(new MouseAdapter() { 
+		          public void mousePressed(MouseEvent e) { 
+		        	  
+		              dispose();
+		              MainView.openWindow = null;
+		              
+		            } 
+		          });
+			contentPane.add(escapeLabel);
+			
+			
+			setMargins(fixed);
+			build(Konto1, Konto2, Konto3, fixed);
+			
+			frame.setVisible(true);
 		
-		setXYWidthHeight(coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
-		build(Konto1, Konto2, Konto3, fixed);
+		}
+		
+		else
+			manageOpenWindow();
+		
+	}
+	
+	private void manageOpenWindow() {
+		
+		MainView.openWindow.toFront();
+		MainView.openWindow.repaint();
+		vibrate(MainView.openWindow);
 		
 	}
 	
@@ -136,11 +179,43 @@ public class View_SuperClass_2Outputs extends JFrame{
 	}
 	
 	
+	private void setMargins(boolean fixed) {
+		
+		if(leftMore) {
+			
+			marginLeft1 = kontenLeft;
+			marginLeft2 = kontenRight;
+			
+			if(!fixed) {
+				
+				marginLeft1 -= 40;
+				marginLeft2 += 40;
+				
+			}
+			
+		}
+		
+		else {
+			
+			marginLeft1 = kontenRight;
+			marginLeft2 = kontenLeft;
+			
+			if(!fixed) {
+				
+				marginLeft1 += 80;
+				marginLeft2 -= 50;
+				
+			}
+			
+		}
+		
+	}
+	
 	public void makeKonto1(String konto1) {
 		lblKonto1 = new JLabel(konto1);
 		lblKonto1.setFont(MainView.font_20);
 		lblKonto1.setForeground(Color.WHITE);
-		lblKonto1.setBounds(xLeft, yFirst, 71, 26);
+		lblKonto1.setBounds(marginLeft1, 195, 71, 26);
 		contentPane.add(lblKonto1);
 	}
 	
@@ -148,7 +223,7 @@ public class View_SuperClass_2Outputs extends JFrame{
 		lblKonto2Fixed = new JLabel(konto2);
 		lblKonto2Fixed.setForeground(Color.WHITE);
 		lblKonto2Fixed.setFont(MainView.font_20);
-		lblKonto2Fixed.setBounds(xRight, yFirst, 248, 31);
+		lblKonto2Fixed.setBounds(marginLeft2, 195, 248, 26);
 		contentPane.add(lblKonto2Fixed);
 	}
 	
@@ -162,7 +237,7 @@ public class View_SuperClass_2Outputs extends JFrame{
 		lblKonto2Variable.setBorder(new LineBorder(new Color(37, 37, 38), 2));
 		lblKonto2Variable.setEditable(true);
 		lblKonto2Variable.setFont(MainView.font_20);
-		lblKonto2Variable.setBounds(xRight, yFirst, 248, 31);
+		lblKonto2Variable.setBounds(marginLeft2, 195, 248, 31);
 		contentPane.add(lblKonto2Variable);
 	}
 	
@@ -171,17 +246,10 @@ public class View_SuperClass_2Outputs extends JFrame{
 		lblKonto3 = new JLabel(konto3);
 		lblKonto3.setFont(MainView.font_20);
 		lblKonto3.setForeground(Color.WHITE);
-		lblKonto3.setBounds(xLeft, ySecond, 56, 16);
+		lblKonto3.setBounds(marginLeft1, 235, 56, 16);
 		contentPane.add(lblKonto3);
 	}
 	
-	
-	public void setXYWidthHeight(int xLeft, int xRight, int yFirst, int ySecond) {
-		this.xLeft = xLeft;
-		this.xRight = xRight;
-		this.yFirst = yFirst;
-		this.ySecond = ySecond;
-	}
 	
 	public void makePrice() {
 		txtPreis = new JTextField();
@@ -238,5 +306,34 @@ public class View_SuperClass_2Outputs extends JFrame{
 		dcLabel.setBounds(8, 430, 31, 28);
 		contentPane.add(dcLabel);
 	}
+	
+	
+	
+	public static void vibrate(Frame frame) {
+		
+		try {
+			
+			frame.setVisible(true);
+			
+			final int originalX = frame.getLocationOnScreen().x;
+			final int originalY = frame.getLocationOnScreen().y;
+			
+			for (int i = 0; i < 10; i++) {
+				
+				Thread.sleep(10);
+				frame.setLocation(originalX, originalY + 5);
+				Thread.sleep(10);
+				frame.setLocation(originalX, originalY - 5);
+				Thread.sleep(10);
+				frame.setLocation(originalX + 5, originalY);
+				Thread.sleep(10);
+				frame.setLocation(originalX, originalY);
+				
+			}
+			
+		} catch (Exception e) {e.printStackTrace();}
+		
+	}
+
 	
 }

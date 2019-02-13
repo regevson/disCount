@@ -30,25 +30,25 @@ public class Tagesgeld_View extends View_SuperClass{
 	private void makePrices() {
 		txtTage = new JTextField("Tage");
 		View_SuperClass.txtFieldDesign(txtTage);
-		txtTage.setBounds(xLeft+400, yFirst, 130, 42);
+		txtTage.setBounds(marginLeft1 + 400, 195, 130, 42);
 		contentPane.add(txtTage);
 		txtTage.setColumns(10);
 		
 		txtStartZeit = new JTextField("Startzeit");
 		View_SuperClass.txtFieldDesign(txtStartZeit);
-		txtStartZeit.setBounds(xLeft+400, ySecond, 130, 42);
+		txtStartZeit.setBounds(marginLeft1 + 400, 235, 130, 42);
 		contentPane.add(txtStartZeit);
 		txtStartZeit.setColumns(10);
 		
 		txtEndZeit = new JTextField("Endzeit");
 		View_SuperClass.txtFieldDesign(txtEndZeit);
-		txtEndZeit.setBounds(xLeft+400, ySecond+(ySecond-yFirst), 130, 42);
+		txtEndZeit.setBounds(marginLeft1 + 400, 235 + (235 - 195), 130, 42);
 		contentPane.add(txtEndZeit);
 		txtEndZeit.setColumns(10);
 		
 		txtEssen = new JTextField("Anzahl Essen");
 		View_SuperClass.txtFieldDesign(txtEssen);
-		txtEssen.setBounds(xLeft+550, yFirst, 130, 42);
+		txtEssen.setBounds(marginLeft1 + 550, 195, 130, 42);
 		contentPane.add(txtEssen);
 		txtEssen.setColumns(10);
 	}

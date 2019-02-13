@@ -26,6 +26,7 @@ public class _2Stufig_Fixed_View extends View_SuperClass {
 
 	@Override
 	public void setUpRoutine(String Konto1, String[] Konten2, String Konto3, boolean fixed, String percent) {
+		
 		if(fixed == true)
 			finalZahlungskonto = Konten2[0];
 		else
@@ -46,7 +47,6 @@ public class _2Stufig_Fixed_View extends View_SuperClass {
 		myController.initpaintUpTo7(kontos, prices, leftMore);
 
 		MainView.waitOK = true;
-		
 		
 	}
 

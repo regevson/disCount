@@ -32,9 +32,6 @@ public class ML_Steuer implements MouseListener{
 		String[] VAG = {"2800"};
 		
 		
-		
-		int[] leftmore2Stufig = {150, 250, 170, 210};
-		
 		String cmd = ((JLabel) e.getSource()).getText();
 		
 		int index = cmd.indexOf(':');
@@ -44,24 +41,24 @@ public class ML_Steuer implements MouseListener{
 		
 		
 		if(cmd.equals("~  Einkommensteuer/KESt/Grundsteuer Privatgrundstücke")) {
-			myController.exec_1Stufig_ohneSteuer(cmd, "9600", dirZahl, null, null, leftmore2Stufig, false, false);
+			myController.exec_1Stufig_ohneSteuer(cmd, "9600", dirZahl, null, null, false, true);
 		}
 		
 		
 		else if(cmd.equals("~  USt-Zahllast")) {
-			myController.exec_1Stufig_ohneSteuer(cmd, "3520", VAG, null, null, leftmore2Stufig, false, false);
+			myController.exec_1Stufig_ohneSteuer(cmd, "3520", VAG, null, null, false, true);
 		}
 		
 		else if(cmd.equals("~  Lohnsteuer")) {
-			myController.exec_1Stufig_ohneSteuer(cmd, "3540", VAG, null, null, leftmore2Stufig, false, false);
+			myController.exec_1Stufig_ohneSteuer(cmd, "3540", VAG, null, null, false, true);
 		}
 		
 		else if(cmd.equals("~  Grunderwerbssteuer (unbebaut)")) {
-			myController.exec_1Stufig_ohneSteuer(cmd, "0200", VAG, null, null, leftmore2Stufig, false, false);
+			myController.exec_1Stufig_ohneSteuer(cmd, "0200", VAG, null, null, false, true);
 		}
 		
 		else if(cmd.equals("~  Kammerumlage")) {
-			myController.exec_1Stufig_ohneSteuer(cmd, "7780", VAG, null, null, leftmore2Stufig, false, false);
+			myController.exec_1Stufig_ohneSteuer(cmd, "7780", VAG, null, null, false, true);
 		}
 		
 		
