@@ -77,6 +77,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	public String[] execOpenDB_content(String codeInfo, boolean onlyTS) {
 		return myModel.getBestARMatch(codeInfo, onlyTS);
 	}
+	
+	public String execGetEmail() {
+		return myModel.getEmail();
+	}
 
 	public String execGetName() {
 		return myModel.getName();
@@ -96,6 +100,10 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 
 	public int execGetBScount() {
 		return myModel.getBScount();
+	}
+	
+	public String execGetPartnerEmail() {
+		return myModel.getPartnerEmail();
 	}
 	
 	public void initAddInfoToPanel(String name, String codeInfo, String upvotes, String downvotes, String commentCount, String uploader, String solutionID, Buchungssatz bs, MouseListener ML) {
@@ -745,7 +753,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public void execUpdateSessionContent(String code) {
-		myModel.updateSessionContent(code);
+		myModel.updateSessionContent(code, MC.createCodeCommitHistory());
 	}
 	
 	public void initRemoveSessionFromDB() {

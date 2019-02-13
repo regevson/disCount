@@ -1973,12 +1973,9 @@ public class db_Model {
 		
 	}
 	
-	public void updateSessionContent(String code) {
+	public void updateSessionContent(String code, String codeCommitHistory) {
 		
 		try {
-			
-			String codeCommitHistory = getColumnFromSession("codeCommitHistory");
-			codeCommitHistory += "#" + email;
 			
 			st.executeUpdate("UPDATE sessions SET code='" + code + "'");
 			st.executeUpdate("UPDATE sessions SET codeCommitHistory='" + codeCommitHistory + "'");
@@ -1986,6 +1983,8 @@ public class db_Model {
 		} catch(SQLException e) {e.printStackTrace();}
 		
 	}
+	
+	
 	
 	public void removeSessionFromDB() {
 		
@@ -2017,6 +2016,11 @@ public class db_Model {
 
 //---------------------------------------Getter----------------------------------------
 
+	
+	public int getMyID() {
+		return myID;
+	}
+	
 	public String getSolutionID() {
 		return solutionID;
 	}
@@ -2108,6 +2112,10 @@ public class db_Model {
 	
 	public int getStudentNumber() {
 		return studentNumber;
+	}
+	
+	public String getPartnerEmail() {
+		return partnerEmail;
 	}
 
 

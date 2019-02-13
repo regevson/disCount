@@ -331,8 +331,8 @@ public class MainController{
 
 	public void execPrintSessionComments(String comments, int oldCommentCount, int newCommentCount, String chatCommitHistory, String myEmail) {
 
-		mainView.printSessionComments(mainModel.decodeHashTag(comments, oldCommentCount, newCommentCount),
-				mainModel.decodeHashTag(chatCommitHistory, oldCommentCount, newCommentCount), myEmail);
+		mainView.printSessionComments(mainModel.decodeChar("#", comments, oldCommentCount, newCommentCount),
+				mainModel.decodeChar("#", chatCommitHistory, oldCommentCount, newCommentCount), myEmail);
 
 	}
 
@@ -342,11 +342,18 @@ public class MainController{
 		dbController.execUpdateSessionContent(code);
 		
 	}
+	
+	public String createCodeCommitHistory() {
+		
+		Controller_dbActivity dbController = (Controller_dbActivity) controllerList.get(8);
+		return mainModel.createCodeCommitHistory(dbController.execGetEmail(), dbController.execGetPartnerEmail());
+		
+	}
 
 	public void execPrintSessionCode(String newCode, String codeCommitHistory, String myEmail) {
 		
 		execOpenProject(MainModel.convertStringToLL_Char(newCode));
-		ArrayList<String> codeCommitList = mainModel.decodeHashTag(codeCommitHistory, 0, MainModel.countOccurencesOfChar(codeCommitHistory, "#"));
+		ArrayList<String> codeCommitList = mainModel.decodeChar("#", codeCommitHistory, 0, MainModel.countOccurencesOfChar(codeCommitHistory, "#"));
 		mainModel.changeBSColorDueToCodeCommitHistory(codeCommitList, myEmail);
 		
 	}

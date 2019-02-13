@@ -744,28 +744,28 @@ public class MainModel {
 	}
 
 
-	public ArrayList<String> decodeHashTag(String content, int oldCount, int newCount) {
+	public ArrayList<String> decodeChar(String item, String content, int oldCount, int newCount) {
 		
 		ArrayList<String> contentList = new ArrayList<String>();
 		int index = -1;
 		
 		for(int x = 0; x <= oldCount; x++) {	
-			index = content.indexOf("#", index + 1);
+			index = content.indexOf(item, index + 1);
 		}
 		
 		content = content.substring(index + 1);
 		
 		for(int x = 0; x < newCount; x++) {
 			
-			if(content.indexOf("#") == -1) {
+			if(content.indexOf(item) == -1) {
 				
 				contentList.add(content);
 				break;
 				
 			}
 
-			contentList.add(content.substring(0, content.indexOf("#")));
-			content = content.substring(content.indexOf("#") + 1);
+			contentList.add(content.substring(0, content.indexOf(item)));
+			content = content.substring(content.indexOf(item) + 1);
 			
 		}
 		
@@ -789,6 +789,24 @@ public class MainModel {
 			}
 			
 		}
+		
+	}
+
+
+	public String createCodeCommitHistory(String myEmail, String partnerEmail) {
+		
+		String codeCommitHistory = "";
+		
+		for(int x = 0; x < MainView.bsList.size(); x++) {
+			
+			if(MainView.bsList.get(x).getBSNumberPanel().getBackground() == MainView.disCountBlue)
+				codeCommitHistory += "#" + myEmail;
+			else
+				codeCommitHistory += "#" + partnerEmail;
+			
+		}
+		
+		return codeCommitHistory;
 		
 	}
 	
