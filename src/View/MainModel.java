@@ -776,6 +776,9 @@ public class MainModel {
 
 	public void changeBSColorDueToCodeCommitHistory(ArrayList<String> codeCommitList, String myEmail) {
 		
+		if(codeCommitList.isEmpty())
+			return;
+		
 		for(int x = 0; x < MainView.bsList.size(); x++) {
 			
 			if(codeCommitList.get(x).equals(myEmail))

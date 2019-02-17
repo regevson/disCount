@@ -59,7 +59,7 @@ public class Main {
 
 		try {
 
-			Thread.sleep(0);//1500
+			Thread.sleep(1500);//1500
 
 		} catch(InterruptedException ex) {ex.printStackTrace();}
 

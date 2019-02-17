@@ -97,7 +97,7 @@ public class ML_Controls implements MouseListener{
 				if(!MainView.databaseIsActive) {
 					
 					MessageBox mb = new MessageBox("Hinweis", "disCount wurde ohne Datenbankverbindung gestartet!\n", "Ohne funktionierende Verbindung zur Datenbank"
-							+ "ist diese Funktion nicht funktionsfähig.", "smallMessage");
+							+ " ist diese Funktion nicht funktionsfähig.", "smallMessage");
 					mb.setVisible(true);
 					
 				}

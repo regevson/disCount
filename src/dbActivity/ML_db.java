@@ -379,6 +379,14 @@ public class ML_db implements MouseListener{
 	public void initUpdateSessionContent(String code) {
 		myController.execUpdateSessionContent(code);
 	}
+	
+	public void initSendSessionComment(String comment) {
+		myController.execSendSessionComment(comment);
+	}
+	
+	public String initGetStringColumnFromDatabase(String query, String column) {
+		return myController.execGetStringColumnFromDatabase(query, column);
+	}
 
 	
 	
@@ -416,6 +424,12 @@ public class ML_db implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
+
+
+	
 
 
 

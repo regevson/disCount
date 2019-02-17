@@ -86,7 +86,7 @@ public class MainController{
 	
 	private void executeBannedRoutine() {
 		MessageBox mb = new MessageBox("Programmstart verweigert", "Sie wurden verbannt!", "Bei Fragen bezüglich dem Grund des Banns, kontaktieren Sie bitte:\n"
-				+ "discount-software@hotmail.com", "badMessage");
+				+ "juwal.regev@hotmail.com", "badMessage");
 		
 		mb.setVisible(true);
 	}
@@ -306,7 +306,7 @@ public class MainController{
 	}
 
 	public void execPaintGroups(ArrayList<String> groupList) {
-		mainView.paintGroups(groupList, true);
+		mainView.paintGroups(groupList);
 	}
 
 	public void execRemoveGroupFromMiddlePanel(JPanel parent) {

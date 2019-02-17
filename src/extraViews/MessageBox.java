@@ -475,7 +475,7 @@ public class MessageBox extends JFrame {
 		textArea.setWrapStyleWord(true);
 		textArea.setBounds(175, 72, 448, 157);
 		textArea.setBackground(MainView.darkBlack);
-		textArea.setFont(MainView.font_16);
+		textArea.setFont(MainView.font_17);
 		textArea.setForeground(Color.RED);
 		contentPane.add(textArea);
 		

@@ -79,8 +79,9 @@ public class db_Model {
 	private String uploaderID;
 	private ArrayList<Integer> examBSList = null;
 	private Color bsColor = MainView.disCountPurple;
-	private int sessionID;
+	private int sessionID = -1;
 	private String partnerEmail;
+	private String version;
 	
 	
 	
@@ -120,6 +121,7 @@ public class db_Model {
 				String password = br.readLine();
 				schoolClass = br.readLine();
 				myTier = br.readLine();
+				version = br.readLine();
 
 				if(!Main.alreadyDone) {
 					
@@ -132,12 +134,14 @@ public class db_Model {
 				}
 
 			}
+    	   
    		   
-   		   
+    	   if(myTier.equals("teacher"))
+				MainView.isTeacher = true;
       
            checkIfBanned();
            
-          // setLoggedIn();
+           setLoggedIn();
            
            getMinimumConstants();
    		
@@ -149,7 +153,7 @@ public class db_Model {
 		 
        catch (Exception e){e.printStackTrace();return null;}
       
-       return null;//showPotentialMessages();
+       return showPotentialMessages(); //return null;
 	       
 	}
 	
@@ -253,13 +257,34 @@ public class db_Model {
 	     	   schoolClass = rs.getString("class");
 	     	   myTier = rs.getString("tier");
 	     	   String password = rs.getString("password");
+	     	   version = getStringColumnFromDatabase("SELECT currentVersion FROM stats", "currentVersion");
 	     	   
-	     	   setupView.writeInfoIntoFile(name, schoolType, email, password, schoolClass, myTier);
+	     	   setupView.writeInfoIntoFile(name, schoolType, email, password, schoolClass, myTier, version);
 	     	   Main.retireveLocalInfo = false;
 	     	   
 	        }
         
 		} catch(SQLException e) {e.printStackTrace();}
+		
+	}
+	
+	public String getStringColumnFromDatabase(String query, String column) {
+		
+		String result = null;
+		
+		try {
+			
+			st = conn.createStatement();
+			ResultSet rs = st.executeQuery(query);
+
+	        if(rs.next())
+	     	   result = rs.getString(column);
+	        
+	        rs.close();
+	        
+		} catch(Exception e) {e.printStackTrace();}
+		
+		return result;
 		
 	}
 
@@ -626,6 +651,16 @@ public class db_Model {
 		        }
 	        
 	        }
+			
+				
+			if(!version.equals(getStringColumnFromDatabase("SELECT currentVersion FROM stats", "currentVersion"))) {
+				
+				MainView.databaseIsActive = false;
+				
+				list.add(new MessageBox("Nachricht von regevson", "Neue Version verfügbar", "Bitte laden Sie sich die neue Version herunter!"
+						+ "\n\ndisCount muss inzwischen ohne Datenbankverbindung gestartet werden.\n\nEs ist empfehlenswert, die alte Version vorher/nacher zu deinstallieren.", "badMessage"));
+				
+			}
 	        
 	        return list;
 	        
@@ -1649,6 +1684,7 @@ public class db_Model {
 			if(rs.next()) {
 				
 				myTier = "teacher";
+				MainView.isTeacher = true;
 				updateTxtInfoFile();
 				updateTierOnDB();
 				deleteCodeFromDB(enteredCode);
@@ -1895,8 +1931,10 @@ public class db_Model {
 					"INSERT INTO sessions (student1, student2, code, chat, codeCommitHistory, chatCommitHistory) VALUES ('"
 							+ email + "', '" + partnerEmail + "', '" + "-1" + "', '" + "" + "', '" + "" + "', '" + ""
 							+ "')");
+			
+			setPartnerEmail(partnerEmail);
 
-			return searchForSession(partnerEmail);
+			return searchForSession(email, partnerEmail);
 
 		} catch (SQLException e) {e.printStackTrace();}
 
@@ -1914,25 +1952,28 @@ public class db_Model {
 				
 				int id = rs.getInt("id");
 				removeSessionFromDB(id);
-			
+
 			}
 			
+			rs.close();
+			
 		} catch(SQLException e) {e.printStackTrace();}
+		
 
 	}
 	
-	public int searchForSession(String partnerEmail) {
-		
-		this.partnerEmail = partnerEmail;
+	public int searchForSession(String sessionCreator, String sessionPartner) {
 		
 		try {
 			
-			ResultSet rs = st.executeQuery("SELECT id FROM sessions WHERE student1='" + partnerEmail + "' AND student2='" + email + "'");
+			ResultSet rs = st.executeQuery("SELECT id FROM sessions WHERE student1='" + sessionCreator + "' AND student2='" + sessionPartner + "'");
 			
 			if(rs.next())
 				sessionID = rs.getInt("id");
 			
-		} catch(SQLException e) {sessionID = -1; e.printStackTrace();}
+			rs.close();
+			
+		} catch(SQLException e) {e.printStackTrace();}
 		
 		return sessionID;
 
@@ -1966,6 +2007,8 @@ public class db_Model {
 			
 			if(rs.next())
 				content += rs.getString(column);
+			
+			rs.close();
 			
 		} catch(SQLException e) {e.printStackTrace();}
 		
@@ -2003,6 +2046,7 @@ public class db_Model {
 		
 		try {
 			
+			st = conn.createStatement();
 			st.executeUpdate("DELETE FROM sessions WHERE id='" + id + "'");
 		
 		} catch (SQLException e) {e.printStackTrace();}
@@ -2116,6 +2160,10 @@ public class db_Model {
 	
 	public String getPartnerEmail() {
 		return partnerEmail;
+	}
+	
+	public void setPartnerEmail(String partnerEmail) {
+		this.partnerEmail = partnerEmail;
 	}
 
 

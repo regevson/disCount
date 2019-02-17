@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
@@ -24,13 +25,14 @@ public abstract class TextBox extends JFrame{
 	private JPanel contentPane;
 	protected JButton btn;
 	protected JTextField textField;
+	private final int WINDOWWIDTH = 601;
 	
 	
 	public TextBox(ML_db ML, String heading, String placeholder, String button) {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
-		setBounds(100, 100, 601, 347);
+		setBounds(100, 100, WINDOWWIDTH, 347);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -44,12 +46,13 @@ public abstract class TextBox extends JFrame{
 		JLabel headingLabel = new JLabel(heading);
 		headingLabel.setFont(MainView.font_20);
 		headingLabel.setForeground(MainView.disCountBlue);
-		headingLabel.setBounds(151, 33, 400, 55);
+		headingLabel.setBounds(0, 33, WINDOWWIDTH, 55);
+		headingLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(headingLabel);
 		
 		textField = new JTextField();
 		textField.setText(placeholder);
-		textField.setBounds(221, 154, 140, 39);
+		textField.setBounds(211, 154, 180, 39);
 		View_SuperClass.txtFieldDesign(textField);
 		contentPane.add(textField);
 		
@@ -60,7 +63,7 @@ public abstract class TextBox extends JFrame{
 		btn.setOpaque(true);
 		btn.setFont(MainView.font_17_bold);
 		btn.setBorder(new LineBorder(new Color(0, 117, 211), 2));
-		btn.setBounds(446, 236, 109, 39);
+		btn.setBounds(446, 266, 109, 39);
 		contentPane.add(btn);
 		
 		JLabel escapeLabel = MainView.makeMenuLabels("src/escape.png", "Schlieﬂen", 555, 10, -1, 23, 23);

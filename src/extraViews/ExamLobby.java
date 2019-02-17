@@ -48,7 +48,7 @@ public class ExamLobby extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setUndecorated(true);
-		setBounds(100, 100, 1231, 734);
+		setBounds(100, 100, 1300, 734);
 		setTitle("Exam Lobby");
 		contentPane = new JPanel();
 		contentPane.setBackground(MainView.middleBlack);
@@ -65,8 +65,8 @@ public class ExamLobby extends JFrame {
 		alStudentNames = new ArrayList<String>();
 		
 		JLabel lblBeigetreteneSchler = new JLabel("Beigetretene Sch\u00FCler:");
-		lblBeigetreteneSchler.setBounds(12, 74, 177, 26);
-		lblBeigetreteneSchler.setFont(MainView.font_17_bold);
+		lblBeigetreteneSchler.setBounds(12, 74, 300, 26);
+		lblBeigetreteneSchler.setFont(MainView.font_19_bold);
 		lblBeigetreteneSchler.setForeground(MainView.disCountBlue);
 		contentPane.add(lblBeigetreteneSchler);
 		
@@ -101,13 +101,13 @@ public class ExamLobby extends JFrame {
 		
 		JPanel topBanner = new JPanel();
 		topBanner.setBorder(new MatteBorder(0, 0, 3, 0, (Color) MainView.disCountBlue));
-		topBanner.setBounds(0, 0, 1231, 48);
+		topBanner.setBounds(0, 0, 1300, 48);
 		topBanner.setBackground(MainView.darkBlack);
 		contentPane.add(topBanner);
 		topBanner.setLayout(null);
 		
 		JLabel lblExamnumber = new JLabel("Pr\u00FCfung " + pid);
-		lblExamnumber.setBounds(547, 5, 137, 42);
+		lblExamnumber.setBounds(600, 5, 137, 42);
 		topBanner.add(lblExamnumber);
 		lblExamnumber.setFont(MainView.font_20);
 		lblExamnumber.setForeground(MainView.disCountBlue);
@@ -115,24 +115,21 @@ public class ExamLobby extends JFrame {
 		
 		
 
-		/*ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<String> finishedNames = new ArrayList<String>();
 		ArrayList<Double> results = new ArrayList<Double>();
+		for(int x = 1; x < 41; x++) {
+			names.add("student" + x);
+		}
 		
-		names.add("Marco Wagner");
-		names.add("Jennifer Koenig");
-		names.add("Tom Goldschmidt");
-		names.add("regevson");
-		names.add("Anna-Maria Boehm");
-		
-		finishedNames.add("regevson");
+		finishedNames.add("student37");
 		results.add(-31.00);
 		
 		
 		displayJoinedStudents(names);
 		updateFinishedStudents(finishedNames, results);
-		*/
 		
+	
 		 
 		 
 		
@@ -238,6 +235,9 @@ public class ExamLobby extends JFrame {
 		
 		btnStartExam.setText("zur Auswertung");
 		btnStartExam.setVisible(true);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
 		
 	}
 	

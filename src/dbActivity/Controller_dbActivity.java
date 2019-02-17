@@ -296,16 +296,15 @@ public class Controller_dbActivity extends Controller_AbstractClass{
         			  ArrayList<Double> alStudentResults = myModel.scanForFinishedStudents(studentCount, cheaterList);
         			  seenResults += alStudentResults.size();
         			  
-        			  if(alStudentResults.size() >= 1) {
+        			  if(alStudentResults.size() >= 1 || seenResults == studentCount) {
         				  
         				  ArrayList<String> finishedStudentsNames = myModel.getStudentsNamesBasedOnScanList();
         				  int cheaterCount = lobby.updateFinishedStudents(finishedStudentsNames, alStudentResults);
         				  seenResults -= cheaterCount;
         				  
-        				  System.out.println(studentCount +"  studntcount");
-	        			 
+        				  
         				  if(seenResults == studentCount) {
-	        				
+    	        				
         					  cancelTimer();
 	        				  
 	        				  allStudentsFinished = true;
@@ -736,12 +735,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	}
 
 	public int execSearchForSession(String partnerEmail) {
-		
-		int sessionID = myModel.searchForSession(partnerEmail);
-		myModel.sendSessionComment("Ich bin online!!");
-		
-		return sessionID;
-		
+		myModel.setPartnerEmail(partnerEmail);
+		return myModel.searchForSession(partnerEmail, execGetEmail());
 	}
 
 	public void initBuildSessionEnvironment() {
@@ -759,6 +754,11 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 	public void initRemoveSessionFromDB() {
 		myModel.removeSessionFromDB();
 	}
+
+	public String execGetStringColumnFromDatabase(String query, String column) {
+		return myModel.getStringColumnFromDatabase(query, column);
+	}
+
 
 
 

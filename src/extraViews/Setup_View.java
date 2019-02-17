@@ -49,6 +49,7 @@ import View.MainController;
 import View.MainModel;
 import View.MainView;
 import dbActivity.ML_db;
+import disCount.Main;
 import stats.ML_Stats;
 
 public class Setup_View extends JFrame{
@@ -111,7 +112,7 @@ public class Setup_View extends JFrame{
 		UIManager.put("ComboBox.selectionForeground", new Color(128, 128, 128));
 
 		String arryaSchoolTypes[] = { "HBLA", "HAK" };
-		JComboBox cbSchule = new JComboBox(arryaSchoolTypes);
+		cbSchule = new JComboBox(arryaSchoolTypes);
 		cbSchule.setBorder(new LineBorder(purple, 2, true));
 		cbSchule.setBorder(BorderFactory.createCompoundBorder(cbSchule.getBorder(), BorderFactory.createEmptyBorder(3, 6, 3, 3)));
 		cbSchule.setEditable(true);
@@ -170,11 +171,9 @@ public class Setup_View extends JFrame{
 					return;
 				}
 
-				writeInfoIntoFile(txtName.getText(), (String) cbSchule.getSelectedItem(), txtEmail.getText(), txtPasswortfrDiscount.getText(),
-						txtJahrgangzahl.getText(), "student");
 				dispose();
 				startApp();
-
+				
 			}
 
 		});
@@ -183,7 +182,7 @@ public class Setup_View extends JFrame{
 	}
 	
 	
-	public void writeInfoIntoFile(String name, String school, String email, String password, String schoolClass, String tier) {
+	public void writeInfoIntoFile(String name, String school, String email, String password, String schoolClass, String tier, String version) {
 
 		PrintStream fileStream;
 
@@ -198,6 +197,7 @@ public class Setup_View extends JFrame{
 			fileStream.println(password);
 			fileStream.println(schoolClass);
 			fileStream.println(tier);
+			fileStream.println(version);
 			fileStream.close();
 
 		} catch (FileNotFoundException e1) {
@@ -273,7 +273,12 @@ public class Setup_View extends JFrame{
 		llML.addLast(new ML_TableSelectionTopics(ML_TABKALK));
 		llML.addLast(new ML_Stats(mainController));
 		
-		System.out.println("MouseListener-Size: " + llML.size());
+		if(!Main.alreadyDone) {
+		
+			writeInfoIntoFile(txtName.getText(), (String) cbSchule.getSelectedItem(), txtEmail.getText(), txtPasswortfrDiscount.getText(),
+					txtJahrgangzahl.getText(), "student", MLdb.initGetStringColumnFromDatabase("SELECT currentVersion FROM stats", "currentVersion"));
+			
+		}
 
 		mainController.addMLList(llML);
 
@@ -292,7 +297,7 @@ public class Setup_View extends JFrame{
 			System.out.println("Database connection established");
 
 		
-			/* String url =
+			/*String url =
 			 "jdbc:mysql://serverrw.ferrari.tsn.at:3306/db_usersolutions?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 			 Class.forName ("com.mysql.jdbc.Driver"); conn = DriverManager.getConnection
 			 (url,"root","juwalRegev1"); System.out.println

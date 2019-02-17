@@ -202,6 +202,8 @@ public static boolean isBANNED = false;
 	
 	public static JFrame openWindow = null; // (to prevent window-massacre)
 	
+	public static boolean isTeacher = false;
+	
 	
 	
 	public MainView() {
@@ -748,7 +750,7 @@ public static boolean isBANNED = false;
 						((ML_Stats) llML.get(12)).paintGraphs(panelMiddle, labels);
 					
 					else if(title.equals("Gruppen"))
-							paintGroups(((ML_db) llML.get(9)).initGetAllGroups(), db_Model.myTier.equals("teacher"));
+							paintGroups(((ML_db) llML.get(9)).initGetAllGroups());
 					
 				}
 				
@@ -1044,19 +1046,22 @@ public static boolean isBANNED = false;
 	
 			setJMenuBar(menuBar);
 			
-	
-			menuItemExam = new JMenuItem("Neue Prüfung starten", KeyEvent.VK_T);
-			
-			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-			menuItemExam.addActionListener(new ActionListener() {
-			    public void actionPerformed(ActionEvent e) {
-			    	ExamSetupView esv = ((ML_db) llML.get(9)).startExam();
-					esv.setVisible(true);
-			    }
-			});
-	
-			menu.add(menuItemExam);
-			
+			if(isTeacher) {
+				
+				menuItemExam = new JMenuItem("Neue Prüfung starten", KeyEvent.VK_T);
+				
+				menuItemExam.setAccelerator(KeyStroke.getKeyStroke('G', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+				menuItemExam.addActionListener(new ActionListener() {
+				    public void actionPerformed(ActionEvent e) {
+				    	ExamSetupView esv = ((ML_db) llML.get(9)).startExam();
+						esv.setVisible(true);
+				    }
+				});
+		
+				menu.add(menuItemExam);
+				
+			}
+				
 			menuItemExam = new JMenuItem("Prüfung beitreten", KeyEvent.VK_T);
 			
 			menuItemExam.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
@@ -1109,40 +1114,41 @@ public static boolean isBANNED = false;
 		}
 		
 		
-		
-		menu = new JMenu("SESSION");
-		menu.setMnemonic(KeyEvent.VK_N);
-		menu.getAccessibleContext().setAccessibleDescription(
-		        "Session starten");
-		menuBar.add(menu);
-
-		setJMenuBar(menuBar);
-		
-		menuItemStartSession = new JMenuItem("Übungssession starten", KeyEvent.VK_T);
-		
-		menuItemStartSession.setAccelerator(KeyStroke.getKeyStroke('T', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemStartSession.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	EnterEmailForSession eefs = new EnterEmailForSession((ML_db) llML.get(9), "Geben Sie die E-Mail-Addresse Ihres Partners ein!", "E-Mail", "Kontaktieren");
-		    	eefs.setVisible(true);
-		    }
-		});
-
-		menu.add(menuItemStartSession);
-		
-		menuItemJoinSession = new JMenuItem("Übungssession beitreten", KeyEvent.VK_T);
-		
-		menuItemJoinSession.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
-		menuItemJoinSession.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	SearchForSessions sfs = new SearchForSessions((ML_db) llML.get(9), "Geben Sie die E-Mail-Addresse Ihres Partners ein!", "E-Mail", "Suchen");
-		    	sfs.setVisible(true);
-		    }
-		});
-
-		menu.add(menuItemJoinSession);
+		if(databaseIsActive) {
+			
+			menu = new JMenu("SESSION");
+			menu.setMnemonic(KeyEvent.VK_N);
+			menu.getAccessibleContext().setAccessibleDescription(
+			        "Session starten");
+			menuBar.add(menu);
 	
-
+			setJMenuBar(menuBar);
+			
+			menuItemStartSession = new JMenuItem("Übungssession starten", KeyEvent.VK_T);
+			
+			menuItemStartSession.setAccelerator(KeyStroke.getKeyStroke('T', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemStartSession.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	EnterEmailForSession eefs = new EnterEmailForSession((ML_db) llML.get(9), "Geben Sie die E-Mail-Addresse Ihres Partners ein!", "E-Mail", "Kontaktieren");
+			    	eefs.setVisible(true);
+			    }
+			});
+	
+			menu.add(menuItemStartSession);
+			
+			menuItemJoinSession = new JMenuItem("Übungssession beitreten", KeyEvent.VK_T);
+			
+			menuItemJoinSession.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+			menuItemJoinSession.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			    	SearchForSessions sfs = new SearchForSessions((ML_db) llML.get(9), "Geben Sie die E-Mail-Addresse Ihres Partners ein!", "E-Mail", "Suchen");
+			    	sfs.setVisible(true);
+			    }
+			});
+	
+			menu.add(menuItemJoinSession);
+		
+		}
 		
 		
 		
@@ -2133,7 +2139,7 @@ public static boolean isBANNED = false;
 //----------------------------------GROUPS----------------------
 
 	
-	public void paintGroups(ArrayList<String> groupList, boolean isTeacher) {
+	public void paintGroups(ArrayList<String> groupList) {
 		
 		if(!isTeacher) {
 			

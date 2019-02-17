@@ -21,6 +21,8 @@ public class SearchForSessions extends TextBox{
 					
 				}
 				
+				ML.initSendSessionComment("Ich bin online!!");
+				
 				dispose();
 				
 				ML.initBuildSessionEnvironment();
