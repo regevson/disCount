@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 
+import View.MainView;
 import extraViews.RegistrationQuestion;
 import extraViews.Setup_View;
 import extraViews.SplashScreen_View;
@@ -78,9 +79,11 @@ public class Main {
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 	        public void run() {
 	        	
-	            logOut();
-	            getUseTime();
-	            
+	        	if(MainView.databaseIsActive)
+	        		logOut();
+	        	
+	        	getUseTime();
+	        	
 	        }
 	    }, "Shutdown-thread"));
 		

@@ -68,9 +68,7 @@ public class ExamSetupView extends JFrame {
 				ML.initOpenSolution();
 				btnLsungAnhngen.setVisible(false);
 				lblLsungAngehngt.setVisible(true);
-				
-				ML.setStudentCount((int) spinner.getValue());
-				
+
 			}
 
 				});
@@ -93,9 +91,12 @@ public class ExamSetupView extends JFrame {
 		btnPrfungStarten.setBounds(382, 283, 147, 45);
 		btnPrfungStarten.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
+				
+				ML.setStudentCount((int) spinner.getValue());
 				ML.setBSCount(MainModel.countOccurencesOfChar(MainModel.getCodeOnWorkPanel(), "#"));
 				ML.continueWithStudentLogin(bsVorlagen.isSelected());
 				dispose();
+				
 			}
 
 				});

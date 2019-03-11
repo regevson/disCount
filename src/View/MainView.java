@@ -322,7 +322,7 @@ public static boolean isBANNED = false;
 		makeNewEntryOnSideBar("Rechnungsausgleich      ", panelLeft, contentPane, screen, namesRechnungsausgleich, llML.get(1));
 		
 		String[] namesSteuer = {"~  Einkommensteuer/KESt/Grundsteuer Privatgrundstücke", "~  USt-Zahllast", "~  Lohnsteuer",
-				"~  Grunderwerbssteuer (unbebaut)", "~  Kammerumlage"};
+				"~  Grunderwerbssteuer (unbebaut)", "~  Kammerumlage (erste 3 Quartale)", "~  Kammerumlage (im alten Jahr)", "~  Kammerumlage (im neuen Jahr)"};
 
 		makeNewEntryOnSideBar("Steuern/sonst. Spesen  ", panelLeft, contentPane, screen, namesSteuer, llML.get(2));
 		
@@ -2074,6 +2074,55 @@ public static boolean isBANNED = false;
 		});
 
 		menu.add(menuItemExam);
+		
+		
+		menu = new JMenu("LÖSCHEN");
+		menu.setMnemonic(KeyEvent.VK_A);
+		menu.getAccessibleContext().setAccessibleDescription(
+		        "disCout menu");
+		menuBar.add(menu);
+
+		JMenuItem menuItem = new JMenuItem("Ausgewählte Buchungssätze löschen", KeyEvent.VK_T);
+		menuBar.setForeground(Color.WHITE);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke('D', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItem.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	
+		    	MainModel.deleteChecked(workPanel);
+		    	
+		    	if(MainView.inSession)
+		    		((ML_db) llML.get(9)).initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
+		    	
+		    	workPanel.repaint();
+		    	
+		    }
+		});
+		
+		menuItem.getAccessibleContext().setAccessibleDescription(
+				"Ausgewählte Buchungssätze löschen");
+		menu.add(menuItem);
+
+		
+		menu.addSeparator();
+		
+
+		JMenuItem menuItem2 = new JMenuItem("Alle Buchungssätze löschen", KeyEvent.VK_T);
+		
+		menuItem2.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuItem2.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	MainModel.deleteAll(workPanel);
+		    	if(MainView.inSession)
+		    		((ML_db) llML.get(9)).initUpdateSessionContent(MainModel.getCodeOnWorkPanel());
+		    	workPanel.repaint();
+		    }
+		});
+		
+		menuItem2.getAccessibleContext().setAccessibleDescription(
+				"Alle Buchungssätze löschen");
+		menu.add(menuItem2);
+		
+		
 		setJMenuBar(menuBar);
 		panelLeft.setVisible(false);
 		if(turnedOnPanel != null)
@@ -2085,8 +2134,12 @@ public static boolean isBANNED = false;
 		
 		menuBar.setVisible(true);
 		panelLeft.setVisible(true);
+		
 		if(turnedOnPanel != null)
 			turnedOnPanel.setVisible(true);
+		
+		contentPane.revalidate();
+		contentPane.repaint();
 		
 	}
 

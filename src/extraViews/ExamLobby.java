@@ -114,7 +114,7 @@ public class ExamLobby extends JFrame {
 		
 		
 		
-
+/*
 		ArrayList<String> names = new ArrayList<String>();
 		ArrayList<String> finishedNames = new ArrayList<String>();
 		ArrayList<Double> results = new ArrayList<Double>();
@@ -129,7 +129,7 @@ public class ExamLobby extends JFrame {
 		displayJoinedStudents(names);
 		updateFinishedStudents(finishedNames, results);
 		
-	
+	*/
 		 
 		 
 		
@@ -259,11 +259,11 @@ public class ExamLobby extends JFrame {
 		int cheaterCount = 0;
 		
 		for(int x = 0; x < finishedStudentsNames.size(); x++) {
-			System.out.println("finished student: " + finishedStudentsNames.get(x));
-			System.out.println("finished students results: " + alStudentResults.get(x));
+			//System.out.println("finished student: " + finishedStudentsNames.get(x));
+			//System.out.println("finished students results: " + alStudentResults.get(x));
 			
 			if(alStudentResults.get(x) == -31 || alStudentResults.get(x) == -2) {
-				System.out.println("in bad");
+				//System.out.println("in bad");
 				
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setText("ungültig");
 				hmStringToJLabel.get(finishedStudentsNames.get(x)).setForeground(Color.RED);
@@ -321,6 +321,11 @@ public class ExamLobby extends JFrame {
 		Rectangle cheaterRec = cheaterPanel.getBounds();
 		cheaterPanel.setBounds((int) cheaterRec.getX(), (int) cheaterRec.getY(), (int) cheaterRec.getWidth() - 60, (int) cheaterRec.getHeight());
 		
+	}
+	
+	
+	public int getCheaterIndex(String cheater) {
+		return alStudentNames.indexOf(cheater);
 	}
 	
 	

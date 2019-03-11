@@ -23,7 +23,7 @@ public class ML_Controls implements MouseListener{
 	private MainController MC;
 	private ControlsModel myModel;
 	
-	private boolean windowListererIsActive = false;
+	public static boolean windowListererIsActive = false;
 
 	
 

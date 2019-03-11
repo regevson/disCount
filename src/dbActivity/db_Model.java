@@ -1356,11 +1356,11 @@ public class db_Model {
     }
 	
 	
-	public void changeResultValue(int student, int value) {
+	public void changeResultValue(int studentIndex, int value) {
 		
 		try {
 			
-			st.executeUpdate("UPDATE exams SET student" + student + "='" + value + "' WHERE id='" + resultID + "'");
+			st.executeUpdate("UPDATE exams SET student" + studentIndex + "='" + value + "' WHERE id='" + resultID + "'");
 			
 		}catch(SQLException e) {e.printStackTrace();}
 		

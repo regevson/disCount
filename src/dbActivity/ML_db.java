@@ -279,7 +279,8 @@ public class ML_db implements MouseListener{
 			
 			else if(jltemp.getIcon().toString().equals("src/happyFace.png")) {
 				
-				myController.execChangeResultValue(-1);
+				String cheater = ((JLabel) jltemp.getParent().getComponent(0)).getText();
+				myController.execChangeResultValue(lobby.getCheaterIndex(cheater), -1);
 				
 				lobby.removeSmileys(lobby.changeStudentStatus("arbeitet", ((JLabel) jltemp.getParent().getComponent(0)).getText()));
 				
@@ -287,8 +288,8 @@ public class ML_db implements MouseListener{
 			
 			else if(jltemp.getIcon().toString().equals("src/sadFace.png")) {
 				
-				System.out.println("clicked sad face");
-				myController.execChangeResultValue(-2);
+				String cheater = ((JLabel) jltemp.getParent().getComponent(0)).getText();
+				myController.execChangeResultValue(lobby.getCheaterIndex(cheater), -2);
 				
 				lobby.removeSmileys((JPanel) jltemp.getParent());
 				
@@ -387,6 +388,10 @@ public class ML_db implements MouseListener{
 	public String initGetStringColumnFromDatabase(String query, String column) {
 		return myController.execGetStringColumnFromDatabase(query, column);
 	}
+	
+	
+	
+	
 
 	
 	

@@ -30,6 +30,7 @@ public class ML_Steuer implements MouseListener{
 		String[] dirZahl = {"2800", "2700", "2810"};
 		
 		String[] VAG = {"2800"};
+		String[] FA = {"3540"};
 		
 		
 		String cmd = ((JLabel) e.getSource()).getText();
@@ -57,8 +58,16 @@ public class ML_Steuer implements MouseListener{
 			myController.exec_1Stufig_ohneSteuer(cmd, "0200", VAG, null, null, false, true);
 		}
 		
-		else if(cmd.equals("~  Kammerumlage")) {
+		else if(cmd.equals("~  Kammerumlage (erste 3 Quartale)")) {
 			myController.exec_1Stufig_ohneSteuer(cmd, "7780", VAG, null, null, false, true);
+		}
+		
+		else if(cmd.equals("~  Kammerumlage (im alten Jahr)")) {
+			myController.exec_1Stufig_ohneSteuer(cmd, "7780", FA, null, null, false, true);
+		}
+		
+		else if(cmd.equals("~  Kammerumlage (im neuen Jahr)")) {
+			myController.exec_1Stufig_ohneSteuer(cmd, "3540", VAG, null, null, false, true);
 		}
 		
 		

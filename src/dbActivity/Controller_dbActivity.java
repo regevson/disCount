@@ -1,7 +1,6 @@
 package dbActivity;
 
 import java.awt.event.MouseListener;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -10,6 +9,7 @@ import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import Controls.ML_Controls;
 import View.Buchungssatz;
 import View.Controller_AbstractClass;
 import View.MainController;
@@ -363,8 +363,8 @@ public class Controller_dbActivity extends Controller_AbstractClass{
     private void startExam() {
     	cancelTimer();
 		myModel.getExamSolutionsFromDB();
-		int allow = myModel.getBSHelpPermission();
-		if(allow == 0)
+		int allowHelp = myModel.getBSHelpPermission();
+		if(allowHelp == 0)
 			MC.execSetupExamEnvironment();
 		waitView.examOpened();
 		inExam = true;
@@ -415,6 +415,7 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		
 		
 		MC.execRemoveExamEnvironment();
+		ML_Controls.windowListererIsActive = false;
 		
 		return percentage;
 		
@@ -717,12 +718,12 @@ public class Controller_dbActivity extends Controller_AbstractClass{
 		myModel.setUseTime(minutes);
 	}
 
-	public void execChangeResultValue(int value) {
+	public void execChangeResultValue(int cheaterIndex, int value) {
 		
 		if(value == -2)
 			seenResults++;
 		
-		myModel.changeResultValue(cheaterList, value);
+		myModel.changeResultValue(++cheaterIndex, value);
 		
 	}
 

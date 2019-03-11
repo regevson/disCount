@@ -34,7 +34,7 @@ public class SplashScreen_View extends JFrame {
 		
 		BufferedImage myPicture;
 		try {
-			myPicture = ImageIO.read(new File("src/splash_v2_0.png"));
+			myPicture = ImageIO.read(new File("src/splash_v2_1.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			getContentPane().add(picLabel, BorderLayout.CENTER);
 		} catch (IOException e) {
