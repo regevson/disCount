@@ -8,7 +8,7 @@ Furthermore online exams can be carried out with the software.
 
 [YT-Tutorial-Playlist (presentation of most functions)](https://www.youtube.com/channel/UC6XVCxsKlbpnTWiFQuDos-g/playlists)
 
-## How?
+## Aim
 disCount aims to assist advanced students as well as students who are new to accounting.
 This is achieved by letting the user decide wether to use the help of the computer to solve
 exercises or do it themselves. Furthermore tools like "solution-suggestions" or
