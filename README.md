@@ -1,4 +1,3 @@
-# disCount - Ein RW-Programm für SchülerInnen
 ![Image](https://github.com/regevson/disCount/blob/master/src/discount_social_preview.png)
 
 disCount is an accounting software that aims to improve the learning process for students.
